@@ -1,0 +1,174 @@
+<?php
+
+namespace App\Exceptions;
+
+use Exception;
+
+use App\Traits\ApiResponser;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Database\QueryException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Validation\ValidationException;
+use Laravel\Passport\Exceptions\MissingScopeException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+
+class Handler extends ExceptionHandler
+{
+    use ApiResponser;
+
+    protected $dontReport = [
+
+    ];
+
+    protected $dontFlash = [
+        'password',
+        'password_confirmation',
+    ];
+
+    public function report(Exception $exception)
+    {
+        parent::report($exception);
+    }
+
+    public function render($request, Exception $exception)
+    {
+        if ($exception instanceof RouteNotFoundException){
+            return $this->errorResponse("La ruta no fue encontrada", 404);
+        }
+
+        if ($exception instanceof ValidationException) {
+            return $this->invalidJson($request, $exception);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            $modelo = strtolower(class_basename($exception->getModel()));
+            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el ID especificado", 404);
+        }
+        
+        if ($exception instanceof AuthenticationException) {
+            return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
+        }
+        
+        if ($exception instanceof MissingScopeException) {
+            return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+            return $this->errorResponse("No se encontró la URL especificada", 404);
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return $this->errorResponse("El método especificado en la petición no es válido", 405);
+        }
+
+        if ($exception instanceof HttpException) {
+            return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if ($exception instanceof QueryException) {
+            if(Config::get('database.default') == 'pgsql')
+                $codigo = $exception->errorInfo[0];
+            else
+                $codigo = $exception->errorInfo[1];
+
+            $message = "";
+
+            switch ($codigo) {
+                case 4060:
+                    $message = "No se puede abrir la base de datos solicitada por el inicio de sesión";
+                    break;
+                case 40197:
+                    $message = "Error en el servicio al procesar la solicitud. Vuelva a intentarlo";
+                    break;
+                case 40501:
+                    $message = "El servicio está ocupado actualmente. Vuelva a intentar la solicitud después de 10 segundos";
+                    break;
+                case 40613:
+                    $message = "Vuelva a intentar la conexión más tarde";
+                    break; 
+                case 49918:
+                    $message = "No se puede procesar la solicitud. No hay suficientes recursos para procesar la solicitud";
+                    break;  
+                case 49919:
+                    $message = "No se procesar, crear ni actualizar la solicitud. Hay demasiadas operaciones de creación o actualización en curso para la suscripción";
+                    break;  
+                case 1451:
+                    $message = "El registro se encuentra asociado, no podra realizar la eliminación";
+                    break;    
+                case 104:
+                    $message = "Debe haber elementos ORDER BY en la lista de selección si la instrucción contiene el operador UNION, INTERSECT o EXCEPT";
+                    break;    
+                case 107:
+                    $message = "El prefijo de columna no coincide con un nombre de tabla o un nombre de alias utilizado en la consulta";
+                    break;    
+                case 109:
+                    $message = "Hay más columnas en la instrucción INSERT que valores en la cláusula VALUES. El número de valores de VALUES debe coincidir con el de columnas de INSERT";
+                    break;    
+                case 109:
+                    $message = "Hay más columnas en la instrucción INSERT que valores en la cláusula VALUES. El número de valores de VALUES debe coincidir con el de columnas de INSERT";
+                    break;
+                case 1048:
+                    $message = "Los campos no pueden ser nulos, debe de especificar un valor";
+                    break;    
+                case 42703:
+                    $message = "No existe una o varias columnas en la BD y que están referenciadas en el modelo";
+                    break;                 
+                default:
+                    $message = "BD";
+                    break;                                       
+            }
+
+            return $this->errorResponse($message, 409);
+        }
+
+        if ($exception instanceof TokenMismatchException)
+        {
+            return redirect()->back()->withInput($request->input());
+        }
+        
+
+        if(!config('app.debug'))
+        {
+            return $this->errorResponse("Falla inesperada, intente luego", 500);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        if($this->isFrontend($request))
+        {
+            return $request->ajax() ? response()->json($exception->errors(), 422) : 
+                                      redirect()->back()->withInput($request->input())->withErrors($exception->errors());
+        }
+
+        return $this->errorResponse($exception->errors(), $exception->status);
+    }
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if($this->isFrontend($request))
+        {
+            return redirect()->guest('login');
+        }
+
+        return $this->errorResponse('No autenticado', 401);
+    }
+
+    protected function isFrontend($request)
+    {
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
+    }
+}
