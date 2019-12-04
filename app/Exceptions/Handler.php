@@ -39,6 +39,10 @@ class Handler extends ExceptionHandler
 
     public function render($request, Exception $exception)
     {
+        if($exception->getCode() === 401){
+            return $this->errorResponse("Usuario o contraseña incorrectos", 401);
+        }
+        
         if ($exception instanceof RouteNotFoundException){
             return $this->errorResponse("La ruta no fue encontrada", 404);
         }
