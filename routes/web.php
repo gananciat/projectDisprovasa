@@ -13,3 +13,8 @@
 Route::get('/', function () {
     return view('home');
 });
+
+Route::get('/escuela', function () {
+    return view('escuela');
+});
+
