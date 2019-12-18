@@ -118,6 +118,7 @@ export default {
         text: "Administración",
         children: [
           { icon: "circle-o", text: "Listar", path: "/example" },
+          { icon: "circle-o", text: "Categorias", path: "/category" },
         ]
       }
     ]

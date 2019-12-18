@@ -8,6 +8,7 @@ import { isNullOrUndefined } from 'util';
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
+import categoryService from '../services/CategoryService'
 
 // Axios Configuration
 let baseUrl = 'http://www.project.com/' //base url desarrollo
@@ -39,7 +40,6 @@ Axios.interceptors.response.use(response => {
 });
 
 function refreshToken() {
-    debugger
     var data = auth.getRefreshToken()
     return new Promise(function(resolve, reject) {
         instance.post(baseUrl + 'oauth/token', data)
@@ -63,5 +63,6 @@ instance.interceptors.response.use(response => {
 
 export default {
     exampleService: new exampleService(Axios),
-    loginService: new loginService(Axios,baseUrl)
+    loginService: new loginService(Axios,baseUrl),
+    categoryService: new categoryService(Axios,baseUrl)
 }

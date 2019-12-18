@@ -87,7 +87,7 @@ export default {
                 return
             }
             self.$store.dispatch('guardarToken',r.data)
-            self.$router.push('/home')
+            self.$router.push('/')
             auth.getUser()
         }).catch(e => {
 

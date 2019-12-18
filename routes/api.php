@@ -23,3 +23,5 @@ Route::name('verify')->get('users/verfiy/{token}', 'User\UserController@verfiy')
 Route::name('resend')->get('users/{user}/resend', 'User\UserController@resend');
 
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+
+Route::resource('categories', 'Sistema\CategoryController', ['except' => ['create', 'edit']]);

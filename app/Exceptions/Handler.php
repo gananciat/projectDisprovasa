@@ -57,10 +57,11 @@ class Handler extends ExceptionHandler
         }
         
         if ($exception instanceof AuthenticationException) {
-            return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
+            return $this->unauthenticated($request, $exception);
         }
         
         if ($exception instanceof MissingScopeException) {
+
             return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
         }
 

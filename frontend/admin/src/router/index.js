@@ -5,8 +5,8 @@ import multiguard from 'vue-router-multiguard'
 
 import Default from '@/components/Default'
 import ExampleIndex from '@/components/example/Index'
-import ExampleView from '@/components/example/View'
 import Login from '@/components/login/Index'
+import Category from '@/components/administracion/Category'
 
 Vue.use(Router)
 
@@ -23,6 +23,7 @@ const routes = [
   { path: '/', name: 'Default', component: Default,beforeEnter: multiguard([isLoggedIn]) },
   { path: '/example', name: 'ExampleIndex', component: ExampleIndex, beforeEnter: multiguard([isLoggedIn]) },
   { path: '/login', name: 'Login', component: Login,beforeEnter: multiguard([isLoggedOut]) },
+  { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({

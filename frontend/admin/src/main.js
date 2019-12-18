@@ -5,12 +5,19 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 
+import { VBModal } from 'bootstrap-vue'
+// Note: Vue automatically prefixes the directive name with 'v-'
+Vue.directive('b-modal', VBModal)
+
 import '../static/template/font-awesome/css/font-awesome.min.css'
 import '../static/template/dist/css/adminlte.min.css'
 
 import '../static/template/jquery/jquery.min.js'
 import '../static/template/bootstrap/js/bootstrap.bundle.min.js'
 import '../static/template/dist/js/adminlte.min.js'
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 /*bootstrap 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -89,6 +96,17 @@ require('moment/locale/es')
 Vue.use(require('vue-moment'), {
     moment
 })
+
+import VueSweetalert2 from 'vue-sweetalert2'
+
+const options = {
+  confirmButtonColor: '#41b882',
+  cancelButtonColor: '#ff7674',
+  confirmButtonText: "Confirmar",
+  cancelButtonText: "Cancelar"
+}
+ 
+Vue.use(VueSweetalert2,options)
 
 //volver a validar
 store.dispatch('autoLogin')
