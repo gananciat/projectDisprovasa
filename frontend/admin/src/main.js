@@ -3,7 +3,6 @@
 import Vue from 'vue'
 
 import BootstrapVue from 'bootstrap-vue'
-
 Vue.use(BootstrapVue);
 
 import '../static/template/font-awesome/css/font-awesome.min.css'

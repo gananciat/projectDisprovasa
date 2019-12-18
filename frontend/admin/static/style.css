@@ -1,21 +1,17 @@
 input:valid {
   border-color: green;
-  border-radius: 0;
   height: 34px;
 }
 
 input:invalid {
   border-color: red;
-  border-radius: 0;
   height: 34px;
 }
 
 textarea:invalid {
   border-color: red;
-  border-radius: 0;
 }
 
 textarea:valid {
   border-color: green;
-  border-radius: 0;
 }

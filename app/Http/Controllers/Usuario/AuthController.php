@@ -28,8 +28,6 @@ class AuthController extends Controller
 
         $http = new Client();
 
-        
-
         $response = $http->post('http://www.project.com/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
