@@ -12,3 +12,5 @@ npm-debug.log
 yarn-error.log
 frontend/admin/bundle/
 frontend/admin/node_modules/
+public/bundle
+resources/views/home.blade.php

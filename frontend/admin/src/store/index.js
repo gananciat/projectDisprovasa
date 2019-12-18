@@ -15,7 +15,7 @@ const state = {
     token_expired: null,
     client_id: 2,
     base_url: 'http://www.project.com/',
-    client_secret: 'QH37yL9MCSciFki6nh8DOtMYXrbb0r7Tqy5aK9PI'
+    client_secret: 'gA61MQKZK9p4CxXv4Wr0qiavTc09Sb8oNzEkitVW'
 }
 
 const mutations = {
