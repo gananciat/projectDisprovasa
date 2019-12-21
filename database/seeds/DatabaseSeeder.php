@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\Departament;
+use App\Models\Month;
 use App\Models\Municipality;
 use App\Models\Person;
 use App\Models\Rol;
+use App\Models\Year;
 use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -13,6 +15,60 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //$this->call([UsersTableSeeder::class]);
+
+        for ($i=18; $i < 50; $i++) { 
+            $new = new Year();
+            $new->year = '20'.$i;
+            $new->save();
+        }
+
+        $insert_month = new Month();
+        $insert_month->month = 'Enero';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Febrero';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Marzo';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Abril';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Mayo';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Junio';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Julio';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Agosto';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Septiembre';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Octubre';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Noviembre';
+        $insert_month->save();
+
+        $insert_month = new Month();
+        $insert_month->month = 'Diciembre';
+        $insert_month->save();
 
         $insert_departament = new Departament();
         $insert_departament->name = 'Santa Rosa';

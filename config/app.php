@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'server_auth' => env('SERVER_AUTH', 'http://www.project.com/oauth/token'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

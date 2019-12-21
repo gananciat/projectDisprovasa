@@ -23,7 +23,8 @@ class CategoryController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|string'
+            'name' => 'required|string|max:75|unique:categories,name',
+            'description' => 'nullable|string|max:250'
         ];
         
         $this->validate($request, $rules);
@@ -41,7 +42,8 @@ class CategoryController extends ApiController
     public function update(Request $request, Category $category)
     {
         $rules = [
-            'name' => 'required|string|unique:categories,name,' . $category->id,
+            'name' => 'required|string|max:75|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:250'
         ];
 
         $this->validate($request, $rules);

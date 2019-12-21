@@ -11,7 +11,7 @@ import loginService from '../services/LoginService'
 import categoryService from '../services/CategoryService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test:8081/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
