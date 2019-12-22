@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class School extends Model
 {
     protected $table = 'schools';
-    protected $fillable = ['name','logo','direction','nit','code','municipalities_id','people_id'];
+    protected $fillable = ['name','logo','direction','nit','code','municipalities_id','people_id','current'];
 
     public function municipality()
     {

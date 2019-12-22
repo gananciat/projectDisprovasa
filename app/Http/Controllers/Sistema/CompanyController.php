@@ -85,7 +85,7 @@ class CompanyController extends ApiController
         }
 
         $company->save();
-        return $this->showOne($company);
+        return $this->showOne($company,201);
     }
 
     /**
@@ -97,6 +97,6 @@ class CompanyController extends ApiController
     public function destroy(Company $company)
     {
         $company->delete();
-        return $this->showOne($company);
+        return $this->showOne($company,201);
     }
 }

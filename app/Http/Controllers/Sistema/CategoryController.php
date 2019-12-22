@@ -51,17 +51,17 @@ class CategoryController extends ApiController
         $category->name = $request->name;
         $category->description = $request->description;
 
-         if (!$category->isDirty()) {
+        if (!$category->isDirty()) {
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
         $category->save();
-        return $this->showOne($category);
+        return $this->showOne($category,201);
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return $this->showOne($category);
+        return $this->showOne($category,201);
     }
 }

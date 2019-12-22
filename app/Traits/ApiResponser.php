@@ -31,4 +31,15 @@ trait ApiResponser
   {
     return $this->successResponse(['data' => $instance, 'code' => $code], $code);
   }
+
+  protected function generarPassword($longitud)
+  {
+    $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890#.!@";
+
+    for($i=0;$i<$longitud;$i++) {
+       $password .= substr($str,rand(0,62),1);
+    }
+
+    return $password;
+  }
 }

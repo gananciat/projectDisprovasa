@@ -21,7 +21,7 @@ class MunicipalityController extends ApiController
      */
     public function index()
     {
-        return $this->showAll(Municipality::when('departament')->get());
+        return $this->showAll(Municipality::with('departament')->get());
     }
 
     /**

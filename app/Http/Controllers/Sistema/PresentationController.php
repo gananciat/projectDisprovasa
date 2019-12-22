@@ -95,12 +95,12 @@ class PresentationController extends ApiController
         $presentation->name = $request->name;
         $presentation->description = $request->description;
 
-         if (!$presentation->isDirty()) {
+        if (!$presentation->isDirty()) {
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
         $presentation->save();
-        return $this->showOne($presentation);
+        return $this->showOne($presentation,201);
     }
 
     /**
@@ -112,6 +112,6 @@ class PresentationController extends ApiController
     public function destroy(Presentation $presentation)
     {
         $presentation->delete();
-        return $this->showOne($presentation);
+        return $this->showOne($presentation,201);
     }
 }

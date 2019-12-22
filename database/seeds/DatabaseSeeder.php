@@ -82,6 +82,21 @@ class DatabaseSeeder extends Seeder
         $insert_rol = new Rol();
         $insert_rol->name = 'administrador';
         $insert_rol->administrative = true;
+        $insert_rol->save();        
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'director';
+        $insert_rol->administrative = false;
+        $insert_rol->save();        
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'profesor';
+        $insert_rol->administrative = false;
+        $insert_rol->save();        
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'otro';
+        $insert_rol->administrative = false;
         $insert_rol->save();
 
         $insert_person = new Person();
