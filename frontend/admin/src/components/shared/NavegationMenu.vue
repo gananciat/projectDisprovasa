@@ -40,8 +40,16 @@
               </p>
             </a>
           </li>
+          <template>
+            
           <li class="nav-item" v-for="item in items" :key="item.text">
-            <a href="#" class="nav-link">
+            <a href="#/" class="nav-link" v-if="item.children.length === 0">
+              <i :class="'nav-icon fa fa-'+item.icon"></i>
+              <p>
+                {{item.text}}
+              </p>
+            </a>
+            <a href="#" class="nav-link" v-if="item.children.length > 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
@@ -57,6 +65,7 @@
               </li>
             </ul>
           </li>
+          </template>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -117,10 +126,20 @@ export default {
         icon: "cog",
         text: "Administración",
         children: [
-          { icon: "circle-o", text: "Listar", path: "/example" },
           { icon: "circle-o", text: "Categorias", path: "/category" },
+          { icon: "circle-o", text: "Compañias", path: "/company" },
+          { icon: "circle-o", text: "Presentaciones", path: "/presentation" },
+          { icon: "circle-o", text: "productos", path: "/product" },
         ]
-      }
+      },
+      
+      {
+        icon: "user",
+        text: "Acceso",
+        children: [
+          { icon: "circle-o", text: "Usuarios", path: "/" },
+        ]
+      },
     ]
   }),
 
@@ -129,6 +148,11 @@ export default {
       if(path === undefined) return;
       this.$router.push(path);
     }
+  },
+
+  mounted() {
+    let self = this
+    $("body").resize()
   },
 
   computed: {

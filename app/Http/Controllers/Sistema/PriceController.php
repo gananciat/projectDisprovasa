@@ -60,7 +60,7 @@ class PriceController extends ApiController
             DB::beginTransaction();
                 $data = $request->all();
 
-                $precios = Price::where('products_id',$data->id)->where('current',true)->get();
+                $precios = Price::where('products_id',$request->products_id)->where('current',true)->get();
 
                 foreach ($precios as $key => $value) {
                     $value->current = false;
@@ -68,9 +68,9 @@ class PriceController extends ApiController
                 }
 
                 $insert = new Price();
-                $insert->price = $data->price;
+                $insert->price = $request->price;
                 $insert->current = true;
-                $insert->products_id = $data->products_id;
+                $insert->products_id = $request->products_id;
                 $insert->save();
             DB::commit();
 

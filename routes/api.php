@@ -34,6 +34,7 @@ Route::resource('phone_schools', 'Sistema\PhoneSchoolController', ['except' => [
 Route::resource('presentations', 'Sistema\PresentationController', ['except' => ['create', 'edit']]);
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('products', 'Sistema\ProductController', ['except' => ['edit']]);
+Route::resource('products.prices', 'Sistema\ProductPriceController', ['except' => ['edit']]);
 Route::resource('schools', 'Sistema\SchoolController', ['except' => ['create', 'edit']]);
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
 

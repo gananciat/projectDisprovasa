@@ -16,17 +16,17 @@ class Product extends Model
 
     public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class,'categories_id');
     }
 
     public function presentation()
     {
-        return $this->hasOne(Presentation::class);
+        return $this->belongsTo(Presentation::class,'presentations_id');
     }
 
     public function prices()
     {
-        return $this->hasMany(Price::class);
+        return $this->hasMany(Price::class,'products_id');
     }
 
     public function sentences()

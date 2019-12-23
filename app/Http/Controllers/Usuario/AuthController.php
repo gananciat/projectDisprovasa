@@ -28,7 +28,7 @@ class AuthController extends Controller
 
         $http = new Client();
 
-        $response = $http->post(config('app.server_auth').'/oauth/token', [
+        $response = $http->post('http://www.project.com/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
                 'client_id' => config('services.passport.client_id'),

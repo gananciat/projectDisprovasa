@@ -34,7 +34,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorias de productos</h1> 
+            <h1 class="m-0 text-dark">Presentaciones de productos</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -49,7 +49,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorias 
+                  <h3 class="card-title">Lista de presentaciones 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -190,7 +190,7 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .getAll()
         .then(r => {
           self.loading = false; 
@@ -205,7 +205,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .create(data)
         .then(r => {
           self.loading = false
@@ -226,7 +226,7 @@ export default {
       self.loading = true
       let data = self.form
        
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .update(data)
         .then(r => {
           self.loading = false
@@ -253,7 +253,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.presentationService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -327,7 +327,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nueva presentación' : 'Editar '+self.form.name
       }
   }
 };
