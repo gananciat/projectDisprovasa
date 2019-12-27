@@ -8,10 +8,14 @@ import { isNullOrUndefined } from 'util';
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
-import categoryService from '../services/CategoryService'
+import CategoryService from '../services/CategoryService'
+import CompanyService from '../services/CompanyService'
+import PresentationService from '../services/PresentationService'
+import ProductService from '../services/ProductService'
+import PriceService from '../services/PriceService'
 
 // Axios Configuration
-let baseUrl = 'http://sistematio.test:8081/' //base url desarrollo
+let baseUrl = 'http://www.project.com/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
@@ -27,7 +31,7 @@ Axios.interceptors.response.use(response => {
     if (error.response.status === 401) {
         var token_data = $cookies.get('token_data')
         if (isNullOrUndefined(token_data)) { return error }
-        
+
         var original_request = error.config
         return refreshToken().then(res => {
             auth.saveToken(res.data)
@@ -63,6 +67,10 @@ instance.interceptors.response.use(response => {
 
 export default {
     exampleService: new exampleService(Axios),
-    loginService: new loginService(Axios,baseUrl),
-    categoryService: new categoryService(Axios,baseUrl)
+    loginService: new loginService(Axios, baseUrl),
+    categoryService: new CategoryService(Axios, baseUrl),
+    companyService: new CompanyService(Axios, baseUrl),
+    presentationService: new PresentationService(Axios, baseUrl),
+    productService: new ProductService(Axios, baseUrl),
+    priceService: new PriceService(Axios, baseUrl)
 }

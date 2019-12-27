@@ -4,6 +4,8 @@ import Vue from 'vue'
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
+import Multiselect from 'vue-multiselect'
+import Vue2Filters from 'vue2-filters'
 
 import { VBModal } from 'bootstrap-vue'
 // Note: Vue automatically prefixes the directive name with 'v-'
@@ -35,10 +37,10 @@ import 'font-awesome/css/font-awesome.css'*/
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
- 
+
 library.add(faUserSecret)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-// App
+    // App
 import App from './App'
 
 // Vue Router
@@ -55,13 +57,13 @@ import VeeValidate from 'vee-validate'
 const VueValidationEs = require('vee-validate/dist/locale/es');
 
 const config = {
-  locale: 'es',
-  validity: true,
-  dictionary: {
-    es: VueValidationEs
-  },
-  fieldsBagName: 'campos',
-  errorBagName: 'errors', // change if property conflicts
+    locale: 'es',
+    validity: true,
+    dictionary: {
+        es: VueValidationEs
+    },
+    fieldsBagName: 'campos',
+    errorBagName: 'errors', // change if property conflicts
 };
 
 Vue.use(VeeValidate, config);
@@ -71,6 +73,7 @@ import VueToastr2 from 'vue-toastr-2'
 import 'vue-toastr-2/dist/vue-toastr-2.min.css'
 window.toastr = require('toastr')
 Vue.use(VueToastr2)
+Vue.use(Vue2Filters)
 
 import VueCookies from 'vue-cookies'
 Vue.use(VueCookies)
@@ -79,7 +82,7 @@ Vue.use(VueCookies)
 import '../static/style.css'
 
 Vue.config.productionTip = false
-// set default config
+    // set default config
 window.events = new Vue();
 
 // Element Ui
@@ -87,7 +90,7 @@ import Element from 'element-ui'
 import locale from 'element-ui/lib/locale/lang/es'
 
 Vue.use(Element, {
-  locale
+    locale
 })
 
 // MomentJs for Vue
@@ -100,24 +103,32 @@ Vue.use(require('vue-moment'), {
 import VueSweetalert2 from 'vue-sweetalert2'
 
 const options = {
-  confirmButtonColor: '#41b882',
-  cancelButtonColor: '#ff7674',
-  confirmButtonText: "Confirmar",
-  cancelButtonText: "Cancelar"
+    confirmButtonColor: '#41b882',
+    cancelButtonColor: '#ff7674',
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar"
 }
- 
-Vue.use(VueSweetalert2,options)
+
+Vue.use(VueSweetalert2, options)
+Vue.component('multiselect', Multiselect)
+import '../static/vue-multiselect.min.css'
+
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css';
+
+Vue.use(Tooltip);
+
 
 //volver a validar
 store.dispatch('autoLogin')
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  template: '<App/>',
-  components: {
-    App
-  }
+    el: '#app',
+    router,
+    store,
+    template: '<App/>',
+    components: {
+        App
+    }
 })

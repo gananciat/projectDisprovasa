@@ -13,10 +13,6 @@
          :class="{'input':true,'has-errors': errors.has('name')}">
          <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
         </div>
-        <div class="form-group">
-            <label>Descripción</label>
-          <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
-        </div>
         <div class="row">
           <!-- /.col -->
           <div class="col-12 text-right">
@@ -34,7 +30,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorias de productos</h1> 
+            <h1 class="m-0 text-dark">Compañias</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -49,7 +45,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorias 
+                  <h3 class="card-title">Lista de compañias 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -156,7 +152,6 @@ export default {
       items: [],
       fields: [
         { key: 'name', label: 'Nombre', sortable: true },
-        { key: 'description', label: 'Descripción', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -169,7 +164,6 @@ export default {
       form: {
           id: null,
           name: '',
-          description: ''
       }
     };
   },
@@ -190,7 +184,7 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .getAll()
         .then(r => {
           self.loading = false; 
@@ -205,7 +199,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .create(data)
         .then(r => {
           self.loading = false
@@ -226,7 +220,7 @@ export default {
       self.loading = true
       let data = self.form
        
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .update(data)
         .then(r => {
           self.loading = false
@@ -253,7 +247,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.companyService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -286,7 +280,6 @@ export default {
         let self = this
         self.form.id = data.id
         self.form.name = data.name
-        self.form.description = data.description
         this.$refs['nuevo'].show()
     },
 
@@ -327,7 +320,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nueva compañia' : 'Editar '+self.form.name
       }
   }
 };

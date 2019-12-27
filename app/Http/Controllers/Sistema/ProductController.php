@@ -23,7 +23,8 @@ class ProductController extends ApiController
      */
     public function index()
     {
-        return $this->showAll(Product::with('category','presentation','prices')->get());
+        $products = Product::with('category','presentation','prices')->get();
+        return $this->showAll($products);
     }
 
     /**
@@ -68,9 +69,9 @@ class ProductController extends ApiController
                 $data = $request->all();
 
                 $existe = Product::where([
-                    ['name', '=', $data->name],
-                    ['categories_id', '=', $data->categories_id],
-                    ['presentations_id', '=', $data->presentations_id],
+                    ['name', '=', $request->name],
+                    ['categories_id', '=', $request->categories_id],
+                    ['presentations_id', '=', $request->presentations_id],
                 ])->first();
                 
                 if(!is_null($existe))
@@ -86,7 +87,7 @@ class ProductController extends ApiController
                 }
 
                 $asignar_precio = new Price();
-                $asignar_precio->price = $data->price;
+                $asignar_precio->price = $request->price;
                 $asignar_precio->current = true;
                 $asignar_precio->products_id = $insert->id;
                 $asignar_precio->save();
@@ -148,19 +149,19 @@ class ProductController extends ApiController
             DB::beginTransaction();
                 $data = $request->all();
 
-                $existe = Product::where([
-                    ['name', '=', $data->name],
-                    ['categories_id', '=', $data->categories_id],
-                    ['presentations_id', '=', $data->presentations_id],
+                /*$existe = Product::where([
+                    ['name', '=', $request->name],
+                    ['categories_id', '=', $request->categories_id],
+                    ['presentations_id', '=', $request->presentations_id],
                 ])->first();
                 
                 if(!is_null($existe))
-                    return $this->errorResponse('El producto que trata de ingresar ya existe.',403);
+                    return $this->errorResponse('El producto que trata de ingresar ya existe.',403);*/
 
-                $product->name = $data->name;
-                $product->categories_id = $data->categories_id;
-                $product->presentations_id = $data->presentations_id;
-                $product->camouflage = $data->camouflage;
+                $product->name = $request->name;
+                $product->categories_id = $request->categories_id;
+                $product->presentations_id = $request->presentations_id;
+                $product->camouflage = $request->camouflage;
 
                 if (!$product->isDirty()) {
                     return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
