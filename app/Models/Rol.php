@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rol extends Model
 {
+    const ROL_PRESIDENTE = 'PRESIDENTE';
+
     protected $table = 'rols';
     protected $fillable = ['name','administrative'];
 

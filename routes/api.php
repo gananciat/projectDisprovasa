@@ -35,6 +35,7 @@ Route::resource('presentations', 'Sistema\PresentationController', ['except' => 
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('products', 'Sistema\ProductController', ['except' => ['edit']]);
 Route::resource('schools', 'Sistema\SchoolController', ['except' => ['create', 'edit']]);
+Route::resource('school_presidents', 'Sistema\SchoolPresidentController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
 
 //New Route Usuario

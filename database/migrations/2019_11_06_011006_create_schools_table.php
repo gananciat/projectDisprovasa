@@ -14,7 +14,8 @@ class CreateSchoolsTable extends Migration
             $table->longText('logo');
             $table->string('direction');
             $table->string('nit');
-            $table->string('code')->unique();
+            $table->string('code_primary')->nullable();
+            $table->string('code_high_school')->nullable();
             $table->boolean('current')->default(1);
             $table->unsignedBigInteger('municipalities_id');
             $table->foreign('municipalities_id')->references('id')->on('municipalities');  

@@ -8,6 +8,8 @@ use App\Models\School;
 use App\Models\Balance;
 use App\Models\PhonePerson;
 use App\Models\Municipality;
+use App\Models\PersonSchool;
+use App\Models\SchoolPresident;
 use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
@@ -68,6 +70,11 @@ class Person extends Model
     public function schools()
     {
         return $this->belongsToMany(School::class)->using(PersonSchool::class);        
+    }
+
+    public function school_president()
+    {
+        return $this->belongsTo(SchoolPresident::class);
     }
 
     public function orders()

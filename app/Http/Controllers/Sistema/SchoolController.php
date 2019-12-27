@@ -75,7 +75,8 @@ class SchoolController extends ApiController
             'logo' => 'required|string',
             'direction' => 'required|string|max:200',
             'nit' => 'required|string|max:15|unique:schools,nit',
-            'code' => 'required|string|max:20|unique:schools,code',
+            'code_high_school' => 'nullable|string|max:20',
+            'code_primary' => 'nullable|string|max:20',
             'phone_school.number.*' => 'required|digits_between:8,8',
             'phone_school.companies_id.*' => 'required|integer|exists:companies,id',
 
@@ -99,13 +100,20 @@ class SchoolController extends ApiController
             DB::beginTransaction();
                 $data = $request->all();
 
+                if(!is_null(School::where('code_high_school',$data->code_high_school)->first()) && $data->code_high_school != null)
+                    return $this->errorResponse('El cóigo de preprimaria ya existe registrado.',403);
+
+                if(!is_null(School::where('code_primary',$data->code_primary)->first()) && $data->code_primary != null)
+                    return $this->errorResponse('El cóigo de primaria ya existe registrado.',403);
+
                 $insert = new School();
                 $insert->municipalities_id = $data->municipalities_id;
                 $insert->name = $data->name;
                 $insert->logo = $data->logo;
                 $insert->direction = $data->direction;
                 $insert->nit = $data->nit;
-                $insert->code = $data->code;
+                $insert->code_high_school = $data->code_high_school;
+                $insert->code_primary = $data->code_primary;
                 $insert->people_id = Auth::user()->people_id;
                 $insert->current = true;
                 $insert->save();
@@ -224,7 +232,8 @@ class SchoolController extends ApiController
             'logo' => 'required|string',
             'direction' => 'required|string|max:200',
             'nit' => 'required|string|max:15|unique:schools,nit,'.$school->id,
-            'code' => 'required|string|max:20|unique:schools,code,'.$school->id,
+            'code_high_school' => 'nullable|string|max:20',
+            'code_primary' => 'nullable|string|max:20',
         ];
         
         $this->validate($request, $rules, $messages);
@@ -232,12 +241,19 @@ class SchoolController extends ApiController
         try {
             DB::beginTransaction();
 
+                if(!is_null(School::where('code_high_school',$school->code_high_school)->first()) && $school->code_high_school != $request->code_high_school && $request->code_high_school != null)
+                    return $this->errorResponse('El cóigo de preprimaria ya existe registrado.',403);
+
+                if(!is_null(School::where('code_primary',$school->code_primary)->first()) && $school->code_primary != $request->code_primary && $request->code_primary != null)
+                    return $this->errorResponse('El cóigo de primaria ya existe registrado.',403);
+
                 $school->municipalities_id = $request->municipalities_id;
                 $school->name = $request->name;
                 $school->logo = $request->logo;
                 $school->direction = $request->direction;
                 $school->nit = $request->nit;
-                $school->code = $request->code;
+                $school->code_high_school = $request->code_high_school;
+                $school->code_primary = $request->code_primary;
                 $school->people_id = Auth::user()->people_id;
                 $school->current = true;
 
