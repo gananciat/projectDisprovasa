@@ -12,5 +12,7 @@ npm-debug.log
 yarn-error.log
 frontend/admin/bundle/
 frontend/admin/node_modules/
+frontend/school/bundle/
+frontend/school/node_modules/
 public/bundle
 resources/views/home.blade.php
