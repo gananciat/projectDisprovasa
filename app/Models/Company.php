@@ -11,6 +11,10 @@ class Company extends Model
     protected $table = 'companies';
     protected $fillable = ['name'];
 
+    public function setNameAttribute($value) {
+        $this->attributes['name'] = mb_strtoupper($value);
+    }
+
     public function person()
     {
         return $this->belongsTo(Person::class);

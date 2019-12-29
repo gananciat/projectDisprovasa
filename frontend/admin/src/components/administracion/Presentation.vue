@@ -34,7 +34,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Presentaciones de productos</h1> 
+            <h1 class="m-0 text-dark">Marcas de productos</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -49,7 +49,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de presentaciones 
+                  <h3 class="card-title">Lista de marcas 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -274,12 +274,25 @@ export default {
     createOrEdit(){
       this.$validator.validateAll().then((result) => {
           if (result) {
+              self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
            }
       });
 
       let self = this
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+
+        Object.keys(self.form).forEach(function(key,index) {
+          
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
      //mapear datos a formulario
     mapData(data){

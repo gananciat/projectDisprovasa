@@ -18,7 +18,7 @@ class Municipality extends Model
 
     public function departament()
     {
-        return $this->belongsTo(Departament::class);
+        return $this->belongsTo(Departament::class,'departaments_id');
     }
 
     public function person()

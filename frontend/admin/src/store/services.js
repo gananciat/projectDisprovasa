@@ -9,13 +9,15 @@ import { isNullOrUndefined } from 'util';
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
 import CategoryService from '../services/CategoryService'
+import MunicipalityService from '../services/MunicipalityService'
 import CompanyService from '../services/CompanyService'
 import PresentationService from '../services/PresentationService'
 import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
+import SchoolService from '../services/SchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test:8081/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
@@ -69,8 +71,10 @@ export default {
     exampleService: new exampleService(Axios),
     loginService: new loginService(Axios, baseUrl),
     categoryService: new CategoryService(Axios, baseUrl),
+    municipalityService: new MunicipalityService(Axios, baseUrl),
     companyService: new CompanyService(Axios, baseUrl),
     presentationService: new PresentationService(Axios, baseUrl),
     productService: new ProductService(Axios, baseUrl),
-    priceService: new PriceService(Axios, baseUrl)
+    priceService: new PriceService(Axios, baseUrl),
+    schoolService: new SchoolService(Axios, baseUrl)
 }

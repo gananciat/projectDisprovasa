@@ -10,12 +10,13 @@ Vue.use(Vuex)
 const state = {
     services,
     usuario: {},
+    escuela: {},
     token: null,
     is_login: false,
     token_expired: null,
     client_id: 2,
-    base_url: 'http://www.project.com/',
-    client_secret: '2dqY1BgXX3QU515wSBLWcxnbMbMArHTstzIIULzl'
+    base_url: 'http://sistematio.test:8081/',
+    client_secret: 'EtM9Fi3ZgGYyRhPfzWoFurah025oVgChe9XSaHSj'
 }
 
 const mutations = {

@@ -34,6 +34,7 @@ trait ApiResponser
 
   protected function generarPassword($longitud)
   {
+    $password = '';
     $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890#.!@";
 
     for($i=0;$i<$longitud;$i++) {

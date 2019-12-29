@@ -13,7 +13,7 @@ class PhoneSchool extends Model
 
     public function company()
     {
-        return $this->hasOne(Company::class);
+        return $this->belongsTo(Company::class,'companies_id');
     }
 
     public function schools()

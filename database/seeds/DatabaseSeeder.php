@@ -1,14 +1,23 @@
 <?php
 
-use App\Models\Departament;
-use App\Models\Month;
-use App\Models\Municipality;
-use App\Models\Person;
+use App\User;
 use App\Models\Rol;
 use App\Models\Year;
-use App\User;
-use Illuminate\Database\Seeder;
+use App\Models\Month;
+use App\Models\Person;
+use App\Models\Company;
+use App\Imports\UtilImport;
 use Illuminate\Support\Str;
+use App\Imports\MarcaImport;
+use App\Models\Municipality;
+use Illuminate\Database\Seeder;
+use App\Imports\CategoriaImport;
+use App\Imports\GratuidadImport;
+use App\Imports\MunicipioImport;
+use App\Imports\AlimentacionImport;
+use App\Imports\DepartamentoImport;
+use App\Imports\EscuelaImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,90 +29,123 @@ class DatabaseSeeder extends Seeder
             $new = new Year();
             $new->year = '20'.$i;
             $new->save();
+            echo 'AÑO: '.$new->year.PHP_EOL;
         }
 
         $insert_month = new Month();
         $insert_month->month = 'Enero';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Febrero';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Marzo';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Abril';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Mayo';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Junio';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Julio';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Agosto';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Septiembre';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Octubre';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Noviembre';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
         $insert_month = new Month();
         $insert_month->month = 'Diciembre';
         $insert_month->save();
+        echo 'MES: '.$insert_month->month.PHP_EOL;
 
-        $insert_departament = new Departament();
-        $insert_departament->name = 'Santa Rosa';
-        $insert_departament->save();
+        $insert_company = new Company();
+        $insert_company->name = 'tigo';
+        $insert_company->save();
+        echo 'COMPANIA: '.$insert_company->name.PHP_EOL;
 
-        $insert_municipality = new Municipality();
-        $insert_municipality->name = 'Chiquimulilla';
-        $insert_municipality->departaments_id = $insert_departament->id;
-        $insert_municipality->save();        
+        $insert_company = new Company();
+        $insert_company->name = 'claro';
+        $insert_company->save();
+        echo 'COMPANIA: '.$insert_company->name.PHP_EOL;
+
+        $insert_company = new Company();
+        $insert_company->name = 'movistar';
+        $insert_company->save();
+        echo 'COMPANIA: '.$insert_company->name.PHP_EOL;
+
+        Excel::import(new DepartamentoImport, 'database/seeds/Catalogos/Departamentos.xlsx');
+        Excel::import(new MunicipioImport, 'database/seeds/Catalogos/Municipios.xlsx');
+        Excel::import(new CategoriaImport, 'database/seeds/Catalogos/Categorias.xlsx');
+        Excel::import(new MarcaImport, 'database/seeds/Catalogos/Marcas.xlsx');
+        Excel::import(new AlimentacionImport, 'database/seeds/Catalogos/Alimentacion.xlsx');
+        Excel::import(new GratuidadImport, 'database/seeds/Catalogos/Gratuidad.xlsx');
+        Excel::import(new UtilImport, 'database/seeds/Catalogos/Utiles.xlsx');
 
         $insert_rol = new Rol();
         $insert_rol->name = 'administrador';
         $insert_rol->administrative = true;
-        $insert_rol->save();        
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;        
 
         $insert_rol = new Rol();
         $insert_rol->name = 'director';
         $insert_rol->administrative = false;
-        $insert_rol->save();        
+        $insert_rol->save();    
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;        
 
         $insert_rol = new Rol();
         $insert_rol->name = 'profesor';
         $insert_rol->administrative = false;
-        $insert_rol->save();              
+        $insert_rol->save();  
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;                
 
         $insert_rol = new Rol();
         $insert_rol->name = 'presidente';
         $insert_rol->administrative = false;
         $insert_rol->save();  
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;    
 
         $insert_rol = new Rol();
         $insert_rol->name = 'otro';
         $insert_rol->administrative = false;
         $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;
 
+        $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
         $insert_person = new Person();
         $insert_person->cui = '12345678912345';
         $insert_person->name_one = 'Héctor';
@@ -112,8 +154,8 @@ class DatabaseSeeder extends Seeder
         $insert_person->last_name_two = 'Ojeda';
         $insert_person->direction = 'barrio belén';
         $insert_person->email = 'emisor.tarea@gmail.com';
-        $insert_person->municipalities_id = $insert_municipality->id;
-        $insert_person->save();
+        $insert_person->municipalities_id = $municipality->id;
+        $insert_person->save();  
 
         $insert_user = new User();
         $insert_user->email = $insert_person->email;
@@ -123,7 +165,12 @@ class DatabaseSeeder extends Seeder
         $insert_user->verification_token = User::generarVerificationToken();
         $insert_user->admin = User::USUARIO_ADMINISTRADOR;
         $insert_user->people_id = $insert_person->id;
-        $insert_user->rols_id = $insert_rol->id;
+        $insert_user->rols_id = 1;
+        $insert_user->current_school = 0;
         $insert_user->save();
+        echo 'CUI: '.$insert_person->cui.'PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: ADMINISTRADOR'.PHP_EOL;  
+    
+    
+        Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');    
     }
 }

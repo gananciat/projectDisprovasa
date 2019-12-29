@@ -60,13 +60,28 @@ class ProductController extends ApiController
             'presentations_id' => 'required|integer|exists:presentations,id',
             'price' => 'required|numeric|between:0.01,100000',
             'camouflage' => 'required|boolean', 
+            'propierty' => 'required|integer'
         ];
         
         $this->validate($request, $rules, $messages);
 
         try {
             DB::beginTransaction();
+
+                switch ($request->propierty) {
+                    case 1:
+                        $propierty = Product::ALIMENTACION;
+                        break;
+                    case 2:
+                        $propierty = Product::GRATUIDAD;
+                        break;
+                    case 3:
+                        $propierty = Product::UTILES;
+                        break;
+                    default:
+                }
                 $data = $request->all();
+                $data['propierty'] = $propierty;
 
                 $existe = Product::where([
                     ['name', '=', $request->name],
@@ -149,14 +164,17 @@ class ProductController extends ApiController
             DB::beginTransaction();
                 $data = $request->all();
 
-                /*$existe = Product::where([
-                    ['name', '=', $request->name],
-                    ['categories_id', '=', $request->categories_id],
-                    ['presentations_id', '=', $request->presentations_id],
-                ])->first();
+                if($product->name != $request->name || $product->categories_id != $request->categories_id || $product->presentations_id != $request->presentations_id)
+                {
+                    $existe = Product::where([
+                        ['name', '=', $request->name],
+                        ['categories_id', '=', $request->categories_id],
+                        ['presentations_id', '=', $request->presentations_id],
+                    ])->first();
+                }
                 
                 if(!is_null($existe))
-                    return $this->errorResponse('El producto que trata de ingresar ya existe.',403);*/
+                    return $this->errorResponse('El producto que trata de ingresar ya existe.',403);
 
                 $product->name = $request->name;
                 $product->categories_id = $request->categories_id;

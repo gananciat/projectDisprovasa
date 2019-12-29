@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sistema;
 
 use App\User;
 use App\Models\Rol;
+use App\Models\Order;
 use App\Models\Person;
 use App\Models\School;
 use App\Models\PhonePerson;
@@ -11,12 +12,12 @@ use App\Models\PhoneSchool;
 use Illuminate\Support\Str;
 use App\Models\PersonSchool;
 use Illuminate\Http\Request;
+use App\Models\SchoolPresident;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
-use App\Models\Order;
 
 class SchoolController extends ApiController
 {
@@ -72,13 +73,15 @@ class SchoolController extends ApiController
         $rules = [
             'municipalities_id' => 'required|integer|exists:municipalities,id',
             'name' => 'required|string|max:200|unique:schools,name',
-            'logo' => 'required|string',
+            'bill' => 'required|string|max:200|unique:schools,bill',
             'direction' => 'required|string|max:200',
             'nit' => 'required|string|max:15|unique:schools,nit',
             'code_high_school' => 'nullable|string|max:20',
             'code_primary' => 'nullable|string|max:20',
             'phone_school.number.*' => 'required|digits_between:8,8',
             'phone_school.companies_id.*' => 'required|integer|exists:companies,id',
+
+            'president' => 'required|boolean',
 
             'cui' => 'required|digits_between:13,15|unique:people,cui',
             'name_one' => 'required|string|max:25',
@@ -98,35 +101,34 @@ class SchoolController extends ApiController
 
         try {
             DB::beginTransaction();
-                $data = $request->all();
-
-                if(!is_null(School::where('code_high_school',$data->code_high_school)->first()) && $data->code_high_school != null)
+                if(!is_null(School::where('code_high_school',$request->code_high_school)->first()) && $request->code_high_school != null)
                     return $this->errorResponse('El cóigo de preprimaria ya existe registrado.',403);
 
-                if(!is_null(School::where('code_primary',$data->code_primary)->first()) && $data->code_primary != null)
+                if(!is_null(School::where('code_primary',$request->code_primary)->first()) && $request->code_primary != null)
                     return $this->errorResponse('El cóigo de primaria ya existe registrado.',403);
 
                 $insert = new School();
-                $insert->municipalities_id = $data->municipalities_id;
-                $insert->name = $data->name;
-                $insert->logo = $data->logo;
-                $insert->direction = $data->direction;
-                $insert->nit = $data->nit;
-                $insert->code_high_school = $data->code_high_school;
-                $insert->code_primary = $data->code_primary;
+                $insert->municipalities_id = $request->municipalities_id;
+                $insert->name = $request->name;
+                $insert->bill = $request->bill;
+                //$insert->logo = $request->logo;
+                $insert->direction = $request->direction;
+                $insert->nit = $request->nit;
+                $insert->code_high_school = $request->code_high_school;
+                $insert->code_primary = $request->code_primary;
                 $insert->people_id = Auth::user()->people_id;
                 $insert->current = true;
                 $insert->save();
 
-                for ($i=0; $i < count($data->phone_school); $i++) { 
+                for ($i=0; $i < count($request->phone_school); $i++) { 
                     $insert_phone_school = new PhoneSchool();
-                    $insert_phone_school->number = $data->phone_school[$i]['number'];
-                    $insert_phone_school->companies_id = $data->phone_school[$i]['companies_id'];
+                    $insert_phone_school->number = $request->phone_school[$i]['number'];
+                    $insert_phone_school->companies_id = $request->phone_school[$i]['companies_id'];
                     $insert_phone_school->schools_id = $insert->id;
                     $insert_phone_school->save();
                 }
 
-                $insert_people = Person::where('cui',$data->cui)->first();
+                $insert_people = Person::where('cui',$request->cui)->first();
 
                 if(is_null($insert_people)) {
                     $insert_people = new Person();
@@ -134,30 +136,39 @@ class SchoolController extends ApiController
                     PhonePerson::where('people_id',$insert_people->id)->delete();
                 }
 
-                $insert_people->cui = $data->cui;
-                $insert_people->name_one = $data->name_one;
-                $insert_people->name_two = $data->name_two;
-                $insert_people->last_name_one = $data->last_name_one;
-                $insert_people->last_name_two = $data->last_name_two;
-                $insert_people->direction = $data->direction_people;
-                $insert_people->email = $data->email;
-                $insert_people->municipalities_id = $data->municipalities_id_people;
+                $insert_people->cui = $request->cui;
+                $insert_people->name_one = $request->name_one;
+                $insert_people->name_two = $request->name_two;
+                $insert_people->last_name_one = $request->last_name_one;
+                $insert_people->last_name_two = $request->last_name_two;
+                $insert_people->direction = $request->direction_people;
+                $insert_people->email = $request->email;
+                $insert_people->municipalities_id = $request->municipalities_id_people;
                 $insert_people->save();
 
-                for ($i=0; $i < count($data->phone_people); $i++) { 
+                for ($i=0; $i < count($request->phone_people); $i++) { 
                     $insert_phone_people = new PhonePerson();
-                    $insert_phone_people->number = $data->phone_people[$i]['number'];
-                    $insert_phone_people->companies_id = $data->phone_people[$i]['companies_id'];
+                    $insert_phone_people->number = $request->phone_people[$i]['number'];
+                    $insert_phone_people->companies_id = $request->phone_people[$i]['companies_id'];
                     $insert_phone_people->people_id = $insert_people->id;
                     $insert_phone_people->save();
                 }
 
                 $asignar_persona_escuela = new PersonSchool();
-                $asignar_persona_escuela->type_person = $data->type_person;
+                $asignar_persona_escuela->type_person = $request->type_person;
                 $asignar_persona_escuela->current = true;
                 $asignar_persona_escuela->schools_id = $insert->id;
                 $asignar_persona_escuela->people_id = $insert_people->id;
                 $asignar_persona_escuela->save();
+
+                if($request->president == true) 
+                {
+                    $asignar_presidente_escuela = new SchoolPresident();
+                    $asignar_presidente_escuela->current = true;
+                    $asignar_presidente_escuela->schools_id = $insert->id;
+                    $asignar_presidente_escuela->people_id = $insert_people->id;
+                    $asignar_presidente_escuela->save(); 
+                }
 
                 $insert_user = User::where('people_id',$insert_people->id)->first();
 
@@ -165,14 +176,16 @@ class SchoolController extends ApiController
                     $insert_user = new User();
                 }
 
+                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+                $password = $this->generarPassword(16);
                 $insert_user->email = $insert_people->email;
-                $insert_user->password = Hash::make($this->generarPassword(16));
+                $insert_user->password = $password;
                 $insert_user->remember_token = Str::random(20);
                 $insert_user->verified = User::USUARIO_NO_VERIFICADO;
                 $insert_user->verification_token = User::generarVerificationToken();
                 $insert_user->admin = User::USUARIO_REGULAR;
                 $insert_user->people_id = $insert_people->id;
-                $insert_user->rols_id = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+                $insert_user->rols_id = $rol->id;
                 $insert_user->save();                
 
             DB::commit();
@@ -196,8 +209,8 @@ class SchoolController extends ApiController
             'municipality.departament',
             'person',
             'phons.company',
-            'people.user',
-            'people.municipality.departament')
+            'people.person.municipality.departament',
+            'people.person.user.rol')
             ->where('id',$school->id)
             ->get());
     }
@@ -229,7 +242,7 @@ class SchoolController extends ApiController
         $rules = [
             'municipalities_id' => 'required|integer|exists:municipalities,id',
             'name' => 'required|string|max:200|unique:schools,name,'.$school->id,
-            'logo' => 'required|string',
+            'bill' => 'required|string|max:200|unique:schools,bill,'.$school->id,
             'direction' => 'required|string|max:200',
             'nit' => 'required|string|max:15|unique:schools,nit,'.$school->id,
             'code_high_school' => 'nullable|string|max:20',
@@ -249,13 +262,12 @@ class SchoolController extends ApiController
 
                 $school->municipalities_id = $request->municipalities_id;
                 $school->name = $request->name;
-                $school->logo = $request->logo;
+                $school->bill = $request->bill;
                 $school->direction = $request->direction;
                 $school->nit = $request->nit;
                 $school->code_high_school = $request->code_high_school;
                 $school->code_primary = $request->code_primary;
                 $school->people_id = Auth::user()->people_id;
-                $school->current = true;
 
                 if (!$school->isDirty()) {
                     return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);

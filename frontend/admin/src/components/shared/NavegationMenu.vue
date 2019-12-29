@@ -126,10 +126,11 @@ export default {
         icon: "cog",
         text: "Administración",
         children: [
-          { icon: "circle-o", text: "Categorias", path: "/category" },
-          { icon: "circle-o", text: "Compañias", path: "/company" },
-          { icon: "circle-o", text: "Presentaciones", path: "/presentation" },
-          { icon: "circle-o", text: "productos", path: "/product" },
+          { icon: "circle-o", text: "Categorías", path: "/category" },
+          { icon: "circle-o", text: "Companias", path: "/company" },
+          { icon: "circle-o", text: "Marcas", path: "/presentation" },
+          { icon: "circle-o", text: "Productos", path: "/product" },
+          { icon: "circle-o", text: "Escuelas", path: "/school" },
         ]
       },
       

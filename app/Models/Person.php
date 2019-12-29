@@ -49,12 +49,12 @@ class Person extends Model
 
     public function municipality()
     {
-        return $this->hasOne(Municipality::class);
+        return $this->belongsTO(Municipality::class,'municipalities_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class,'people_id');
     }
 
     public function school()
@@ -69,7 +69,7 @@ class Person extends Model
 
     public function schools()
     {
-        return $this->belongsToMany(School::class)->using(PersonSchool::class);        
+        return $this->belongsTo(PersonSchool::class);        
     }
 
     public function school_president()

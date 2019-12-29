@@ -51,76 +51,28 @@ class SchoolPresidentController extends ApiController
     {
         $messages = [
             'schools_id.exists'    => 'Debe de seleccionar la menos una escuela.',
-            'cui'    => 'El número de DPI debe de tener entre :min y :max digitos.',
-            'municipalities_id_people.exists'    => 'Debe de seleccionar la menos un municipio para la persona.',
+            'schools_id.exists'    => 'Debe de seleccionar la menos una escuela.',
         ];
 
         $rules = [
             'schools_id' => 'required|integer|exists:schools,id',
-            'cui' => 'required|digits_between:13,15|unique:people,cui',
-            'name_one' => 'required|string|max:25',
-            'name_two' => 'nullable|string|max:50',
-            'last_name_one' => 'required|string|max:25',
-            'last_name_two' => 'nullable|string|max:50',
-            'direction_people' => 'required|string|max:200',
-            'email' => 'required|email|max:125|unique:people,email',
-            'municipalities_id_people' => 'required|integer|exists:municipalities,id',
+            'people_id' => 'required|integer|exists:people,id',
         ];
         
         $this->validate($request, $rules, $messages);
 
         try {
             DB::beginTransaction();
-                $data = $request->all();
-
-                $insert = Person::where('cui',$data->cui)->first();
-
-                if(is_null($insert)) {
-                    $insert = new Person();
-                } 
-
-                $insert->cui = $data->cui;
-                $insert->name_one = $data->name_one;
-                $insert->name_two = $data->name_two;
-                $insert->last_name_one = $data->last_name_one;
-                $insert->last_name_two = $data->last_name_two;
-                $insert->direction = $data->direction_people;
-                $insert->email = $data->email;
-                $insert->municipalities_id = $data->municipalities_id_people;
-                $insert->save();
-
-                $existe_asignacion = SchoolPresident::where('people_id',$insert->id)->where('current',true)->get();
-
-                foreach ($existe_asignacion as $key => $value) {
-                    $value->current = false;
-                    $value->save();
-                }
 
                 $asignar_persona_escuela = new SchoolPresident();
                 $asignar_persona_escuela->current = true;
-                $asignar_persona_escuela->schools_id = $data->schools_id;
-                $asignar_persona_escuela->people_id = $insert->id;
-                $asignar_persona_escuela->save();
-
-                $insert_user = User::where('people_id',$insert->id)->first();
-
-                if(is_null($insert_user)) {
-                    $insert_user = new User();
-                }
-
-                $insert_user->email = $insert->email;
-                $insert_user->password = Hash::make($this->generarPassword(16));
-                $insert_user->remember_token = Str::random(20);
-                $insert_user->verified = User::USUARIO_NO_VERIFICADO;
-                $insert_user->verification_token = User::generarVerificationToken();
-                $insert_user->admin = User::USUARIO_REGULAR;
-                $insert_user->people_id = $insert->id;
-                $insert_user->rols_id = Rol::select('id')->where('name',Rol::ROL_PRESIDENTE)->first();
-                $insert_user->save();                
+                $asignar_persona_escuela->schools_id = $request->schools_id;
+                $asignar_persona_escuela->people_id = $request->people_id;
+                $asignar_persona_escuela->save();              
 
             DB::commit();
 
-            return $this->showOne($insert,201);
+            return $this->showOne($asignar_persona_escuela,201);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->errorResponse($e->getMessage(),403);
@@ -173,17 +125,12 @@ class SchoolPresidentController extends ApiController
         try {
             DB::beginTransaction();
 
-                $school_president->current = false;
+                if($school_president->current != false)
+                    $school_president->current = false;
+                else
+                    $school_president->current = true;
+                    
                 $school_president->save();
-
-                $insert_user = User::where('people_id',$school_president->people_id)->first();
-
-                $insert_user->password = Hash::make($this->generarPassword(16));
-                $insert_user->remember_token = Str::random(20);
-                $insert_user->verified = User::USUARIO_NO_VERIFICADO;
-                $insert_user->verification_token = User::generarVerificationToken();
-                $insert_user->admin = User::USUARIO_REGULAR;
-                $insert_user->save();    
 
             DB::commit();
 
