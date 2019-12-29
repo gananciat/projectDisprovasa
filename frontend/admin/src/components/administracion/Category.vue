@@ -1,40 +1,13 @@
 <template>
 <div v-loading="loading">
-    <!-- Modal para nuevo registro -->
-  <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-    <form>
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" class="form-control" placeholder="nombre"
-          name="name"
-          v-model="form.name"
-          data-vv-as="nombre"
-          v-validate="'required'"
-         :class="{'input':true,'has-errors': errors.has('name')}">
-         <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-        </div>
-        <div class="form-group">
-            <label>Descripción</label>
-          <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
-        </div>
-        <div class="row">
-          <!-- /.col -->
-          <div class="col-12 text-right">
-             <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-             <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-  </b-modal>
-
   <div class="content-wrapper">
+
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorias de productos</h1> 
+            <h1 class="m-0 text-dark">Categorías de productos</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -44,12 +17,41 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
+
+        <!-- Modal para nuevo registro -->
+        <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
+          <form>
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" class="form-control" placeholder="nombre"
+                name="name"
+                v-model="form.name"
+                data-vv-as="nombre"
+                v-validate="'required'"
+              :class="{'input':true,'has-errors': errors.has('name')}">
+              <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
+              </div>
+              <div class="form-group">
+                  <label>Descripción</label>
+                <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
+              </div>
+              <div class="row">
+                <!-- /.col -->
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+                  <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+                <!-- /.col -->
+              </div>
+            </form>
+        </b-modal>
+
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorias 
+                  <h3 class="card-title">Lista de categorías 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -92,11 +94,11 @@
                         {{data.item.description}}
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)">
+                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -262,6 +264,7 @@ export default {
                         return
                     }
                   this.$toastr.success('registro eliminado con exito', 'exito')
+                  self.getAll()
                   self.close()
                 })
                 .catch(r => {});
@@ -273,12 +276,25 @@ export default {
     createOrEdit(){
       this.$validator.validateAll().then((result) => {
           if (result) {
+              self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
            }
       });
 
       let self = this
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+
+        Object.keys(self.form).forEach(function(key,index) {
+          
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
      //mapear datos a formulario
     mapData(data){

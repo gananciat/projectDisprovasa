@@ -10,6 +10,8 @@ class CreatePersonSchoolsTable extends Migration
     {
         Schema::create('person_schools', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('type_person');
+            $table->boolean('current')->default(1);
             $table->unsignedBigInteger('schools_id');
             $table->foreign('schools_id')->references('id')->on('schools');              
             $table->unsignedBigInteger('people_id');

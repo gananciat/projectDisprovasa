@@ -7,7 +7,6 @@ use App\Models\Rol;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -23,10 +22,10 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    protected $fillable = ['email', 'verified', 'verification_token', 'admin', 'people_id', 'rols_id'];
+    protected $fillable = ['email', 'verified', 'verification_token', 'admin', 'people_id', 'rols_id', 'current_school'];
 
     protected $hidden = [
-        'password', 'remember_token', 'verification_token'
+        'password', 'remember_token', 'verification_token',
     ];
     
     protected $casts = [];
@@ -56,11 +55,11 @@ class User extends Authenticatable
     
     public function people()
     {
-        return $this->hasOne(Person::class);
+        return $this->belongsTo(Person::class,'people_id');
     }
 
     public function rol()
     {
-        return $this->hasOne(Rol::class);
+        return $this->belongsTo(Rol::class,'rols_id');
     }
 }

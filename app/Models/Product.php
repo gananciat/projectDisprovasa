@@ -11,22 +11,34 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    const ALIMENTACION = 'ALIMENTACION';
+    const GRATUIDAD = 'GRATUIDAD';
+    const UTILES = 'UTILES';
+
     protected $table = 'products';
-    protected $fillable = ['name','categories_id','presentations_id'];
+    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty'];
+    
+    public function setNameAttribute($value) {
+        $this->attributes['name'] = mb_strtoupper($value);
+    }
+    
+    public function setPropiertyAttribute($value) {
+        $this->attributes['propierty'] = mb_strtoupper($value);
+    }
 
     public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class,'categories_id');
     }
 
     public function presentation()
     {
-        return $this->hasOne(Presentation::class);
+        return $this->belongsTo(Presentation::class,'presentations_id');
     }
 
     public function prices()
     {
-        return $this->hasMany(Price::class);
+        return $this->hasMany(Price::class,'products_id');
     }
 
     public function sentences()

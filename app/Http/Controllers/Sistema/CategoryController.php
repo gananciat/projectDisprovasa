@@ -23,7 +23,8 @@ class CategoryController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|string'
+            'name' => 'required|string|max:75|unique:categories,name',
+            'description' => 'nullable|string|max:250'
         ];
         
         $this->validate($request, $rules);
@@ -41,7 +42,8 @@ class CategoryController extends ApiController
     public function update(Request $request, Category $category)
     {
         $rules = [
-            'name' => 'required|string|unique:categories,name,' . $category->id,
+            'name' => 'required|string|max:75|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:250'
         ];
 
         $this->validate($request, $rules);
@@ -49,17 +51,17 @@ class CategoryController extends ApiController
         $category->name = $request->name;
         $category->description = $request->description;
 
-         if (!$category->isDirty()) {
+        if (!$category->isDirty()) {
             return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
         $category->save();
-        return $this->showOne($category);
+        return $this->showOne($category,201);
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return $this->showOne($category);
+        return $this->showOne($category,201);
     }
 }

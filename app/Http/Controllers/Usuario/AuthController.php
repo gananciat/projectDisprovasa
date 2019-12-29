@@ -28,7 +28,7 @@ class AuthController extends Controller
 
         $http = new Client();
 
-        $response = $http->post('http://www.project.com/oauth/token', [
+        $response = $http->post(config('app.server_auth').'/oauth/token', [
             'form_params' => [
                 'grant_type' => 'password',
                 'client_id' => config('services.passport.client_id'),
@@ -39,9 +39,9 @@ class AuthController extends Controller
             ],
         ]);
 
-        return json_decode((string) $response->getBody(), true);
+        //return json_decode((string) $response->getBody(), true);
 
-       /* if (!Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Usuario o contraseña incorrectos'], 401);
         }
@@ -62,7 +62,7 @@ class AuthController extends Controller
             'expires_at'   => Carbon::parse(
                 $tokenResult->token->expires_at)
                     ->toDateTimeString(),
-        ]);*/
+        ]);
     }
 
     //cerrar session

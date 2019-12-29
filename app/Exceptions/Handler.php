@@ -39,6 +39,8 @@ class Handler extends ExceptionHandler
 
     public function render($request, Exception $exception)
     {
+        dd($exception);
+        
         if($exception->getCode() === 401){
             return $this->errorResponse("Usuario o contraseña incorrectos", 401);
         }
@@ -153,13 +155,8 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception)
     {
-        if($this->isFrontend($request))
-        {
-            return $request->ajax() ? response()->json($exception->errors(), 422) : 
-                                      redirect()->back()->withInput($request->input())->withErrors($exception->errors());
-        }
-
-        return $this->errorResponse($exception->errors(), $exception->status);
+        return $request->ajax() ? response()->json($exception->errors(), 422) : 
+        redirect()->back()->withInput($request->input())->withErrors($exception->errors());
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)

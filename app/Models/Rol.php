@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rol extends Model
 {
+    const ROL_PRESIDENTE = 'PRESIDENTE';
+
     protected $table = 'rols';
     protected $fillable = ['name','administrative'];
 
@@ -23,6 +25,6 @@ class Rol extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class)->using(MenuRol::class);   
+        return $this->belongsTo(User::class);   
     }
 }

@@ -25,6 +25,7 @@
         </div>
         <div class="form-group has-feedback">
           <input 
+            @keypress.enter="beforeLogin"
             type="password" 
             name="contraseña"
             class="form-control" 
