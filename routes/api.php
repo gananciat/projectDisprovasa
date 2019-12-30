@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::name('login')->post('auth/login', 'Usuario\AuthController@login');
 Route::name('logout')->get('auth/logout', 'Usuario\AuthController@logout');
 Route::name('me')->get('auth/me', 'Usuario\AuthController@user');
+Route::name('me_eschool')->get('auth/me_school', 'Usuario\AuthController@userEschool');
+
+Route::name('login_escuela')->post('auth/login_escuela', 'Usuario\AuthController@loginEscuela');
 
 
 //Route::resource('users', 'User\UserController', ['except' => ['create', 'edit']]);

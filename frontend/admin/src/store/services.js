@@ -17,7 +17,7 @@ import PriceService from '../services/PriceService'
 import SchoolService from '../services/SchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://sistematio.test:8081/' //base url desarrollo
+let baseUrl = 'http://www.project.com/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration

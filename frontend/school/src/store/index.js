@@ -12,6 +12,7 @@ const state = {
     usuario: {},
     token: null,
     is_login: false,
+    school: {},
     token_expired: null,
     client_id: 2,
     base_url: 'http://www.project.com/',
@@ -20,7 +21,8 @@ const state = {
 
 const mutations = {
     setUser(state, usuario) {
-        state.usuario = usuario
+        state.usuario = usuario.user
+        state.school = usuario.school
     },
 
     setToken(state, token) {
@@ -67,7 +69,7 @@ const actions = {
 
     setUser({ commit }, user) {
         commit('setUser', user)
-    },
+    }
 }
 
 export default new Vuex.Store({

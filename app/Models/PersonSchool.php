@@ -21,11 +21,11 @@ class PersonSchool extends Model
 
     public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class,'schools_id');
     }
 
     public function person()
     {
-        return $this->belongsTO(Person::class,'people_id');
+        return $this->belongsTo(Person::class,'people_id');
     }
 }

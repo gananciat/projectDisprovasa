@@ -3,7 +3,7 @@
 <body class="hold-transition login-page" style="height: 100%">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Sistema</b>Dispro</a>
+    <a href="#"><b>Sistema</b> escuela</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

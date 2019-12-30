@@ -50,10 +50,10 @@ module.exports = {
   
   build: {
     // Template for index.html
-    index: path.resolve(__dirname,'../../../resources/views/home.blade.php'),
+    index: path.resolve(__dirname,'../../../resources/views/escuela.blade.php'),
 
     // Paths
-     assetsRoot: path.resolve(__dirname,'../../../public/bundle'),
+     assetsRoot: path.resolve(__dirname,'../../../public/bundle2'),
 
     // Template for index.html
     /*index: path.resolve('../../../xampp/htdocs/spa-vue/index.html'),

@@ -72,6 +72,11 @@ class Person extends Model
         return $this->belongsTo(PersonSchool::class);        
     }
 
+    public function current_school()
+    {
+        return $this->hasOne(PersonSchool::class,'people_id')->where('current',true);        
+    }
+
     public function school_president()
     {
         return $this->belongsTo(SchoolPresident::class);
