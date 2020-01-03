@@ -46,8 +46,8 @@ const routes = [
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
 
     /* ROUTER SCHOOL */
-    { path: '/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/management/order/new', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({

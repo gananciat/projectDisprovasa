@@ -14,409 +14,111 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
+            
             <div class="card">
               <div class="card-header border-0">
-                <h3 class="card-title">Nueva escuela</h3>
+                <h3 class="card-title">Aregar nuevo pedido de alimentación</h3>
               </div>
               <div class="card-body">
                 <div class="row">
-<form>                
-  <hr>
-  <div class="col-md-12 col-sm-12">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <h3>Datos de la escuela</h3>
-      </div>
-      <div class="col-md-12 col-sm-12">
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" class="form-control" placeholder="nombre"
-          name="name"
-          v-model="form.name"
-          data-vv-as="nombre"
-          v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('name')}">
-          <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-        </div>
-      </div>
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>NIT</label>
-          <input type="text" class="form-control" placeholder="nit"
-          name="nit"
-          v-model="form.nit"
-          data-vv-as="nit"
-          v-validate="'required|max:13|max:7'"
-          :class="{'input':true,'has-errors': errors.has('nit')}">
-          <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>Código Primaria</label>
-          <input type="text" class="form-control" placeholder="código primaria"
-          name="code_primary"
-          v-model="form.code_primary"
-          data-vv-as="código primaria"
-          v-validate="'required|max:24'"
-          :class="{'input':true,'has-errors': errors.has('code_primary')}">
-          <FormError :attribute_name="'code_primary'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>Código Preprimaria</label>
-          <input type="text" class="form-control" placeholder="código preprimaria"
-          name="code_high_school"
-          v-model="form.code_high_school"
-          data-vv-as="código preprimaria"
-          v-validate="'required|max:24'"
-          :class="{'input':true,'has-errors': errors.has('code_high_school')}">
-          <FormError :attribute_name="'code_high_school'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
-
-      <div class="col-md-12 col-sm-12">
-        <div class="form-group">
-          <label>Nombre Factura</label>
-          <input type="text" class="form-control" placeholder="nombre a facturar"
-          name="bill"
-          v-model="form.bill"
-          data-vv-as="nombre a facturar"
-          v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('bill')}">
-          <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
-        </div>
-      </div>  
-
-      <div class="col-md-5 col-sm-12">
-        <div class="form-group">
-          <label>Municipio</label>
-          <multiselect v-model="form.municipalities_id"
-              v-validate="'required'" 
-              data-vv-name="municipalities_id"
-              data-vv-as="municipio"
-              :options="municipalities" placeholder="seleccione municipio"  
-              :searchable="true"
-              :allow-empty="false"
-              :show-labels="false"
-              label="name" track-by="id">
-              <span slot="noResult">No se encontro ningún registro</span>
-              </multiselect>
-              <FormError :attribute_name="'municipalities_id'" :errors_form="errors"> </FormError>
-        </div>
-      </div>
-
-      <div class="col-md-7 col-sm-12">
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" class="form-control" placeholder="dirección"
-          name="direction"
-          v-model="form.direction"
-          data-vv-as="dirección"
-          v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('direction')}">
-          <FormError :attribute_name="'direction'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
+                  <div class="col-md-12 col-sm-12">
+                    <div class="card card-primary card-tabs">
+                      <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                          <li class="nav-item">
+                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Datos de la escula</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="card-body">
+<form> 
+  <div class="tab-content" id="custom-tabs-one-tabContent">
+    <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur. 
     </div>
-  </div>
-  <hr>
-  <div class="col-md-12 col-sm-12">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <h3>Número de teléfono de la escuela</h3>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-              <label>Número de Teléfono</label>
-              <input type="text" class="form-control" placeholder="número de teléfono"
-              name="number_phone_school"
-              v-model="number_phone_school"
-              data-vv-as="número de teléfono"
-              v-validate="'required|numeric|min:8|max:8'"
-              :class="{'input':true,'has-errors': errors.has('number_phone_school')}">
-              <FormError :attribute_name="'number_phone_school'" :errors_form="errors"> </FormError>
-            </div>
-          </div>           
-          <div class="col-md-12 col-sm-12">            
-            <div class="form-group">
-              <label>Compania</label>
-              <multiselect v-model="companies_id_phone_school"
-                  v-validate="'required'" 
-                  data-vv-name="companies_id_phone_school"
-                  data-vv-as="compania"
-                  :options="companies" placeholder="seleccione compania"  
-                  :searchable="true"
-                  :allow-empty="false"
-                  :show-labels="false"
-                  label="name" track-by="id">
-                  <span slot="noResult">No se encontro ningún registro</span>
-                  </multiselect>
-                  <FormError :attribute_name="'companies_id_phone_school'" :errors_form="errors"> </FormError>
-            </div>
-          </div>
-          <div class="col-md-12 col-sm-12 text-right">
-            <button type="button" class="btn btn-success btn-sm" @click="addPhoneSchool">Agregar teléfono</button>
-          </div>            
+
+    <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <h3>Pedido # </h3><h1><b>1</b></h1>
         </div>
-      </div>
-      <div class="col-md-8 col-sm-12">
-        <div class="table-responsive">
-          <table class="table table-bordered table-striped table-sm">
-            <thead>
-                <tr>
-                    <th>Número de Teléfono</th>
-                    <th>Compania</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody v-if="form.phone_school.length >= 1">
-              <template v-for="(item, index) in form.phone_school">
-                <tr v-bind:key="index">
-                    <td v-text="item.number"></td>
-                    <td v-text="item.name"></td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(index)">
-                          Quitar
-                        </button>
-                    </td>                    
-                </tr>
-              </template>
-            </tbody>            
-          </table>
+        <div class="col-md-8 col-sm-12">
+          <div class="row">
+            <div class="col-md-4 col-sm-12">
+              <div class="form-group">
+                <label>Cantidad</label>
+
+                <FormError :attribute_name="'number_phone_school'" :errors_form="errors"> </FormError>
+              </div>
+            </div>           
+            <div class="col-md-12 col-sm-12">            
+              <div class="form-group">
+                <label>Compania</label>
+                <multiselect v-model="companies_id_phone_school"
+                    v-validate="'required'" 
+                    data-vv-name="companies_id_phone_school"
+                    data-vv-as="compania"
+                    :options="companies" placeholder="seleccione compania"  
+                    :searchable="true"
+                    :allow-empty="false"
+                    :show-labels="false"
+                    label="name" track-by="id">
+                    <span slot="noResult">No se encontro ningún registro</span>
+                    </multiselect>
+                    <FormError :attribute_name="'companies_id_phone_school'" :errors_form="errors"> </FormError>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 text-right">
+              <button type="button" class="btn btn-success btn-sm" @click="addPhoneSchool">Agregar teléfono</button>
+            </div>     
+            &nbsp;
+            &nbsp;     
+          </div>
         </div>
-      </div>
-    </div>
-  </div>  
-  <hr>
-  <div class="col-md-12 col-sm-12">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <h3>Datos del Director o Presidente</h3>
-      </div>
-
-      <div class="col-md-8 col-sm-12">
-        <div class="row">
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>CUI</label>
-              <input type="text" class="form-control" placeholder="número de dpi"
-              name="cui"
-              v-model="form.cui"
-              data-vv-as="número de dpi"
-              v-validate="'required|numeric|min:13|max:13'"
-              :class="{'input':true,'has-errors': errors.has('cui')}">
-              <FormError :attribute_name="'cui'" :errors_form="errors"> </FormError>
-            </div>
-          </div>    
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>Correo Electrónico</label>
-              <input type="text" class="form-control" placeholder="correo electrónico"
-              name="email"
-              v-model="form.email"
-              data-vv-as="correo electrónico"
-              v-validate="'required|email|max:100'"
-              :class="{'input':true,'has-errors': errors.has('email')}">
-              <FormError :attribute_name="'email'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>Primer Nombre</label>
-              <input type="text" class="form-control" placeholder="primer nombre"
-              name="name_one"
-              v-model="form.name_one"
-              data-vv-as="primer nombre"
-              v-validate="'required|max:25'"
-              :class="{'input':true,'has-errors': errors.has('name_one')}">
-              <FormError :attribute_name="'name_one'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>Segundo Nombre</label>
-              <input type="text" class="form-control" placeholder="segundo nombre"
-              name="name_two"
-              v-model="form.name_two"
-              data-vv-as="segundo nombre"
-              v-validate="'max:25'"
-              :class="{'input':true,'has-errors': errors.has('name_two')}">
-              <FormError :attribute_name="'name_two'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>Primer Apellido</label>
-              <input type="text" class="form-control" placeholder="primer apellido"
-              name="last_name_one"
-              v-model="form.last_name_one"
-              data-vv-as="primer apellido"
-              v-validate="'required|max:25'"
-              :class="{'input':true,'has-errors': errors.has('last_name_one')}">
-              <FormError :attribute_name="'last_name_one'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-6 col-sm-12">
-            <div class="form-group">
-              <label>Segundo Apellido</label>
-              <input type="text" class="form-control" placeholder="segundo apellido"
-              name="last_name_two"
-              v-model="form.last_name_two"
-              data-vv-as="segundo apellido"
-              v-validate="'max:25'"
-              :class="{'input':true,'has-errors': errors.has('last_name_two')}">
-              <FormError :attribute_name="'last_name_two'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-              <label>Municipio</label>
-              <multiselect v-model="form.municipalities_id_people"
-                  v-validate="'required'" 
-                  data-vv-name="municipalities_id_people"
-                  data-vv-as="municipio"
-                  :options="municipalities" placeholder="seleccione municipio"  
-                  :searchable="true"
-                  :allow-empty="false"
-                  :show-labels="false"
-                  label="name" track-by="id">
-                  <span slot="noResult">No se encontro ningún registro</span>
-                  </multiselect>
-                  <FormError :attribute_name="'municipalities_id_people'" :errors_form="errors"> </FormError>
-            </div>
-          </div>
-
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-              <label>Dirección</label>
-              <input type="text" class="form-control" placeholder="dirección"
-              name="direction_people"
-              v-model="form.direction_people"
-              data-vv-as="dirección"
-              v-validate="'required|max:175'"
-              :class="{'input':true,'has-errors': errors.has('direction_people')}">
-              <FormError :attribute_name="'direction_people'" :errors_form="errors"> </FormError>
-            </div>
-          </div> 
-
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-              <label>Rol</label>
-              <multiselect v-model="form.type_person"
-                  v-validate="'required'" 
-                  data-vv-name="type_person"
-                  data-vv-as="rol"
-                  :options="type_persons" placeholder="seleccione el rol"  
-                  :searchable="true"
-                  :allow-empty="false"
-                  :show-labels="false"
-                  label="name" track-by="id">
-                  <span slot="noResult">No se encontro ningún registro</span>
-                  </multiselect>
-                  <FormError :attribute_name="'type_person'" :errors_form="errors"> </FormError>
-            </div>
-          </div>      
-
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-                <label></label>
-                <b-form-checkbox
-                v-model="form.president"
-                name="president"
-                >
-                ¿Los datos que está registrando, pertenecen a un presidente?
-                </b-form-checkbox>
-                <div class="text-right"><strong>{{ form.president ? 'Si es Presidente':'No es Presidente' }}</strong></div>
-            </div>
-          </div>
-
+        <div class="col-md-4 col-sm-12">
+          <b-jumbotron :header="'100.00'" lead="Total">
+          </b-jumbotron>         
         </div>
-      </div>
-      <div class="col-md-4 col-sm-12">
-        <div class="row">
-
-          <div class="col-md-12 col-sm-12">
-            <div class="form-group">
-              <label>Número de Teléfono</label>
-              <input type="text" class="form-control" placeholder="número de teléfono"
-              name="number_phone_person"
-              v-model="number_phone_person"
-              data-vv-as="número de teléfono"
-              v-validate="'required|numeric|min:8|max:8'"
-              :class="{'input':true,'has-errors': errors.has('number_phone_person')}">
-              <FormError :attribute_name="'number_phone_person'" :errors_form="errors"> </FormError>
-            </div>
-          </div>           
-          <div class="col-md-12 col-sm-12">            
-            <div class="form-group">
-              <label>Compania</label>
-              <multiselect v-model="companies_id_phone_person"
-                  v-validate="'required'" 
-                  data-vv-name="companies_id_phone_person"
-                  data-vv-as="compania"
-                  :options="companies" placeholder="seleccione compania"  
-                  :searchable="true"
-                  :allow-empty="false"
-                  :show-labels="false"
-                  label="name" track-by="id">
-                  <span slot="noResult">No se encontro ningún registro</span>
-                  </multiselect>
-                  <FormError :attribute_name="'companies_id_phone_person'" :errors_form="errors"> </FormError>
-            </div>
+        <div class="col-md-12 col-sm-12">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+              <thead>
+                  <tr>
+                      <th>Número de Teléfono</th>
+                      <th>Compania</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody v-if="form.phone_school.length >= 1">
+                <template v-for="(item, index) in form.phone_school">
+                  <tr v-bind:key="index">
+                      <td v-text="item.number"></td>
+                      <td v-text="item.name"></td>
+                      <td>
+                          <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(index)">
+                            Quitar
+                          </button>
+                      </td>                    
+                  </tr>
+                </template>
+              </tbody>            
+            </table>
           </div>
-          <div class="col-md-12 col-sm-12 text-right">
-            <button type="button" class="btn btn-success btn-sm" @click="addPhonePerson">Agregar teléfono</button>
-          </div>
-          <hr>
-          <div class="col-md-12 col-sm-12">
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                    <tr>
-                        <th>Número de Teléfono</th>
-                        <th>Compania</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody v-if="form.phone_people.length >= 1">
-                  <template v-for="(item, index) in form.phone_people">
-                    <tr v-bind:key="index">
-                        <td v-text="item.number"></td>
-                        <td v-text="item.name"></td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" @click="quitarPhonePerson(index)">
-                              Quitar
-                            </button>
-                        </td>                    
-                    </tr>
-                  </template>
-                </tbody>            
-              </table>
-            </div>
-          </div>
-
+        </div>
+        <hr>
+        <div class="col-md-12 col-sm-12 text-right">
+            <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-12 col-sm-12 text-right">
-    <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-  </div>  
 </form>
+                      </div>
+                    </div>                    
+                  </div>                
                 </div>
               </div>
             </div>
