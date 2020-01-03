@@ -32,10 +32,10 @@
     <ul class="navbar-nav ml-auto">
       <!-- Navbar dropdowns -->
       <b-nav-item-dropdown text="Gestionar Pedido" right>
-        <b-dropdown-item><router-link to="/management/order">Pedidos</router-link></b-dropdown-item>
-        <b-dropdown-item><router-link to="/management/order">Ordenar Alimentación</router-link></b-dropdown-item>
-        <b-dropdown-item><router-link to="/management/order">Ordenar Gratuidad</router-link></b-dropdown-item>
-        <b-dropdown-item><router-link to="/management/order">Ordenar Utiles</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link to="/school/management/order">Pedidos</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link :to="'/school/1/management/order/new/A'">Ordenar Alimentación</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link to="'/school/2/management/order/new/G'">Ordenar Gratuidad</router-link></b-dropdown-item>
+        <b-dropdown-item><router-link to="'/school/3/management/order/new/U'">Ordenar Utiles</router-link></b-dropdown-item>
       </b-nav-item-dropdown>
 
       <!-- Messages Dropdown Menu -->
