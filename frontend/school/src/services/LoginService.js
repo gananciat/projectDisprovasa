@@ -9,7 +9,7 @@ class LoginService {
 
     login(credentials) {
         let self = this
-        return self.axios.post(`${self.baseUrl}/login`,credentials)
+        return self.axios.post(`${self.baseUrl}/login_escuela`,credentials)
     }
 
     logout() {
@@ -19,7 +19,7 @@ class LoginService {
 
     me() {
         let self = this
-        return self.axios.get(`${self.baseUrl}/me`)
+        return self.axios.get(`${self.baseUrl}/me_school`)
     }
 }
 

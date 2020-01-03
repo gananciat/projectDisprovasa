@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
       <navHeader v-if="isLogin"></navHeader>
-       <navegationmenu v-if="isLogin"></navegationmenu>
+       <navegationmenu v-show="isLogin"></navegationmenu>
         <router-view></router-view>
 
     <!-- /.content-wrapper -->

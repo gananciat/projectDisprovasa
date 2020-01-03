@@ -6,7 +6,7 @@
     <a href="#/" class="brand-link">
       <img src="../../assets/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
-      <span class="brand-text font-weight-light">Sistema dispro</span>
+      <span class="brand-text font-weight-light">Escuela</span>
     </a>
 
     <!-- Sidebar -->
@@ -134,7 +134,10 @@ export default {
   computed: {
     userName(){
       let self = this
-      return self.$store.state.usuario.email
+      var people = self.$store.state.usuario.people
+      if(people !== undefined){
+        return people.name_one+' '+people.last_name_one
+      }
     }
   }
 };
