@@ -4,6 +4,7 @@ import services from './services'
 import moment from 'moment'
 import auth from '../auth'
 import Axios from 'axios'
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -13,16 +14,18 @@ const state = {
     token: null,
     is_login: false,
     school: {},
+    school_name: '',
     token_expired: null,
     client_id: 2,
-    base_url: 'http://www.project.com/',
-    client_secret: 'zI4D3xqzDj4hwijoDaOgimKpYuhr0j5veVN4GpO4'
+    base_url: 'http://sistemapro.test:8000/',
+    client_secret: 'HLTbGKzzRnN4zvWvZ0kNiRDZO0H2LKjukL9KtCwK'
 }
 
 const mutations = {
     setUser(state, usuario) {
         state.usuario = usuario.user
         state.school = usuario.school
+        state.school_name = state.school.school.name
     },
 
     setToken(state, token) {
@@ -62,12 +65,18 @@ const actions = {
         if (token) {
             commit('setToken', token)
             auth.getUser()
+            router.push('/')
         } else {
             commit('setState')
         }
     },
 
     setUser({ commit }, user) {
+        console.log(user)
+        var school = user.user.current_school
+        if(!school){
+            window.location.href = state.base_url
+        }
         commit('setUser', user)
     }
 }

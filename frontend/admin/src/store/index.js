@@ -4,24 +4,20 @@ import services from './services'
 import moment from 'moment'
 import auth from '../auth'
 import Axios from 'axios'
+import router from '../router'
 
 Vue.use(Vuex)
 
 const state = {
     services,
     usuario: {},
-    escuela: {},
+    escuela: false,
     token: null,
     is_login: false,
     token_expired: null,
     client_id: 2,
-<<<<<<< HEAD
-    base_url: 'http://sistematio.test:8081/',
-    client_secret: 'fhkZvpL8VHIoTvNMAxlSEnYvjHPsOYlCPOM67ZkR'
-=======
-    base_url: 'http://www.project.com/', 
-    client_secret: 'pZ3UNe0j5FK2ycf4agYumvZba4zU1vV2IDu3EYjK'
->>>>>>> e037831259fbbcc60287b1b61c7e879aa0261b07
+    base_url: 'http://sistemapro.test:8000/',
+    client_secret: 'HLTbGKzzRnN4zvWvZ0kNiRDZO0H2LKjukL9KtCwK'
 }
 
 const mutations = {
@@ -66,12 +62,17 @@ const actions = {
         if (token) {
             commit('setToken', token)
             auth.getUser()
+            router.push('/')
         } else {
             commit('setState')
         }
     },
 
     setUser({ commit }, user) {
+        var school = user.current_school
+        if(school){
+            window.location.href = state.base_url+'/escuela'
+        }
         commit('setUser', user)
     },
 }

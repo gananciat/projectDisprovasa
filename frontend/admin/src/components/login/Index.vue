@@ -1,6 +1,6 @@
 <template>
 
-<body class="hold-transition login-page" style="height: 100%">
+<body class="login-page">
 <div class="login-box">
   <div class="login-logo">
     <a href="#"><b>Sistema</b>Dispro</a>

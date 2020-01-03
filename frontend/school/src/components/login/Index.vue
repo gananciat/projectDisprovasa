@@ -1,6 +1,6 @@
 <template>
 
-<body class="hold-transition login-page" style="height: 100%">
+<body class="login-page">
 <div class="login-box">
   <div class="login-logo">
     <a href="#"><b>Sistema</b> escuela</a>
@@ -47,7 +47,6 @@
   </div>
 </div>
 
-    <br><br><br><br><br><br><br>
 <!-- /.login-box -->
 </body>
 </template>
@@ -60,7 +59,6 @@ export default {
   components: {
       FormError
   },
-
   data(){
     return {
       credentials: {
@@ -69,10 +67,8 @@ export default {
       }
     }
   },
-
   created(){
     let self = this
-
   },
   methods: {
       login(){
@@ -90,10 +86,8 @@ export default {
             self.$router.push('/')
             auth.getUser()
         }).catch(e => {
-
         })
         },
-
         beforeLogin(){
           let self = this
           self.$validator.validateAll().then((result) => {
@@ -102,7 +96,6 @@ export default {
               }
           });
         }
-
   },
   mounted(){
         $("body").resize()

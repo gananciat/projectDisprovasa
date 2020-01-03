@@ -13,6 +13,7 @@ Vue.use(Router)
 //validar authenticacion
 const isLoggedIn = (to, from, next) => {
   //validar si es usuario escuela
+  var user = store.state.usuario
   return store.state.is_login ? next() : next('/login')
 }
 

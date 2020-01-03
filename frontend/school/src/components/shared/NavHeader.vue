@@ -1,13 +1,13 @@
 <template>
   <div>
-  <nav class="main-header navbar navbar-expand bg-primary navbar-light border-bottom">
+  <nav class="main-header navbar navbar-expand text-sm navbar-dark navbar-primary">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="#/" class="nav-link">{{getSchoolName}}</a>
+        <a href="#/" class="nav-link"><h5>{{ getSchoolName }}</h5></a>
       </li>
     </ul>
 
@@ -153,11 +153,14 @@ export default {
   computed: {
     getSchoolName(){
       let self = this
-      var school = self.$store.state.school.school
-      if(school !== undefined){
-        return school.name
-      }
+      return self.$store.state.school_name
     }
   }
 }
 </script>
+
+<style>
+.navbar-dark .navbar-nav .nav-link {
+    color: #f8f9fa;
+}
+</style>

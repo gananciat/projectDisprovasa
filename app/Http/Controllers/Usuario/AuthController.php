@@ -163,4 +163,9 @@ class AuthController extends Controller
             'school' => $school
         ]);
     }
+
+    //validar si es escuela
+    public function isSchool(){
+        
+    }
 }

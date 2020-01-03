@@ -52,6 +52,8 @@
                   <canvas id="visitors-chart" height="200"></canvas>
                 </div>
 
+                
+
                 <div class="d-flex flex-row justify-content-end">
                   <span class="mr-2">
                     <i class="fa fa-square text-primary"></i> This Week
