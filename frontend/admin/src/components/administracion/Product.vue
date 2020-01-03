@@ -379,7 +379,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.companyService
+              self.$store.state.services.productService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -410,9 +410,7 @@ export default {
     //pasar a mayusculas
     pasarMayusculas(){
         let self = this
-
         Object.keys(self.form).forEach(function(key,index) {
-          
           if(typeof self.form[key] === "string") 
             self.form[key] = self.form[key].toUpperCase()
 
