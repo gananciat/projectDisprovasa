@@ -71,7 +71,7 @@ const actions = {
     setUser({ commit }, user) {
         var school = user.current_school
         if(school){
-            window.location.href = state.base_url+'/escuela'
+            window.location.href = state.base_url+'escuela'
         }
         commit('setUser', user)
     },
