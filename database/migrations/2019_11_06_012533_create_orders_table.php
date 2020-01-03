@@ -14,7 +14,7 @@ class CreateOrdersTable extends Migration
             $table->string('title');
             $table->string('description')->nullable();
             $table->date('date');
-            $table->decimal('total',12,2);
+            $table->decimal('total',12,2)->default(0);
             $table->unsignedBigInteger('schools_id');
             $table->foreign('schools_id')->references('id')->on('schools');
             $table->unsignedBigInteger('people_id');

@@ -107,9 +107,9 @@
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Lista de productos 
-                    <b-button variant="success" @click="open(1,'Alimentación')" size="sm"><i class="fa fa-plus"></i> alimentación</b-button>
-                    <b-button variant="success" @click="open(2,'Gratuidad')" size="sm"><i class="fa fa-plus"></i> gratuidad</b-button>
-                    <b-button variant="success" @click="open(3,'Utiles')" size="sm"><i class="fa fa-plus"></i> utiles</b-button>
+                    <b-button variant="success" @click="open('1','Alimentación')" size="sm"><i class="fa fa-plus"></i> alimentación</b-button>
+                    <b-button variant="success" @click="open('2','Gratuidad')" size="sm"><i class="fa fa-plus"></i> gratuidad</b-button>
+                    <b-button variant="success" @click="open('3','Utiles')" size="sm"><i class="fa fa-plus"></i> utiles</b-button>
                   </h3>
                 </div>
               </div>

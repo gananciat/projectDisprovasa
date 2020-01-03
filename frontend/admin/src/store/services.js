@@ -8,6 +8,8 @@ import { isNullOrUndefined } from 'util';
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
+import YearService from '../services/YearService'
+import MonthService from '../services/MonthService'
 import CategoryService from '../services/CategoryService'
 import MunicipalityService from '../services/MunicipalityService'
 import CompanyService from '../services/CompanyService'
@@ -15,6 +17,12 @@ import PresentationService from '../services/PresentationService'
 import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
 import SchoolService from '../services/SchoolService'
+
+
+/* IMPORT SCHOOL */
+import ReservationService from '../services/ReservationService'
+import OrderService from '../services/OrderService'
+import DetailOrderService from '../services/DetailOrderService'
 
 // Axios Configuration
 let baseUrl = 'http://sistematio.test:8081/' //base url desarrollo
@@ -70,11 +78,19 @@ instance.interceptors.response.use(response => {
 export default {
     exampleService: new exampleService(Axios),
     loginService: new loginService(Axios, baseUrl),
+    yearService: new YearService(Axios, baseUrl),
+    monthService: new MonthService(Axios, baseUrl),
     categoryService: new CategoryService(Axios, baseUrl),
     municipalityService: new MunicipalityService(Axios, baseUrl),
     companyService: new CompanyService(Axios, baseUrl),
     presentationService: new PresentationService(Axios, baseUrl),
     productService: new ProductService(Axios, baseUrl),
     priceService: new PriceService(Axios, baseUrl),
-    schoolService: new SchoolService(Axios, baseUrl)
+    schoolService: new SchoolService(Axios, baseUrl),
+
+    /* EXPORT SERVICE SCHOOL */
+    reservationService: new ReservationService(Axios, baseUrl),
+    orderService: new OrderService(Axios, baseUrl),
+    detailorderService: new DetailOrderService(Axios, baseUrl),
+
 }

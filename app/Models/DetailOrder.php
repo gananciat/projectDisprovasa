@@ -18,6 +18,10 @@ class DetailOrder extends Model
                            'complete','products_id','orders_id'];
     protected $dates = ['deleted_at'];
 
+    public function setObservationAttribute($valor) {
+        $this->attributes['observation'] = strtoupper($valor);    
+    }
+
     public function product()
     {
         return $this->hasOne(Product::class);

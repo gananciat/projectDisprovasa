@@ -17,6 +17,7 @@ use App\Imports\MunicipioImport;
 use App\Imports\AlimentacionImport;
 use App\Imports\DepartamentoImport;
 use App\Imports\EscuelaImport;
+use App\Models\OrderStatus;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -171,6 +172,21 @@ class DatabaseSeeder extends Seeder
         echo 'CUI: '.$insert_person->cui.'PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: ADMINISTRADOR'.PHP_EOL;  
     
     
-        Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');    
+        Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');  
+
+        $insert_order = new OrderStatus();
+        $insert_order->status = 'pedido';
+        $insert_order->save();  
+        echo 'ESTADO DE LA ORDEN: '.$insert_order->status.PHP_EOL;
+
+        $insert_order = new OrderStatus();
+        $insert_order->status = 'en proceso';
+        $insert_order->save();  
+        echo 'ESTADO DE LA ORDEN: '.$insert_order->status.PHP_EOL;
+
+        $insert_order = new OrderStatus();
+        $insert_order->status = 'completado';
+        $insert_order->save();  
+        echo 'ESTADO DE LA ORDEN: '.$insert_order->status.PHP_EOL;
     }
 }

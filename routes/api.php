@@ -33,11 +33,14 @@ Route::resource('phone_people', 'Sistema\PhonePersonController', ['except' => ['
 Route::resource('phone_schools', 'Sistema\PhoneSchoolController', ['except' => ['index', 'create', 'show', 'edit', 'update']]);
 Route::resource('presentations', 'Sistema\PresentationController', ['except' => ['create', 'edit']]);
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
-Route::resource('products', 'Sistema\ProductController', ['except' => ['edit']]);
+Route::resource('products', 'Sistema\ProductController', ['except' => ['create']]);
 Route::resource('products.prices', 'Sistema\ProductPriceController', ['except' => ['edit']]);
 Route::resource('schools', 'Sistema\SchoolController', ['except' => ['create', 'edit']]);
 Route::resource('school_presidents', 'Sistema\SchoolPresidentController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
+Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
+Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
+Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'show', 'edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

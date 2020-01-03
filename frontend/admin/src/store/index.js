@@ -16,7 +16,7 @@ const state = {
     token_expired: null,
     client_id: 2,
     base_url: 'http://sistematio.test:8081/',
-    client_secret: 'EtM9Fi3ZgGYyRhPfzWoFurah025oVgChe9XSaHSj'
+    client_secret: 'fhkZvpL8VHIoTvNMAxlSEnYvjHPsOYlCPOM67ZkR'
 }
 
 const mutations = {

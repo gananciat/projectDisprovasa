@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ProgressOrder extends Model
 {
     protected $table = 'progress_orders';
-    protected $fillable = ['purchased_amount','order_statuses_id','detail_orders_id'];
+    protected $fillable = ['purchased_amount','order_statuses_id',
+    'detail_orders_id','products_id','original_quantity'];
 }

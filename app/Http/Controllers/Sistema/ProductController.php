@@ -60,7 +60,7 @@ class ProductController extends ApiController
             'presentations_id' => 'required|integer|exists:presentations,id',
             'price' => 'required|numeric|between:0.01,100000',
             'camouflage' => 'required|boolean', 
-            'propierty' => 'required|integer'
+            //'propierty' => 'required|integer'
         ];
         
         $this->validate($request, $rules, $messages);
@@ -81,7 +81,7 @@ class ProductController extends ApiController
                     default:
                 }
                 $data = $request->all();
-                $data['propierty'] = $propierty;
+                $data['propierty'] = Product::ALIMENTACION;
 
                 $existe = Product::where([
                     ['name', '=', $request->name],
@@ -132,9 +132,12 @@ class ProductController extends ApiController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($product)
     {
-        //
+        $products = Product::with('category','presentation',['prices' => function ($query) {
+            $query->where('current', '=', true);
+        }])->where('propierty',mb_strtoupper($product))->get();
+        return $this->showAll($products);
     }
 
     /**

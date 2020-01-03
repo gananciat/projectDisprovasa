@@ -15,6 +15,18 @@ class Order extends Model
     protected $fillable = ['order','title','description','date','total','schools_id',
                            'people_id','months_id','years_id'];
 
+    public function setOrderAttribute($value) {
+        $this->attributes['order'] = mb_strtoupper($value);
+    }
+
+    public function setTitleAttribute($value) {
+        $this->attributes['title'] = mb_strtoupper($value);
+    }
+
+    public function setDescriptionAttribute($value) {
+        $this->attributes['description'] = mb_strtoupper($value);
+    }
+
     public function school()
     {
         return $this->hasOne(School::class);
