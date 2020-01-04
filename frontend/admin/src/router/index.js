@@ -11,6 +11,7 @@ import Company from '@/components/administracion/Company'
 import Presentation from '@/components/administracion/Presentation'
 import Product from '@/components/administracion/Product'
 import School from '@/components/administracion/School'
+import Order from '@/components/orders/Index'
 import InformationSchool from '@/components/administracion_escuela/InformationSchool'
 import NewSchool from '@/components/administracion_escuela/NewSchool'
 
@@ -42,6 +43,7 @@ const routes = [
     { path: '/presentation', name: 'Presentation', component: Presentation, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/product', name: 'Product', component: Product, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school', name: 'School', component: School, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/orders', name: 'Order', component: Order, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
 

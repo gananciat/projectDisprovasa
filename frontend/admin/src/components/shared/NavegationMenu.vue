@@ -133,6 +133,13 @@ export default {
           { icon: "circle-o", text: "Escuelas", path: "/school" },
         ]
       },
+      {
+        icon: "product-hunt",
+        text: "Pedidos",
+        children: [
+          { icon: "circle-o", text: "Listar", path: "/orders" }
+        ]
+      },
       
       {
         icon: "user",
