@@ -70,7 +70,7 @@ class OrderController extends ApiController
         $rules = [
             'order' => 'required|integer',
             'title' => 'required|string|max:125|unique:orders,title',
-            'description' => 'required|string|max:200',
+            'description' => 'required|string|max:1000',
             'date' => 'required|date',
             'detail_order.quantity.*' => 'required|numeric',
             'detail_order.sale_price.*' => 'required|numeric',

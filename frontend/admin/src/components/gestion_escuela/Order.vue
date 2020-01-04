@@ -1,7 +1,7 @@
 <template>
-<div v-loading="loading">
+<div>
 
-  <div class="content-wrapper">
+  <div class="content-wrapper" v-loading="loading">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">

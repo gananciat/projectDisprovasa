@@ -129,7 +129,10 @@ class Handler extends ExceptionHandler
                     break;    
                 case 42703:
                     $message = "No existe una o varias columnas en la BD y que están referenciadas en el modelo";
-                    break;                 
+                    break; 
+                case 1054:
+                    $message = "No se encuentra la columna en la tabla";
+                    break;                
                 default:
                     $message = "BD";
                     break;                                       

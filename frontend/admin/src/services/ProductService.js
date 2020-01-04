@@ -19,7 +19,7 @@ class productService {
 
     get(propierty) {
         let self = this;
-        return self.axios.get(`${self.baseUrl}/${propierty}`);
+        return self.axios.get(`${self.baseUrl}/${propierty}/edit`);
     }
 
     create(data) {

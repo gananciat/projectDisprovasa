@@ -10,11 +10,12 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('order')->unique();
+            $table->string('order')->unique();
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->string('description',1000)->nullable();
             $table->date('date');
             $table->decimal('total',12,2)->default(0);
+            $table->boolean('complete')->default(0);
             $table->unsignedBigInteger('schools_id');
             $table->foreign('schools_id')->references('id')->on('schools');
             $table->unsignedBigInteger('people_id');

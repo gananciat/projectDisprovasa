@@ -37,9 +37,14 @@ class ReservationController extends ApiController
      */
     public function store(Request $request)
     {
-        $numero_actual = Reservation::where('year',date('Y'))->last();
+        $numero_actual = Reservation::where('year',date('Y'))->get()->last();
+        if(is_null($numero_actual))
+            $numero_actual = 0;
+        else
+            $numero_actual = $numero_actual->correlative;
+
         $insert = new Reservation();
-        $insert->correaltive = $numero_actual->correaltive + 1; 
+        $insert->correlative = $numero_actual + 1; 
         $insert->year = date('Y'); 
         $insert->save();
 
