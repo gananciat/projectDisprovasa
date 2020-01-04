@@ -1,7 +1,7 @@
 <template>
-<div v-loading="loading">
+<div>
 
-  <div class="content-wrapper">
+  <div class="content-wrapper" v-loading="loading">
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -17,7 +17,7 @@
             
             <div class="card">
               <div class="card-header border-0">
-                <h3 class="card-title">Aregar nuevo pedido de alimentación</h3>
+                <h3 class="card-title">Aregar nuevo pedido de {{ title }}</h3>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -26,10 +26,10 @@
                       <div class="card-header p-0 pt-1">
                         <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                           <li class="nav-item">
-                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Datos de la escula</a>
+                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
+                            <a class="nav-link" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
                           </li>
                         </ul>
                       </div>
@@ -37,51 +37,144 @@
 <form> 
   <div class="tab-content" id="custom-tabs-one-tabContent">
     <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur. 
+      <div class="row">
+        <div class="col-md-4 col-sm-12">
+          <div class="form-group">
+            <label>Fecha para la entrega del pedido</label>
+            <div class="block">
+              <el-date-picker
+                v-model="form.date"
+                type="date"
+                data-vv-name="date"
+                data-vv-as="fecha"
+                v-validate="'required|date_format:yyyy-MM-dd'"
+                :class="{'input':true,'has-errors': errors.has('date')}"                
+                placeholder="Seleccionar una fecha"
+                format="dd/MM/yyyy"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </div>
+            <FormError :attribute_name="'date'" :errors_form="errors"> </FormError>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group">
+            <label>Menú</label>
+            <input type="text" class="form-control" placeholder="titulo del menú"
+            name="title"
+            v-model="form.title"
+            data-vv-as="titulo del menú"
+            v-validate="'required|min:5|max:125'"
+            :class="{'input':true,'has-errors': errors.has('title')}">
+            <FormError :attribute_name="'title'" :errors_form="errors"> </FormError>
+          </div>
+        </div>  
+        <div class="col-md-12 col-sm-12">
+          <div class="form-group">
+            <label>Descripción</label>
+            <textarea class="form-control" 
+            cols="10" rows="3" 
+            placeholder="descripción del menú"
+            name="description"
+            v-model="form.description"
+            data-vv-as="descripción del menú"
+            v-validate="'required|min:5|max:1000'"
+            :class="{'input':true,'has-errors': errors.has('description')}">
+            </textarea>
+            <FormError :attribute_name="'description'" :errors_form="errors"> </FormError>
+          </div>
+        </div>                
+      </div>
     </div>
 
     <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
       <div class="row">
-        <div class="col-md-12 col-sm-12">
-          <h3>Pedido # </h3><h1><b>1</b></h1>
-        </div>
         <div class="col-md-8 col-sm-12">
-          <div class="row">
-            <div class="col-md-4 col-sm-12">
-              <div class="form-group">
-                <label>Cantidad</label>
-
-                <FormError :attribute_name="'number_phone_school'" :errors_form="errors"> </FormError>
-              </div>
-            </div>           
+          <div class="row">          
             <div class="col-md-12 col-sm-12">            
               <div class="form-group">
-                <label>Compania</label>
-                <multiselect v-model="companies_id_phone_school"
+                <label>Producto</label>
+                <multiselect v-model="product_id"
+                    @input="information"
                     v-validate="'required'" 
-                    data-vv-name="companies_id_phone_school"
-                    data-vv-as="compania"
-                    :options="companies" placeholder="seleccione compania"  
+                    data-vv-name="product_id"
+                    data-vv-as="producto"
+                    :options="products" placeholder="seleccione producto"  
                     :searchable="true"
                     :allow-empty="false"
                     :show-labels="false"
+                    data-vv-scope="detail"
                     label="name" track-by="id">
                     <span slot="noResult">No se encontro ningún registro</span>
                     </multiselect>
-                    <FormError :attribute_name="'companies_id_phone_school'" :errors_form="errors"> </FormError>
+                    <FormError :attribute_name="'product_id'" :errors_form="errors"> </FormError>
               </div>
             </div>
-            <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm" @click="addPhoneSchool">Agregar teléfono</button>
+            <div class="col-md-6 col-sm-12 text-center">
+              <div class="form-group">
+                <label>Categoría</label>
+                <h1>{{ information_product.category }}</h1>
+              </div>
             </div>     
-            &nbsp;
-            &nbsp;     
+            <div class="col-md-6 col-sm-12 text-center">
+              <div class="form-group">
+                <label>Marca</label>
+                <h1>{{ information_product.marca }}</h1>
+              </div>
+            </div>              
+            <div class="col-md-4 col-sm-12">
+              <div class="form-group">
+                <label>Cantidad</label>
+                <el-input-number v-model="quantity" 
+                :precision="2" :step="0.1" :min="1" :max="10000"
+                data-vv-name="quantity"
+                data-vv-as="cantidad"
+                v-validate="'required|between:1,10000'"
+                data-vv-scope="detail"
+                :class="{'input':true,'has-errors': errors.has('quantity')}"></el-input-number> <br>
+                <FormError :attribute_name="'quantity'" :errors_form="errors"> </FormError>
+              </div>
+            </div>    
+            <div class="col-md-4 col-sm-12 text-right">
+              <div class="form-group">
+                <label>Precio Unitario</label>
+                <h1>{{ information_product.price | currency('Q ') }}</h1>
+              </div>
+            </div>     
+            <div class="col-md-4 col-sm-12 text-right">
+              <div class="form-group">
+                <label>Sub Total</label>
+                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q ') }}</h1>
+              </div>
+            </div>                     
+            <div class="col-md-12 col-sm-12 text-right">
+              <button type="button" class="btn btn-success btn-sm" @click="addProductDetail">Agregar producto</button>
+            </div>      
           </div>
         </div>
         <div class="col-md-4 col-sm-12">
-          <b-jumbotron :header="'100.00'" lead="Total">
-          </b-jumbotron>         
+          <div class="row">
+            <div class="col-md-12 col-sm-12 text-right">
+              <p><label style="font-size:32px;">Pedido #</label> <label style="font-size:48px;">{{ no_reservation }}</label></p>
+            </div>            
+            <div class="col-md-12 col-sm-12">
+              <div class="position-relative p-5 bg-green" style="height: 180px">
+                <div class="ribbon-wrapper ribbon-xl">
+                  <div class="ribbon bg-primary text-xl">
+                    Total
+                  </div>
+                </div>
+                <p>En esta sección mostraremos el <br>
+                monto total del pedido.</p>
+                <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
+                  <label>{{ total | currency('Q ') }}</label>
+                </div>             
+              </div>       
+            </div>
+          </div>
         </div>
+        <hr>
+        &nbsp;
         <div class="col-md-12 col-sm-12">
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
@@ -92,13 +185,13 @@
                       <th></th>
                   </tr>
               </thead>
-              <tbody v-if="form.phone_school.length >= 1">
-                <template v-for="(item, index) in form.phone_school">
+              <tbody v-if="form.detail_order.length >= 1">
+                <template v-for="(item, index) in form.detail_order">
                   <tr v-bind:key="index">
                       <td v-text="item.number"></td>
                       <td v-text="item.name"></td>
                       <td>
-                          <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(index)">
+                          <button class="btn btn-danger btn-sm" @click="quitarProductDetail(index)">
                             Quitar
                           </button>
                       </td>                    
@@ -108,13 +201,12 @@
             </table>
           </div>
         </div>
-        <hr>
-        <div class="col-md-12 col-sm-12 text-right">
-            <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-        </div>
       </div>
     </div>
   </div>
+  <div class="col-md-12 col-sm-12 text-right">
+      <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+  </div>  
 </form>
                       </div>
                     </div>                    
@@ -140,76 +232,87 @@ export default {
   data() {
     return {
       loading: false,
+      no_reservation: '',
+      title: '',
       items: {},
-      municipalities: [],
-      type_persons: [],
-      companies: [],
-      number_phone_school: '',
-      companies_id_phone_school: null,
-      number_phone_person: '',
-      companies_id_phone_person: null,
+      products: [],
+      product_id: null,
+      quantity: '',
+      total: 0,
+      information_product: {
+        category: '',
+        marca: '',
+        price: '',
+        sub_total: '',
+      },
       form: {
         id: null,
-        bill: '',
-        code_high_school: '',
-        code_primary: '',
-        direction: '',
-        municipalities_id: '',
-        name: '',
-        nit: '',  
-        phone_school: [],
-        type_person: null,
-        president: false,
-
-        cui: '',
-        name_one: '',
-        name_two: '',
-        last_name_one: '',
-        last_name_two: '',
-        direction_people: '',
-        email: '',
-        municipalities_id_people: null,
-        phone_people: [],
-
+        order: '',
+        title: '',
+        description: '',
+        date: new Date(),
+        schools_id: '',
+        detail_order: []
       }
     };
   },
   created() {
     let self = this;
-    self.getMunicipalities()
-    self.getTypePersona()
-    self.getComany()
+    let renombrar = '';
+    switch (self.$route.params.type_order) {
+      case 'A':
+        renombrar = 'alimentacion'
+        self.title = 'alimentación'
+        break;
+      case 'G':
+        renombrar = 'gratuidad'
+        self.title = 'gratuidad'
+        break;
+      case 'U':
+        renombrar = 'utiles'
+        self.title = 'utiles'
+        break;                        
+      default:
+        self.$router.Push('/school/management/order') 
+        break;
+    }
+    self.getProduct(renombrar)
   },
 
   methods: {
+    //Generar correlativo de la orden
+    generationOrder(){
+      let self = this
+
+      if(self.no_reservation == '' || self.no_reservation == null)
+      {
+        self.loading = true
+        let data = ''        
+        self.$store.state.services.reservationService
+          .create(data)
+          .then(r => {
+            self.loading = false
+            if(r.response){
+              self.$toastr.error(r.response.data.error, 'error')
+              return
+            }
+            self.no_reservation = r.data.data.correlative+'-'+r.data.data.year
+            self.$toastr.success('número de pedido reservado', 'exito')
+          })
+          .catch(r => {});
+      }
+
+    },
+
     //funcion, validar si se guarda o actualiza
     createOrEdit(){
       let self = this
-      let existe = true
-
-      self.number_phone_school = '00000000'
-      self.companies_id_phone_school = {'id': 1, 'name': 'TIGO'}
-      self.number_phone_person = '00000000'
-      self.companies_id_phone_person = {'id': 1, 'name': 'TIGO'}
-
-      if(self.form.phone_school.length == 0){
-        self.$toastr.error('es necesario registrar al meno un número de teléfono para la escuela.', 'error')
-        existe = false
-      }
-
-      if(self.form.phone_people.length == 0){
-        self.$toastr.error('es necesario registrar al meno un número de teléfono para la persona.', 'error')
-        existe = false
-      }
-
-      if(existe == true){
-        self.$validator.validateAll().then((result) => {
-            if (result) {
-              self.pasarMayusculas()
-              self.form.id === null ? self.create() : self.update()
-            }
-        });
-      }
+      self.$validator.validateAll().then((result) => {
+          if (result) {
+            self.pasarMayusculas()
+            self.form.id === null ? self.create() : self.update()
+          }
+      });
     },
 
     //Limpiar formulario
@@ -225,8 +328,6 @@ export default {
             self.form[key] = null
         });
 
-        self.form.phone_school = []
-        self.form.phone_people = []
         self.$validator.reset()
         self.$validator.reset()
     },   
@@ -248,10 +349,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      data.municipalities_id = self.form.municipalities_id.id
-      data.municipalities_id_people = self.form.municipalities_id_people.id
-      data.type_person = self.form.type_person.id
-      console.log(data)
+
       self.$store.state.services.schoolService
         .create(data)
         .then(r => {
@@ -266,133 +364,52 @@ export default {
         .catch(r => {});
     },
 
-    //Obtner los municipios
-    getMunicipalities(){
-      let self = this;
-      self.loading = true;
+    //Llamar todos los productos que pertenecen al tipo de orden seleccionada
+    getProduct(type){
+      let self = this
+      self.loading = true
 
-      self.$store.state.services.municipalityService
-        .getAll()
+      self.$store.state.services.productService
+        .get(type)
         .then(r => {
-          self.loading = false; 
-          r.data.data.forEach( function ver(item) {
-            self.municipalities.push({'id': item.id, 'name': item.departament.name+' / '+item.name})
+          self.products = []
+          if(r.response){
+            self.$toastr.error(r.response.data.error, 'error')
+            return
+          }
+          r.data.data.forEach(function(item) {
+            self.products.push({id: item.id, name: item.name, category: item.category.name, marca: item.presentation.name, price: item.prices[0].price})
           })
-          self.getAll();
+          self.loading = false
         })
-        .catch(r => {});
+        .catch(r => {});      
     },
 
-    //Obtener los roles
-    getTypePersona(){
-      let self = this;
-      self.loading = true;
-
-      self.type_persons.push({'id': 'DIRECTOR', 'name': 'DIRECTOR'})
-      self.type_persons.push({'id': 'PROFESOR', 'name': 'PROFESOR'})
-      self.type_persons.push({'id': 'OTRO', 'name': 'OTRO'})
-
-      self.loading = false;
-    }, 
-    
-    //Obtner las companias
-    getComany() {
-      let self = this;
-      self.loading = true;
-
-      self.$store.state.services.companyService
-        .getAll()
-        .then(r => {
-          self.loading = false; 
-          self.companies = r.data.data;
-        })
-        .catch(r => {});
-    },
-    
-    //Agregar número de teléfono de la escuela
-    addPhoneSchool(){
-      let self = this
-      let encontro = false
-
-      if(self.number_phone_school == '' || self.number_phone_school == null 
-        || self.companies_id_phone_school == '' || self.companies_id_phone_school == null)
-      {
-        self.$swal({
-          title: "Advertencia",
-          text: 'La información que intenta agregar no es correcta.',
-          type: "warning",
-        })
-
-        return
-      }
-      else 
-      {
-        self.form.phone_school.forEach( function verificar(item) {
-          if(item.number == self.number_phone_school) {
-            self.$toastr.warning('el número '+item.number+' ya fue agregado anteriormente.', 'advertencia')
-            encontro = true
-          }
-        })
-
-        if(encontro == false){
-          self.form.phone_school.push({
-                                        'number': self.number_phone_school, 
-                                        'name': self.companies_id_phone_school.name, 
-                                        'companies_id': self.companies_id_phone_school.id})
-          self.number_phone_school = ''
-          self.companies_id_phone_school = null                                      
-        }
-      }
-    },
-
-    //Quitar número de teléfono de la escuela
-    quitarPhoneSchool(index) {
-        this.form.phone_school.splice(index, 1);
-    },  
-    
     //Agregar número de teléfono de la persona
-    addPhonePerson(){
+    addProductDetail(){
       let self = this
-      let encontro = false
-
-      if(self.number_phone_person == '' || self.number_phone_person == null 
-        || self.companies_id_phone_person == '' || self.companies_id_phone_person == null)
-      {
-        self.$swal({
-          title: "Advertencia",
-          text: 'La información que intenta agregar no es correcta.',
-          type: "warning",
-        })
-
-        return
-      }
-      else 
-      {
-        self.form.phone_people.forEach( function verificar(item) {
-          if(item.number == self.number_phone_person) {
-            self.$toastr.warning('el número '+item.number+' ya fue agregado anteriormente.', 'advertencia')
-            encontro = true
+      self.$validator.validateAll("detail").then((result) => {
+          if (result) {
+            self.$toastr.error('lirbe', 'error')
+          } else {
+            self.$toastr.warning('lirbe', 'error')
           }
-        })
-
-        if(encontro == false){
-          self.form.phone_people.push({
-                                        'number': self.number_phone_person, 
-                                        'name': self.companies_id_phone_person.name, 
-                                        'companies_id': self.companies_id_phone_person.id})
-
-          self.number_phone_person = ''
-          self.companies_id_phone_person = null                                    
-        }
-      }
+      });
     },
 
     //Quitar número de teléfono de la escuela
-    quitarPhonePerson(index) {
-        this.form.phone_people.splice(index, 1);
+    quitarProductDetail(index) {
+      this.form.detail_order.splice(index, 1);
     },    
-  },
 
+    //Mostrar información del producto seleccionado
+    information(data){
+      let self = this
+      self.information_product.price = data.price
+      self.information_product.category = data.category
+      self.information_product.marca = data.marca
+    },
+  },
   mounted(){
     $("body").resize()
   },

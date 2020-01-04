@@ -19,3 +19,8 @@ textarea:valid {
 .h-tooltip {
     z-index: 99999!important;
 }
+
+.ribbon-wrapper.ribbon-xl {
+    height: 100%;
+    width: 175px;
+}

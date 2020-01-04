@@ -47,7 +47,7 @@
           name="nit"
           v-model="form.nit"
           data-vv-as="nit"
-          v-validate="'required|max:13|max:7'"
+          v-validate="'required|max:13|min:7'"
           :class="{'input':true,'has-errors': errors.has('nit')}">
           <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
         </div>
