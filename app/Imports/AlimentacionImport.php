@@ -2,10 +2,11 @@
 
 namespace App\Imports;
 
+use App\Models\Price;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Quantify;
 use App\Models\Presentation;
-use App\Models\Price;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -39,6 +40,12 @@ class AlimentacionImport implements ToCollection
                         $insert_price->price = $value[3];
                         $insert_price->products_id = $insert->id;
                         $insert_price->save();
+
+                        $insert_quantify = new Quantify();
+                        $insert_quantify->sumary_schools = 0;
+                        $insert_quantify->year = date('Y');
+                        $insert_quantify->products_id = $insert->id;
+                        $insert_quantify->save();                        
     
                         echo 'PRODUCTO: '.$insert->name.' PRECIO: '.$insert_price->price.' PERTENECE: '.$insert->propierty.PHP_EOL;    
                     }                

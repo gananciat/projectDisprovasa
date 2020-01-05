@@ -134,7 +134,6 @@ export default {
         ]
       },
       {
-<<<<<<< HEAD
         icon: "cog",
         text: "Pedidos",
         children: [
@@ -144,15 +143,6 @@ export default {
           { icon: "circle-o", text: "Pedido de utiles", path: "/school/1/management/order/new/utiles/U" },
         ]
       },      
-=======
-        icon: "product-hunt",
-        text: "Pedidos",
-        children: [
-          { icon: "circle-o", text: "Listar", path: "/orders" }
-        ]
-      },
-      
->>>>>>> 998b451102e4ae3f34669a5f44563d205c32aa96
       {
         icon: "user",
         text: "Acceso",
