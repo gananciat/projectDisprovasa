@@ -141,13 +141,13 @@
             <div class="col-md-4 col-sm-12 text-right">
               <div class="form-group">
                 <label>Precio Unitario</label>
-                <h1>{{ information_product.price | currency('Q ') }}</h1>
+                <h1>{{ information_product.price | currency('Q',',',2,'.','front',true) }}</h1>
               </div>
             </div>     
             <div class="col-md-4 col-sm-12 text-right">
               <div class="form-group">
                 <label>Sub Total</label>
-                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q ') }}</h1>
+                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q',',',2,'.','front',true) }}</h1>
               </div>
             </div>   
             <div class="col-md-12 col-sm-12">
@@ -187,7 +187,7 @@
                 <p>En esta sección mostraremos el <br>
                 monto total del pedido.</p>
                 <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
-                  <label>{{ total | currency('Q ') }}</label>
+                  <label>{{ total | currency('Q',',',2,'.','front',true) }}</label>
                 </div>             
               </div>       
             </div>
@@ -212,8 +212,8 @@
                   <tr v-bind:key="index" style="font-size: 14px;">
                       <td class="text-center" v-text="item.quantity"></td>
                       <td v-text="item.producto"></td>
-                      <td class="text-right">{{ item.sale_price | currency('Q ') }}</td>
-                      <td class="text-right">{{ item.sub_total | currency('Q ') }}</td>
+                      <td class="text-right">{{ item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
+                      <td class="text-right">{{ item.sub_total | currency('Q',',',2,'.','front',true) }}</td>
                       <td class="text-center"> 
                           <button class="btn btn-danger btn-sm" @click="quitarProductDetail(index)">
                             Quitar
@@ -224,7 +224,7 @@
               </tbody> 
               <tfoot style="font-size: 18px;">
                 <td class="text-right" colspan="3"><b>Total</b></td>
-                <td class="text-right"><b>{{ total | currency('Q ') }}</b></td>
+                <td class="text-right"><b>{{ total | currency('Q',',',2,'.','front',true) }}</b></td>
               </tfoot>           
             </table>
           </div>
@@ -403,7 +403,6 @@ export default {
         .get(type)
         .then(r => {
           self.products = []
-          console.log(r.data.data)
           if(r.response){
             self.$toastr.error(r.response.data.error, 'error')
             return
@@ -489,6 +488,7 @@ export default {
     //Mostrar información del producto seleccionado
     information(data){
       let self = this
+      console.log(data.price)
       self.information_product.price = data.price
       self.information_product.category = data.category
       self.information_product.marca = data.marca

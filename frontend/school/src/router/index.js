@@ -7,12 +7,6 @@ import Default from '@/components/Default'
 import ExampleIndex from '@/components/example/Index'
 import Login from '@/components/login/Index'
 
-/* IMPORT DE ROUTER SCHOOL */
-import School from '@/components/administracion/School'
-import Order from '@/components/orders/Index'
-import InformationSchool from '@/components/administracion_escuela/InformationSchool'
-import NewSchool from '@/components/administracion_escuela/NewSchool'
-
 /* IMPORT SCHOOL */
 import OrderSchool from '@/components/gestion_escuela/Order'
 import NewOrder from '@/components/gestion_escuela/NewOrder'
