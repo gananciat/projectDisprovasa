@@ -1,13 +1,13 @@
 <template>
 <div v-loading="loading">
-  <div class="content-wrapper">
 
+  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorías de productos</h1> 
+            <h1 class="m-0 text-dark">Escuelas</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -17,42 +17,14 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-
-        <!-- Modal para nuevo registro -->
-        <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-          <form>
-              <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" class="form-control" placeholder="nombre"
-                name="name"
-                v-model="form.name"
-                data-vv-as="nombre"
-                v-validate="'required'"
-              :class="{'input':true,'has-errors': errors.has('name')}">
-              <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-              </div>
-              <div class="form-group">
-                  <label>Descripción</label>
-                <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
-              </div>
-              <div class="row">
-                <!-- /.col -->
-                <div class="col-12 text-right">
-                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-                  <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-                <!-- /.col -->
-              </div>
-            </form>
-        </b-modal>
-
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorías 
-                    <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
+                  <h3 class="card-title">Lista de escuelas 
+                    <router-link class="btn btn-success btn-sm" to="/new/school" ><i class="fa fa-plus"></i> nuevo</router-link>
+                  </h3>
                 </div>
               </div>
               <div class="card-body">
@@ -62,16 +34,13 @@
                 </div>
                 <!-- /.d-flex -->
                  <template>
-
                     <div class="col-sm-12">
                       <b-row>
-
                       <b-col md="4" class="my-1 form-inline">
                         <label>mostrando: </label>
                             <b-form-select :options="pageOptions" v-model="perPage" />
                           <label>entradas </label>
                       </b-col>
-
                       <b-col  class="my-1 form-group pull-right">
                           <b-input-group>
                             <b-form-input v-model="filter" placeholder="buscar" />
@@ -87,17 +56,8 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
-                      <template v-slot:cell(name)="data">
-                        {{ data.item.name }}
-                      </template>
-                      <template v-slot:cell(description)="data">
-                        {{data.item.description}}
-                      </template>
-                      <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
-                              <i class="fa fa-pencil">
-                              </i>
-                          </button>
+                      <template v-slot:cell(option)="data">    
+                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
                           <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
                               <i class="fa fa-trash">
                               </i>
@@ -148,7 +108,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "category",
+  name: "school",
   components: {
       FormError
   },
@@ -158,7 +118,6 @@ export default {
       items: [],
       fields: [
         { key: 'name', label: 'Nombre', sortable: true },
-        { key: 'description', label: 'Descripción', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -167,12 +126,6 @@ export default {
       totalRows: 0,
       pageOptions: [ 5, 10, 25 ],
       showStringEmpty: 'no hay registros que mostrar',
-
-      form: {
-          id: null,
-          name: '',
-          description: ''
-      }
     };
   },
   created() {
@@ -192,7 +145,7 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.schoolService
         .getAll()
         .then(r => {
           self.loading = false; 
@@ -202,48 +155,7 @@ export default {
         .catch(r => {});
     },
 
-    //funcion para guardar registro
-    create(){
-      let self = this
-      self.loading = true
-      let data = self.form
-      self.$store.state.services.categoryService
-        .create(data)
-        .then(r => {
-          self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          this.$toastr.success('registro agregado con exito', 'exito')
-          self.close()
-          self.getAll()
-        })
-        .catch(r => {});
-    },
-
-    //funcion para actualizar registro
-    update(){
-      let self = this
-      self.loading = true
-      let data = self.form
-       
-      self.$store.state.services.categoryService
-        .update(data)
-        .then(r => {
-          self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          this.$toastr.success('registro actualizado con exito', 'exito')
-          self.getAll()
-          self.close()
-        })
-        .catch(r => {});
-    },
-
-    //funcion para eliminar registro
+        //funcion para eliminar registro
     destroy(data){
       let self = this
 
@@ -255,7 +167,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.schoolService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -271,79 +183,10 @@ export default {
           }
       });
     },
-
-    //funcion, validar si se guarda o actualiza
-    createOrEdit(){
-      this.$validator.validateAll().then((result) => {
-          if (result) {
-              self.pasarMayusculas()
-              self.form.id === null ? self.create() : self.update()
-           }
-      });
-
-      let self = this
-    },
-
-    //pasar a mayusculas
-    pasarMayusculas(){
-        let self = this
-
-        Object.keys(self.form).forEach(function(key,index) {
-          
-          if(typeof self.form[key] === "string") 
-            self.form[key] = self.form[key].toUpperCase()
-
-        });
-    }, 
-
-     //mapear datos a formulario
-    mapData(data){
-        let self = this
-        self.form.id = data.id
-        self.form.name = data.name
-        self.form.description = data.description
-        this.$refs['nuevo'].show()
-    },
-
-    //limpiar data de formulario
-    clearData(){
-        let self = this
-
-        Object.keys(self.form).forEach(function(key,index) {
-          if(typeof self.form[key] === "string") 
-            self.form[key] = ''
-          else if (typeof self.form[key] === "boolean") 
-            self.form[key] = true
-          else if (typeof self.form[key] === "number") 
-            self.form[key] = null
-        });
-
-        self.$validator.reset()
-        self.$validator.reset()
-    },
-
-    open(){
-        let self = this
-        this.$refs['nuevo'].show()
-        self.clearData()
-    },
-
-    //cerrar modal limpiar registros
-    close(){
-        let self= this
-        self.$refs['nuevo'].hide()
-    }
   },
 
   mounted(){
-        $("body").resize()
+    $("body").resize()
   },
-
-  computed:{
-      title(){
-          let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
-      }
-  }
 };
 </script>

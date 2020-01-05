@@ -134,8 +134,9 @@ class ProductController extends ApiController
      */
     public function edit($product)
     {
-        $products = Product::with('category','presentation','prices')
-        ->whereHas('prices', function($q){$q->where('current', true);})
+        $products = Product::with(['category','presentation','prices' => function ($query) {
+            $query->where('current', true);
+        }])
         ->where('propierty',mb_strtoupper($product))->get();
         return $this->showAll($products);
     }

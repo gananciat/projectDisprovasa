@@ -31,7 +31,7 @@ class User extends Authenticatable
     protected $casts = [];
 
     public function setEmailAttribute($valor){
-        $this->attributes['email'] = mb_strtoupper($valor);
+        $this->attributes['email'] = mb_strtolower($valor);
     }
 
     public function setPasswordAttribute($valor){

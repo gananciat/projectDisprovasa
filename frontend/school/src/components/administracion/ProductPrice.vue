@@ -1,13 +1,13 @@
 <template>
 <div v-loading="loading">
-  <div class="content-wrapper">
-
+    <!-- Modal para nuevo registro -->
+       <div class="">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorías de productos</h1> 
+          <div class="col-sm-12">
+            <h1 class="m-0 text-dark">Precios de producto {{product.name}} </h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -17,42 +17,43 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-
-        <!-- Modal para nuevo registro -->
-        <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-          <form>
-              <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" class="form-control" placeholder="nombre"
-                name="name"
-                v-model="form.name"
-                data-vv-as="nombre"
-                v-validate="'required'"
-              :class="{'input':true,'has-errors': errors.has('name')}">
-              <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-              </div>
-              <div class="form-group">
-                  <label>Descripción</label>
-                <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
-              </div>
-              <div class="row">
-                <!-- /.col -->
-                <div class="col-12 text-right">
-                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-                  <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-                <!-- /.col -->
-              </div>
-            </form>
-        </b-modal>
-
         <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
+            <div class="col-md-12 col-lg-12 col-xs-12">
+              
+              <div class="card">
+                <div class="card-header no-border">
+                <div class="d-flex justify-content-between">
+                  <h3 class="card-title">Nuevo</h3>
+                </div>
+              </div>
+                <form>
+                  <div class="row container">
+                    
+                    <div class="form-group col-lg-12">
+                    <label>Precio</label>
+                    <input type="text" class="form-control" placeholder="precio producto"
+                    name="price"
+                    v-model="form.price"
+                    data-vv-as="precio producto"
+                    v-validate="'required|decimal'"
+                    :class="{'input':true,'has-errors': errors.has('price')}">
+                    <FormError :attribute_name="'price'" :errors_form="errors"> </FormError>
+                    </div>
+                    
+                    <div class="col-md-12 col-lg-12 text-right form-group">
+                        <button type="button" class="btn btn-danger btn-sm" @click="clearData" v-tooltip="'limpiar formulario'"><i class="fa fa-eraser"></i></button>
+                        <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit" v-tooltip="'guardar precio'"><i class="fa fa-save"></i> </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              </div>
+            <div class="col-md-12">
+              <div class="card">
+                
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorías 
-                    <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
+                  <h3 class="card-title">Lista de precios </h3>
                 </div>
               </div>
               <div class="card-body">
@@ -87,23 +88,9 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
-                      <template v-slot:cell(name)="data">
-                        {{ data.item.name }}
+                       <template v-slot:cell(price)="data">
+                         <small :class="data.item.current ? 'badge badge-success':'badge badge-danger'"> {{ data.item.price | currency('Q ') }}</small>
                       </template>
-                      <template v-slot:cell(description)="data">
-                        {{data.item.description}}
-                      </template>
-                      <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
-                              <i class="fa fa-pencil">
-                              </i>
-                          </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
-                              <i class="fa fa-trash">
-                              </i>
-                          </button>
-                      </template>
-
                     </b-table>
                     <b-row>
                         <b-col md="12" class="my-1">
@@ -130,10 +117,8 @@
                     </div>
                   </template>
               </div>
+              </div>
             </div>
-            <!-- /.card -->
-            <!-- /.card -->
-          </div>
           <!-- /.col-md-6 -->
         </div>
         <!-- /.row -->
@@ -142,13 +127,15 @@
     </div>
     <!-- /.content -->
   </div>
+
+ 
 </div>
 </template>
 
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "category",
+  name: "product_price",
   components: {
       FormError
   },
@@ -156,10 +143,9 @@ export default {
     return {
       loading: false,
       items: [],
+      product: {},
       fields: [
-        { key: 'name', label: 'Nombre', sortable: true },
-        { key: 'description', label: 'Descripción', sortable: true },
-        { key: 'option', label: 'Opciones', sortable: true },
+        { key: 'price', label: 'Precio', sortable: true },
       ],
       filter: null,
       currentPage: 1,
@@ -170,14 +156,20 @@ export default {
 
       form: {
           id: null,
-          name: '',
-          description: ''
+          price: null,
+          products_id: null
       }
     };
   },
   created() {
     let self = this;
-    self.getAll();
+    //self.getAll();
+    events.$on('product_price',self.onEventPrice)
+  },
+
+  beforeDestroy(){
+    let self = this
+    events.$off('product_price',self.onEventPrice)
   },
 
   methods: {
@@ -188,15 +180,26 @@ export default {
       this.currentPage = 1
     },
 
-    getAll() {
+    onEventPrice(product){
+        let self = this
+        self.product = product
+        self.getAll(product.id)
+        self.clearData()
+    },
+
+    getAll(id) {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
-        .getAll()
+      self.$store.state.services.productService
+        .getPrices(id)
         .then(r => {
-          self.loading = false; 
-          self.items = r.data.data;
+          self.loading = false;
+          self.items = r.data.data
+          self.items.sort(function(a, b) {
+              return b.id - a.id;
+          });
+
           self.totalRows = self.items.length
         })
         .catch(r => {});
@@ -207,7 +210,8 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      self.$store.state.services.categoryService
+      data.products_id = self.product.id
+      self.$store.state.services.priceService
         .create(data)
         .then(r => {
           self.loading = false
@@ -216,8 +220,9 @@ export default {
             return
           }
           this.$toastr.success('registro agregado con exito', 'exito')
-          self.close()
-          self.getAll()
+          self.getAll(self.product.id)
+          self.clearData()
+          events.$emit('update_products')
         })
         .catch(r => {});
     },
@@ -228,7 +233,7 @@ export default {
       self.loading = true
       let data = self.form
        
-      self.$store.state.services.categoryService
+      self.$store.state.services.priceService
         .update(data)
         .then(r => {
           self.loading = false
@@ -237,8 +242,7 @@ export default {
             return
           }
           this.$toastr.success('registro actualizado con exito', 'exito')
-          self.getAll()
-          self.close()
+          self.$emit('update_products')
         })
         .catch(r => {});
     },
@@ -246,16 +250,15 @@ export default {
     //funcion para eliminar registro
     destroy(data){
       let self = this
-
       self.$swal({
         title: "¿Eliminar registro?",
-        text: "Esta seguro de elminar "+data.name + '?',
+        text: "Esta seguro de elminar "+data.price + '?',
         type: "warning",
         showCancelButton: true
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.priceService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -264,8 +267,8 @@ export default {
                         return
                     }
                   this.$toastr.success('registro eliminado con exito', 'exito')
-                  self.getAll()
-                  self.close()
+                  self.getAll(self.product.id)
+                  events.$emit('update_products')
                 })
                 .catch(r => {});
           }
@@ -300,23 +303,15 @@ export default {
     mapData(data){
         let self = this
         self.form.id = data.id
-        self.form.name = data.name
-        self.form.description = data.description
-        this.$refs['nuevo'].show()
+        self.form.products_id = data.products_id
+        self.form.price = data.price
     },
 
     //limpiar data de formulario
     clearData(){
         let self = this
 
-        Object.keys(self.form).forEach(function(key,index) {
-          if(typeof self.form[key] === "string") 
-            self.form[key] = ''
-          else if (typeof self.form[key] === "boolean") 
-            self.form[key] = true
-          else if (typeof self.form[key] === "number") 
-            self.form[key] = null
-        });
+        self.form.price = null
 
         self.$validator.reset()
         self.$validator.reset()
@@ -324,14 +319,12 @@ export default {
 
     open(){
         let self = this
-        this.$refs['nuevo'].show()
         self.clearData()
     },
 
     //cerrar modal limpiar registros
     close(){
         let self= this
-        self.$refs['nuevo'].hide()
     }
   },
 
@@ -342,7 +335,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nueva precio' : 'Editar '+self.form.price
       }
   }
 };

@@ -53,7 +53,7 @@ class Order extends Model
 
     public function details()
     {
-        return $this->hasMany(DetailOrder::class);
+        return $this->hasMany(DetailOrder::class,'orders_id');
     }
 
     public function schools()

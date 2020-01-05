@@ -112,15 +112,18 @@
 export default {
   name: "NavegationMenu",
   data: () => ({
+    id: '',
     items: [
       {
         icon: "cog",
-        text: "Administración",
+        text: "Pedidos",
         children: [
-          { icon: "circle-o", text: "Listar", path: "/example" },
-          { icon: "circle-o", text: "Categorias", path: "/category" },
+          { icon: "circle-o", text: "Pedido realizados", path: "/school/management/order" },
+          { icon: "circle-o", text: "Pedido de alimentación", path: "/school/0/management/order/new/alimentacion/A" },
+          { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/0/management/order/new/gratuidad/G" },
+          { icon: "circle-o", text: "Pedido de utiles", path: "/school/0/management/order/new/utiles/U" },
         ]
-      }
+      },      
     ]
   }),
 
@@ -131,13 +134,16 @@ export default {
     }
   },
 
+  mounted() {
+    let self = this
+    $("body").resize()
+  },
+
   computed: {
     userName(){
       let self = this
-      var people = self.$store.state.usuario.people
-      if(people !== undefined){
-        return people.name_one+' '+people.last_name_one
-      }
+      self.id = self.$store.state.school.schools_id
+      return self.$store.state.usuario.email
     }
   }
 };

@@ -85,9 +85,9 @@ class DetailOrderController extends ApiController
                 $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                 $insert_progreso_orden->save();
 
-                $exist_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',date('Y'))->firts();
+                $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',date('Y'))->first();
 
-                if(is_null($exist_quantify)) {
+                if(is_null($insert_quantify)) {
                     $insert_quantify = new Quantify();
                     $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
                 } else {
@@ -181,9 +181,9 @@ class DetailOrderController extends ApiController
                         return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
                     }
 
-                    $exist_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->firts();
+                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
 
-                    if(is_null($exist_quantify)) {
+                    if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
                         $insert_quantify->sumary_schools = $detail_order->quantity;
                     } else {

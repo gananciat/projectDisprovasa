@@ -157,8 +157,7 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception)
     {
-        return $request->ajax() ? response()->json($exception->errors(), 422) : 
-        redirect()->back()->withInput($request->input())->withErrors($exception->errors());
+        return response()->json($exception->errors(), 422);
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)

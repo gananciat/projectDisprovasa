@@ -10,6 +10,8 @@ import Category from '@/components/administracion/Category'
 import Company from '@/components/administracion/Company'
 import Presentation from '@/components/administracion/Presentation'
 import Product from '@/components/administracion/Product'
+
+/* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
 import Order from '@/components/orders/Index'
 import InformationSchool from '@/components/administracion_escuela/InformationSchool'

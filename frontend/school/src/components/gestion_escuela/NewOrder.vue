@@ -288,7 +288,7 @@ export default {
   },
   created() {
     let self = this;
-    self.form.schools_id = self.$route.params.id
+    self.form.schools_id = self.$store.state.school.schools_id
   },
 
   methods: {
@@ -403,6 +403,7 @@ export default {
         .get(type)
         .then(r => {
           self.products = []
+          console.log(r.data.data)
           if(r.response){
             self.$toastr.error(r.response.data.error, 'error')
             return
@@ -507,20 +508,22 @@ export default {
         case 'A':
           renombrar = 'alimentacion'
           message = 'alimentación'
+          self.getProduct(renombrar)           
           break;
         case 'G':
           renombrar = 'gratuidad'
           message = 'gratuidad'
+          self.getProduct(renombrar)           
           break;
         case 'U':
           renombrar = 'utiles'
           message = 'utiles'
+          self.getProduct(renombrar)           
           break;                        
         default:
           self.$router.push('/school/management/order') 
           break;
       }
-      self.getProduct(renombrar)  
       self.title = renombrar
       return message    
     }
