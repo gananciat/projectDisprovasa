@@ -17,6 +17,7 @@ import PresentationService from '../services/PresentationService'
 import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
 import SchoolService from '../services/SchoolService'
+import ProviderService from '../services/ProviderService'
 
 
 /* IMPORT SCHOOL */
@@ -92,5 +93,6 @@ export default {
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
+    providerService: new ProviderService(Axios, baseUrl),
 
 }

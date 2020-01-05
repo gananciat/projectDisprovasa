@@ -27,7 +27,7 @@
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
@@ -134,10 +134,10 @@ export default {
         ]
       },
       {
-        icon: "product-hunt",
-        text: "Pedidos",
+        icon: "shopping-cart",
+        text: "Ingresos",
         children: [
-          { icon: "circle-o", text: "Listar", path: "/orders" }
+          { icon: "circle-o", text: "Proveedores", path: "/provider" }
         ]
       },
       
