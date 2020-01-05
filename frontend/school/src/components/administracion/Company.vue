@@ -1,13 +1,13 @@
 <template>
 <div v-loading="loading">
-  <div class="content-wrapper">
 
+  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorías de productos</h1> 
+            <h1 class="m-0 text-dark">Companias</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -17,7 +17,6 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-
         <!-- Modal para nuevo registro -->
         <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
           <form>
@@ -30,10 +29,6 @@
                 v-validate="'required'"
               :class="{'input':true,'has-errors': errors.has('name')}">
               <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-              </div>
-              <div class="form-group">
-                  <label>Descripción</label>
-                <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
               </div>
               <div class="row">
                 <!-- /.col -->
@@ -51,7 +46,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorías 
+                  <h3 class="card-title">Lista de companias 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -148,7 +143,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "category",
+  name: "company",
   components: {
       FormError
   },
@@ -158,7 +153,6 @@ export default {
       items: [],
       fields: [
         { key: 'name', label: 'Nombre', sortable: true },
-        { key: 'description', label: 'Descripción', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -171,7 +165,6 @@ export default {
       form: {
           id: null,
           name: '',
-          description: ''
       }
     };
   },
@@ -192,7 +185,7 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .getAll()
         .then(r => {
           self.loading = false; 
@@ -207,7 +200,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .create(data)
         .then(r => {
           self.loading = false
@@ -228,7 +221,7 @@ export default {
       self.loading = true
       let data = self.form
        
-      self.$store.state.services.categoryService
+      self.$store.state.services.companyService
         .update(data)
         .then(r => {
           self.loading = false
@@ -255,7 +248,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.companyService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -284,24 +277,11 @@ export default {
       let self = this
     },
 
-    //pasar a mayusculas
-    pasarMayusculas(){
-        let self = this
-
-        Object.keys(self.form).forEach(function(key,index) {
-          
-          if(typeof self.form[key] === "string") 
-            self.form[key] = self.form[key].toUpperCase()
-
-        });
-    }, 
-
      //mapear datos a formulario
     mapData(data){
         let self = this
         self.form.id = data.id
         self.form.name = data.name
-        self.form.description = data.description
         this.$refs['nuevo'].show()
     },
 
@@ -321,6 +301,18 @@ export default {
         self.$validator.reset()
         self.$validator.reset()
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+
+        Object.keys(self.form).forEach(function(key,index) {
+          
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
     open(){
         let self = this
@@ -342,7 +334,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nueva compañia' : 'Editar '+self.form.name
       }
   }
 };

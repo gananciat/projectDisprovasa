@@ -16,7 +16,7 @@ class Product extends Model
     const UTILES = 'UTILES';
 
     protected $table = 'products';
-    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty'];
+    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty','stock'];
     
     public function setNameAttribute($value) {
         $this->attributes['name'] = mb_strtoupper($value);

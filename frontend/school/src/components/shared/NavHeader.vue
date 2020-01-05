@@ -129,11 +129,8 @@ export default {
       loading: false,
     }
   },
-
   created(){
-
   },
-
   methods:{
       logout(){
       let self = this
@@ -145,11 +142,9 @@ export default {
           self.$router.push('/login')
           self.loading = false
         }).catch(e => {
-
       })
     }
   },
-
   computed: {
     getSchoolName(){
       let self = this

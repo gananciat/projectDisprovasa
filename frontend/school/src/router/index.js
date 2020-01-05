@@ -6,7 +6,16 @@ import multiguard from 'vue-router-multiguard'
 import Default from '@/components/Default'
 import ExampleIndex from '@/components/example/Index'
 import Login from '@/components/login/Index'
-import Category from '@/components/administracion/Category'
+
+/* IMPORT DE ROUTER SCHOOL */
+import School from '@/components/administracion/School'
+import Order from '@/components/orders/Index'
+import InformationSchool from '@/components/administracion_escuela/InformationSchool'
+import NewSchool from '@/components/administracion_escuela/NewSchool'
+
+/* IMPORT SCHOOL */
+import OrderSchool from '@/components/gestion_escuela/Order'
+import NewOrder from '@/components/gestion_escuela/NewOrder'
 
 Vue.use(Router)
 
@@ -25,7 +34,12 @@ const routes = [
   { path: '/', name: 'Default', component: Default,beforeEnter: multiguard([isLoggedIn]) },
   { path: '/example', name: 'ExampleIndex', component: ExampleIndex, beforeEnter: multiguard([isLoggedIn]) },
   { path: '/login', name: 'Login', component: Login,beforeEnter: multiguard([isLoggedOut]) },
-  { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn]) },
+
+    /* ROUTER SCHOOL */
+    { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({

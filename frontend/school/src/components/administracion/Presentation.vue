@@ -1,13 +1,40 @@
 <template>
 <div v-loading="loading">
-  <div class="content-wrapper">
+    <!-- Modal para nuevo registro -->
+  <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
+    <form>
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" class="form-control" placeholder="nombre"
+          name="name"
+          v-model="form.name"
+          data-vv-as="nombre"
+          v-validate="'required'"
+         :class="{'input':true,'has-errors': errors.has('name')}">
+         <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
+        </div>
+        <div class="form-group">
+            <label>Descripción</label>
+          <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
+        </div>
+        <div class="row">
+          <!-- /.col -->
+          <div class="col-12 text-right">
+             <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+             <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+  </b-modal>
 
+  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorías de productos</h1> 
+            <h1 class="m-0 text-dark">Marcas de productos</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -17,41 +44,12 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-
-        <!-- Modal para nuevo registro -->
-        <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-          <form>
-              <div class="form-group">
-                <label>Nombre</label>
-                <input type="text" class="form-control" placeholder="nombre"
-                name="name"
-                v-model="form.name"
-                data-vv-as="nombre"
-                v-validate="'required'"
-              :class="{'input':true,'has-errors': errors.has('name')}">
-              <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-              </div>
-              <div class="form-group">
-                  <label>Descripción</label>
-                <textarea type="text" v-model="form.description" class="form-control" placeholder="descripcion"></textarea>
-              </div>
-              <div class="row">
-                <!-- /.col -->
-                <div class="col-12 text-right">
-                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-                  <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-                <!-- /.col -->
-              </div>
-            </form>
-        </b-modal>
-
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorías 
+                  <h3 class="card-title">Lista de marcas 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -192,7 +190,7 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .getAll()
         .then(r => {
           self.loading = false; 
@@ -207,7 +205,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .create(data)
         .then(r => {
           self.loading = false
@@ -228,7 +226,7 @@ export default {
       self.loading = true
       let data = self.form
        
-      self.$store.state.services.categoryService
+      self.$store.state.services.presentationService
         .update(data)
         .then(r => {
           self.loading = false
@@ -255,7 +253,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.categoryService
+              self.$store.state.services.presentationService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -342,7 +340,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nueva categoría' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nueva presentación' : 'Editar '+self.form.name
       }
   }
 };

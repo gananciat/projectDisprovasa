@@ -8,10 +8,15 @@ import { isNullOrUndefined } from 'util';
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
-import categoryService from '../services/CategoryService'
+import ProductService from '../services/ProductService'
+
+/* IMPORT SCHOOL */
+import ReservationService from '../services/ReservationService'
+import OrderService from '../services/OrderService'
+import DetailOrderService from '../services/DetailOrderService'
 
 // Axios Configuration
-let baseUrl = 'http://sistemapro.test:8000/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
@@ -64,5 +69,10 @@ instance.interceptors.response.use(response => {
 export default {
     exampleService: new exampleService(Axios),
     loginService: new loginService(Axios,baseUrl),
-    categoryService: new categoryService(Axios,baseUrl)
+    productService: new ProductService(Axios, baseUrl),
+    
+    /* EXPORT SERVICE SCHOOL */
+    reservationService: new ReservationService(Axios, baseUrl),
+    orderService: new OrderService(Axios, baseUrl),
+    detailorderService: new DetailOrderService(Axios, baseUrl),
 }

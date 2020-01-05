@@ -2,6 +2,13 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
+//Tooltipe
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+
+import VueCurrencyFilter from 'vue-currency-filter'
+Vue.use(VueCurrencyFilter)
+
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 
@@ -49,6 +56,10 @@ import store from './store/index'
 
 //import lodash
 import _ from 'lodash'
+
+import Multiselect from 'vue-multiselect'
+Vue.component('multiselect', Multiselect)
+import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 //validators
 import VeeValidate from 'vee-validate'

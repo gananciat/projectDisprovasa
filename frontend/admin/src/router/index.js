@@ -10,6 +10,8 @@ import Category from '@/components/administracion/Category'
 import Company from '@/components/administracion/Company'
 import Presentation from '@/components/administracion/Presentation'
 import Product from '@/components/administracion/Product'
+
+/* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
 import Provider from '@/components/ingresos/Provider'
 import InformationSchool from '@/components/administracion_escuela/InformationSchool'
@@ -50,7 +52,9 @@ const routes = [
 
     /* ROUTER SCHOOL */
     { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({
