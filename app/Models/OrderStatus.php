@@ -22,5 +22,10 @@ class OrderStatus extends Model
     public function details()
     {
         return $this->belongsToMany(DetailOrder::class)->using(ProgressOrder::class);            
-    }      
+    } 
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }     
 }
