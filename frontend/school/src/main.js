@@ -8,6 +8,14 @@ Vue.use(VTooltip)
 
 import VueCurrencyFilter from 'vue-currency-filter'
 Vue.use(VueCurrencyFilter)
+Vue.use(VueCurrencyFilter, {
+  symbol : 'Q',
+  thousandsSeparator: ',',
+  fractionCount: 2,
+  fractionSeparator: '.',
+  symbolPosition: 'front',
+  symbolSpacing: true
+})
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
