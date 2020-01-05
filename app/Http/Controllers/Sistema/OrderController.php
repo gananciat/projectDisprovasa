@@ -13,6 +13,7 @@ use App\Models\Month;
 use App\Models\OrderStatus;
 use App\Models\PersonSchool;
 use App\Models\ProgressOrder;
+use App\Models\Quantify;
 use App\Models\Year;
 use Illuminate\Support\Facades\DB;
 
@@ -68,13 +69,13 @@ class OrderController extends ApiController
         ];
 
         $rules = [
-            'order' => 'required|integer',
+            'order' => 'required|string',
             'title' => 'required|string|max:125|unique:orders,title',
             'description' => 'required|string|max:1000',
             'date' => 'required|date',
+            'type_order' => 'required|string',
             'detail_order.quantity.*' => 'required|numeric',
             'detail_order.sale_price.*' => 'required|numeric',
-            'detail_order.subtotal.*' => 'required|numeric',
             'detail_order.observation.*' => 'nullable|max:125',
             'detail_order.products_id.*' => 'required|integer|exists:products,id',
         ];
@@ -91,14 +92,27 @@ class OrderController extends ApiController
                 ])->first();
 
                 $mes = Month::find(date('n',strtotime($request->date)));
-                $anio = Year::where('year',date('Y',strtotime($request->date)));
+                $anio = Year::where('year',date('Y',strtotime($request->date)))->first();
+
+                switch ($request->type_order) {
+                    case 'alimentacion':
+                        $propierty = Order::ALIMENTACION;
+                        break;
+                    case 'gratuidad':
+                        $propierty = Order::GRATUIDAD;
+                        break;
+                    case 'utiles':
+                        $propierty = Order::UTILES;
+                        break;
+                }
 
                 $insert_orden = new Order();
                 $insert_orden->order = $request->order;
                 $insert_orden->title = $request->title;
                 $insert_orden->description = $request->description;
-                $insert_orden->date = $request->date;
+                $insert_orden->date = date('Y-m-d',strtotime($request->date));
                 $insert_orden->schools_id = 1;
+                $insert_orden->type_order = $propierty;
                 $insert_orden->people_id = Auth::user()->people_id;                
                 $insert_orden->months_id = $mes->id;             
                 $insert_orden->years_id = $anio->id;
@@ -108,7 +122,7 @@ class OrderController extends ApiController
                     $insert_detalle_orden = new DetailOrder();
                     $insert_detalle_orden->quantity = $request->detail_order[$i]['quantity'];
                     $insert_detalle_orden->sale_price = $request->detail_order[$i]['sale_price'];
-                    $insert_detalle_orden->subtotal = $request->detail_order[$i]['subtotal'];
+                    $insert_detalle_orden->subtotal = $request->detail_order[$i]['sale_price']*$request->detail_order[$i]['quantity'];
                     $insert_detalle_orden->observation = $request->detail_order[$i]['observation'];
                     $insert_detalle_orden->products_id = $request->detail_order[$i]['products_id'];
                     $insert_detalle_orden->orders_id = $insert_orden->id;
@@ -122,6 +136,19 @@ class OrderController extends ApiController
                     $insert_progreso_orden->detail_orders_id = $insert_detalle_orden->id;
                     $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                     $insert_progreso_orden->save();
+
+                    $exist_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->firts();
+
+                    if(is_null($exist_quantify)) {
+                        $insert_quantify = new Quantify();
+                        $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
+                    } else {
+                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                    }
+
+                    $insert_quantify->year = $anio->year;
+                    $insert_quantify->products_id = $insert_detalle_orden->products_id;
+                    $insert_quantify->save();
                 }
 
             DB::commit();
@@ -139,9 +166,19 @@ class OrderController extends ApiController
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show($order)
     {
-        return $this->showOne($order, 201);
+        if(Auth::user()->current_school == true){
+            $person_school = PersonSchool::where([
+                ['current','=',true],
+                ['people_id','=',Auth::user()->people_id]
+            ])->first();
+
+            $orders = Order::where('type_order',$order)->where('schools_id',$person_school->schools_id)->get();
+        } else {
+            $orders = Order::where('type_order',$order)->get();
+        }
+        return $this->showAll($orders, 201);
     }
 
     /**

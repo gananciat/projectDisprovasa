@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sistema;
 
+use App\Models\Quantify;
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
 use Illuminate\Http\Request;
@@ -84,6 +85,19 @@ class DetailOrderController extends ApiController
                 $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                 $insert_progreso_orden->save();
 
+                $exist_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',date('Y'))->firts();
+
+                if(is_null($exist_quantify)) {
+                    $insert_quantify = new Quantify();
+                    $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
+                } else {
+                    $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                }
+
+                $insert_quantify->year = date('Y');
+                $insert_quantify->products_id = $insert_detalle_orden->products_id;
+                $insert_quantify->save();
+
             DB::commit();
 
             return $this->showOne($insert_detalle_orden, 201);
@@ -143,15 +157,16 @@ class DetailOrderController extends ApiController
 
                 $estado_orden = OrderStatus::where('status',OrderStatus::PEDIDO)->first();
 
-                $detail_order->quantity = $request->quantity;
-                $detail_order->sale_price = $request->sale_price;
-                $detail_order->subtotal = $request->subtotal;
-                $detail_order->observation = $request->observation;
-                $detail_order->products_id = $request->products_id;
-                $detail_order->complete = false;
-
                 $progress_order = ProgressOrder::where('detail_orders_id',$detail_order->id)->first();
-                if($detail_order->quantity >= $progress_order->purchased_amount){
+                if($request->quantity >= $progress_order->purchased_amount){
+                    
+                    $detail_order->quantity = $request->quantity;
+                    $detail_order->sale_price = $request->sale_price;
+                    $detail_order->subtotal = $request->subtotal;
+                    $detail_order->observation = $request->observation;
+                    $detail_order->products_id = $request->products_id;
+                    $detail_order->complete = false;
+
 
                     $progress_order->original_quantity = $detail_order->quantity;
                     if($detail_order->quantity == $progress_order->purchased_amount){
@@ -166,8 +181,25 @@ class DetailOrderController extends ApiController
                         return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
                     }
 
+                    $exist_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->firts();
+
+                    if(is_null($exist_quantify)) {
+                        $insert_quantify = new Quantify();
+                        $insert_quantify->sumary_schools = $detail_order->quantity;
+                    } else {
+                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $detail_order->quantity;
+                    }
+    
+                    $insert_quantify->year = date('Y');
+                    $insert_quantify->products_id = $detail_order->products_id;
+                    $insert_quantify->save();
+
                     $detail_order->save();
                     $progress_order->save();
+                } else {
+                    return $this->errorResponse('La cantidad ingresada '.
+                        $request->quantity.', no puede ser menor a la cantidad actual '.
+                        $detail_order->quantity.'. La razón es porque el producto ya fue reservado.', 422);
                 }
 
             DB::commit();

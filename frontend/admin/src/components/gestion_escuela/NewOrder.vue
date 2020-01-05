@@ -17,7 +17,7 @@
             
             <div class="card">
               <div class="card-header border-0">
-                <h3 class="card-title">Aregar nuevo pedido de {{ title }}</h3>
+                <h3 class="card-title">Aregar nuevo pedido de {{ llamar_informacion }}</h3>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -48,13 +48,14 @@
                 data-vv-name="date"
                 data-vv-as="fecha"
                 v-validate="'required|date_format:yyyy-MM-dd'"
-                :class="{'input':true,'has-errors': errors.has('date')}"                
+                :class="{'input':true,'has-errors': errors.has('menu.date')}"                
                 placeholder="Seleccionar una fecha"
                 format="dd/MM/yyyy"
+                data-vv-scope="menu"
                 value-format="yyyy-MM-dd">
               </el-date-picker>
             </div>
-            <FormError :attribute_name="'date'" :errors_form="errors"> </FormError>
+            <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
           </div>
         </div>
         <div class="col-md-12 col-sm-12">
@@ -65,8 +66,9 @@
             v-model="form.title"
             data-vv-as="titulo del menú"
             v-validate="'required|min:5|max:125'"
-            :class="{'input':true,'has-errors': errors.has('title')}">
-            <FormError :attribute_name="'title'" :errors_form="errors"> </FormError>
+            data-vv-scope="menu"
+            :class="{'input':true,'has-errors': errors.has('menu.title')}">
+            <FormError :attribute_name="'menu.title'" :errors_form="errors"> </FormError>
           </div>
         </div>  
         <div class="col-md-12 col-sm-12">
@@ -79,16 +81,17 @@
             v-model="form.description"
             data-vv-as="descripción del menú"
             v-validate="'required|min:5|max:1000'"
-            :class="{'input':true,'has-errors': errors.has('description')}">
+            data-vv-scope="menu"
+            :class="{'input':true,'has-errors': errors.has('menu.description')}">
             </textarea>
-            <FormError :attribute_name="'description'" :errors_form="errors"> </FormError>
+            <FormError :attribute_name="'menu.description'" :errors_form="errors"> </FormError>
           </div>
         </div>                
       </div>
     </div>
 
     <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
-      <div class="row">
+      <div class="row" v-loading="loading_detail">
         <div class="col-md-8 col-sm-12">
           <div class="row">          
             <div class="col-md-12 col-sm-12">            
@@ -97,7 +100,7 @@
                 <multiselect v-model="product_id"
                     @input="information"
                     v-validate="'required'" 
-                    data-vv-name="product_id"
+                    data-vv-name="detail.product_id"
                     data-vv-as="producto"
                     :options="products" placeholder="seleccione producto"  
                     :searchable="true"
@@ -107,7 +110,7 @@
                     label="name" track-by="id">
                     <span slot="noResult">No se encontro ningún registro</span>
                     </multiselect>
-                    <FormError :attribute_name="'product_id'" :errors_form="errors"> </FormError>
+                    <FormError :attribute_name="'detail.product_id'" :errors_form="errors"> </FormError>
               </div>
             </div>
             <div class="col-md-6 col-sm-12 text-center">
@@ -126,13 +129,13 @@
               <div class="form-group">
                 <label>Cantidad</label>
                 <el-input-number v-model="quantity" 
-                :precision="2" :step="0.1" :min="1" :max="10000"
-                data-vv-name="quantity"
+                :precision="0" :step="1" :min="1" :max="10000"
+                data-vv-name="detail.quantity"
                 data-vv-as="cantidad"
                 v-validate="'required|between:1,10000'"
                 data-vv-scope="detail"
-                :class="{'input':true,'has-errors': errors.has('quantity')}"></el-input-number> <br>
-                <FormError :attribute_name="'quantity'" :errors_form="errors"> </FormError>
+                :class="{'input':true,'has-errors': errors.has('detail.quantity')}"></el-input-number> <br>
+                <FormError :attribute_name="'detail.quantity'" :errors_form="errors"> </FormError>
               </div>
             </div>    
             <div class="col-md-4 col-sm-12 text-right">
@@ -146,7 +149,23 @@
                 <label>Sub Total</label>
                 <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q ') }}</h1>
               </div>
-            </div>                     
+            </div>   
+            <div class="col-md-12 col-sm-12">
+              <div class="form-group">
+                <label>Observación</label>
+                <textarea class="form-control" 
+                cols="10" rows="1" 
+                placeholder="observación del producto"
+                name="observation"
+                v-model="observation"
+                data-vv-as="observación del producto"
+                v-validate="'min:5|max:1000'"
+                data-vv-scope="detail"
+                :class="{'input':true,'has-errors': errors.has('detail.observation')}">
+                </textarea>
+                <FormError :attribute_name="'detail.observation'" :errors_form="errors"> </FormError>
+              </div>
+            </div>                               
             <div class="col-md-12 col-sm-12 text-right">
               <button type="button" class="btn btn-success btn-sm" @click="addProductDetail">Agregar producto</button>
             </div>      
@@ -156,9 +175,10 @@
           <div class="row">
             <div class="col-md-12 col-sm-12 text-right">
               <p><label style="font-size:32px;">Pedido #</label> <label style="font-size:48px;">{{ no_reservation }}</label></p>
-            </div>            
+            </div>  
+            <hr>         
             <div class="col-md-12 col-sm-12">
-              <div class="position-relative p-5 bg-green" style="height: 180px">
+              <div class="position-relative p-5 bg-green">
                 <div class="ribbon-wrapper ribbon-xl">
                   <div class="ribbon bg-primary text-xl">
                     Total
@@ -178,26 +198,34 @@
         <div class="col-md-12 col-sm-12">
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-sm">
-              <thead>
+              <thead style="font-size: 16px; text-align:center;">
                   <tr>
-                      <th>Número de Teléfono</th>
-                      <th>Compania</th>
+                      <th>Cantidad</th>
+                      <th>Producto</th>
+                      <th>Precio</th>
+                      <th>Sub Total</th>
                       <th></th>
                   </tr>
               </thead>
               <tbody v-if="form.detail_order.length >= 1">
                 <template v-for="(item, index) in form.detail_order">
-                  <tr v-bind:key="index">
-                      <td v-text="item.number"></td>
-                      <td v-text="item.name"></td>
-                      <td>
+                  <tr v-bind:key="index" style="font-size: 14px;">
+                      <td class="text-center" v-text="item.quantity"></td>
+                      <td v-text="item.producto"></td>
+                      <td class="text-right">{{ item.sale_price | currency('Q ') }}</td>
+                      <td class="text-right">{{ item.sub_total | currency('Q ') }}</td>
+                      <td class="text-center"> 
                           <button class="btn btn-danger btn-sm" @click="quitarProductDetail(index)">
                             Quitar
                           </button>
                       </td>                    
                   </tr>
                 </template>
-              </tbody>            
+              </tbody> 
+              <tfoot style="font-size: 18px;">
+                <td class="text-right" colspan="3"><b>Total</b></td>
+                <td class="text-right"><b>{{ total | currency('Q ') }}</b></td>
+              </tfoot>           
             </table>
           </div>
         </div>
@@ -205,7 +233,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" v-if="!loading_detail" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                       </div>
@@ -232,12 +260,14 @@ export default {
   data() {
     return {
       loading: false,
+      loading_detail: false,
       no_reservation: '',
       title: '',
       items: {},
       products: [],
       product_id: null,
       quantity: '',
+      observation: '',
       total: 0,
       information_product: {
         category: '',
@@ -258,25 +288,7 @@ export default {
   },
   created() {
     let self = this;
-    let renombrar = '';
-    switch (self.$route.params.type_order) {
-      case 'A':
-        renombrar = 'alimentacion'
-        self.title = 'alimentación'
-        break;
-      case 'G':
-        renombrar = 'gratuidad'
-        self.title = 'gratuidad'
-        break;
-      case 'U':
-        renombrar = 'utiles'
-        self.title = 'utiles'
-        break;                        
-      default:
-        self.$router.Push('/school/management/order') 
-        break;
-    }
-    self.getProduct(renombrar)
+    self.form.schools_id = self.$route.params.id
   },
 
   methods: {
@@ -307,10 +319,18 @@ export default {
     //funcion, validar si se guarda o actualiza
     createOrEdit(){
       let self = this
-      self.$validator.validateAll().then((result) => {
+      
+      if(self.form.detail_order.length == 0){
+        self.$toastr.error('No hay productos en el detalle del pedido.', 'error')
+        return
+      }
+
+      self.$validator.validateAll('menu').then((result) => {
           if (result) {
             self.pasarMayusculas()
-            self.form.id === null ? self.create() : self.update()
+            self.create()
+          } else {
+            self.$toastr.error('Es necesario que ingrese información del Menú, por favor ir a la sección de "Información del Menú"', 'error')
           }
       });
     },
@@ -319,14 +339,14 @@ export default {
     clearData(){
         let self = this
 
-        Object.keys(self.form).forEach(function(key,index) {
-          if(typeof self.form[key] === "string") 
-            self.form[key] = ''
-          else if (typeof self.form[key] === "boolean") 
-            self.form[key] = false
-          else if (typeof self.form[key] === "number") 
-            self.form[key] = null
-        });
+        self.no_reservation = ''
+        self.form.id = null
+        self.form.order = null
+        self.form.title = null
+        self.form.description = null
+        self.form.date = new Date()
+        self.form.detail_order = []
+        self.total = 0
 
         self.$validator.reset()
         self.$validator.reset()
@@ -340,28 +360,38 @@ export default {
           
           if(typeof self.form[key] === "string") 
             self.form[key] = self.form[key].toUpperCase()
-
         });
     }, 
 
     //funcion para guardar registro
     create(){
       let self = this
-      self.loading = true
       let data = self.form
+      data.order = self.no_reservation
+      data.type_order = self.title
 
-      self.$store.state.services.schoolService
-        .create(data)
-        .then(r => {
-          self.loading = false
-          if(r.response){
-            self.$toastr.error(r.response.data.error, 'error')
-            return
+      self.$swal({
+        title: "Verificar",
+        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ data.order + "?",
+        type: "info",
+        showCancelButton: true
+      }).then((result) => {
+          self.loading = true
+          if (result.value) {
+            self.$store.state.services.orderService
+              .create(data)
+              .then(r => {
+                self.loading = false
+                if(r.response){
+                  self.$toastr.error(r.response.data.error, 'error')
+                  return
+                }
+                self.$toastr.success('registro agregado con exito', 'exito')
+                self.$router.push('/school/management/order') 
+              })
+              .catch(r => {});                     
           }
-          self.$toastr.success('registro agregado con exito', 'exito')
-          self.clearData()
-        })
-        .catch(r => {});
+      });
     },
 
     //Llamar todos los productos que pertenecen al tipo de orden seleccionada
@@ -388,18 +418,71 @@ export default {
     //Agregar número de teléfono de la persona
     addProductDetail(){
       let self = this
+      let encontro = false
+
+      self.loading_detail = true
       self.$validator.validateAll("detail").then((result) => {
           if (result) {
-            self.$toastr.error('lirbe', 'error')
+            self.form.detail_order.forEach(function(item) {
+              if(item.products_id == self.product_id.id){
+                self.loading_detail = false
+                encontro = true
+                self.$swal({
+                  title: "Advertencia",
+                  text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
+                  type: "warning",
+                  showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+
+                      self.total = self.information_product.sub_total + self.total;
+                      item.quantity = item.quantity + self.quantity
+                      item.sub_total = self.information_product.sub_total + item.sub_total
+
+                      self.limpiarInputDetail()
+                      return                      
+                    }
+                });
+              }
+            })
+
+            if(self.form.detail_order.length == 0 || encontro == false ){
+              self.total = self.information_product.sub_total + self.total;
+              self.form.detail_order.push({ quantity:self.quantity,
+                                            sale_price:self.product_id.price,
+                                            sub_total:self.information_product.sub_total,                                            
+                                            observation:self.observation,
+                                            products_id:self.product_id.id, 
+                                            producto:self.product_id.name})
+              self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)    
+            
+              self.limpiarInputDetail()
+              self.loading_detail = false                
+            }   
           } else {
-            self.$toastr.warning('lirbe', 'error')
+            self.$toastr.warning('los datos ingresados no son correctos.', 'advertencia')
+            self.loading_detail = false
           }
       });
     },
 
+    //Limpiar información detalle del pedido (inputs)
+    limpiarInputDetail(){
+      let self = this
+      self.product_id = null,
+      self.quantity = 1,
+      self.observation = '',
+      self.information_product.category = ''
+      self.information_product.marca = ''
+      self.information_product.price = ''
+      self.information_product.sub_total = ''     
+    },
+
     //Quitar número de teléfono de la escuela
     quitarProductDetail(index) {
-      this.form.detail_order.splice(index, 1);
+      let self = this
+      console.log(index)
+      //self.form.detail_order.splice(index, 1);
     },    
 
     //Mostrar información del producto seleccionado
@@ -409,6 +492,33 @@ export default {
       self.information_product.category = data.category
       self.information_product.marca = data.marca
     },
+  },
+  computed: {
+    llamar_informacion(){
+      let self = this
+      let renombrar = '';
+      let message = ''
+      switch (self.$route.params.type_order) {
+        case 'A':
+          renombrar = 'alimentacion'
+          message = 'alimentación'
+          break;
+        case 'G':
+          renombrar = 'gratuidad'
+          message = 'gratuidad'
+          break;
+        case 'U':
+          renombrar = 'utiles'
+          message = 'utiles'
+          break;                        
+        default:
+          self.$router.push('/school/management/order') 
+          break;
+      }
+      self.getProduct(renombrar)  
+      self.title = renombrar
+      return message    
+    }
   },
   mounted(){
     $("body").resize()

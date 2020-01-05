@@ -22,75 +22,201 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de pedidos 
-                    <router-link class="btn btn-success btn-sm" to="/management/order/new" ><i class="fa fa-plus"></i> order alimentación</router-link>
-                    <router-link class="btn btn-success btn-sm" to="/management/order/new" ><i class="fa fa-plus"></i> order gratuidad</router-link>
-                    <router-link class="btn btn-success btn-sm" to="/management/order/new" ><i class="fa fa-plus"></i> order utiles</router-link>
-                  </h3>
+                  <h3 class="card-title">Lista de pedidos</h3>
                 </div>
               </div>
               <div class="card-body">
-                <div class="d-flex">
-                  <p class="d-flex flex-column">
-                  </p>
-                </div>
-                <!-- /.d-flex -->
-                 <template>
-                    <div class="col-sm-12">
-                      <b-row>
-                      <b-col md="4" class="my-1 form-inline">
-                        <label>mostrando: </label>
-                            <b-form-select :options="pageOptions" v-model="perPage" />
-                          <label>entradas </label>
-                      </b-col>
-                      <b-col  class="my-1 form-group pull-right">
-                          <b-input-group>
-                            <b-form-input v-model="filter" placeholder="buscar" />
-                          </b-input-group>
-                      </b-col>
-                    </b-row>
-                    <b-table responsive hover small flex
-                        bordered
-                       :fields="fields" 
-                       :items="items"
-                       :filter = "filter"
-                       :current-page="currentPage"
-                       :per-page="perPage"
-                       @filtered="onFiltered">
-                      <!-- A virtual column -->
-                      <template v-slot:cell(option)="data">    
-                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
-                              <i class="fa fa-trash">
-                              </i>
-                          </button>
-                      </template>
+                <el-tabs tab-position="left" @tab-click="handleClick" style="height: 200px;">
+                  <el-tab-pane label="ALIMENTACION">
+                    <h1>Pedidos de alimentación</h1>
+                    &nbsp;
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+                          <template v-slot:cell(date)="data">
+                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                          </template>                          
+                          <template v-slot:cell(option)="data">    
+                              <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                                  <i class="fa fa-trash">
+                                  </i>
+                              </button>
+                          </template>
 
-                    </b-table>
-                    <b-row>
-                        <b-col md="12" class="my-1">
-                           <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
-                           <div class="text-center">
-                              <label v-if="totalRows === 0">No hay registros que mostrar</label> 
-                           </div>   
-                         </b-col>
-                         <div class="pull-right col-md-12">
-                          <div class="mt-3" v-if="totalRows > 0">
-                              <b-pagination 
-                                v-model="currentPage" 
-                                :per-page="perPage" 
-                                :total-rows="totalRows" 
-                                align="right"
-                                first-text="⏮"
-                                prev-text="⏪"
-                                next-text="⏩"
-                                last-text="⏭">
-                              </b-pagination>
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
                             </div>
-                         </div>
-                    </b-row>
-                    </div>
-                  </template>
+                        </b-row>
+                        </div>
+                      </template>                    
+                  </el-tab-pane>
+                  <el-tab-pane label="GRATUIDAD">
+                    <h1>Pedidos de gratuidad</h1>
+                    &nbsp;
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+                          <template v-slot:cell(date)="data">
+                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                          </template>                          
+                          <template v-slot:cell(option)="data">    
+                              <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                                  <i class="fa fa-trash">
+                                  </i>
+                              </button>
+                          </template>
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template> 
+                  </el-tab-pane>
+                  <el-tab-pane label="UTILES">
+                    <h1>Pedidos de utiles</h1>
+                    &nbsp;
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+                          <template v-slot:cell(date)="data">
+                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                          </template>                          
+                          <template v-slot:cell(option)="data">    
+                              <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                                  <i class="fa fa-trash">
+                                  </i>
+                              </button>
+                          </template>
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template>                     
+                  </el-tab-pane>
+                </el-tabs>
               </div>
             </div>
             <!-- /.card -->
@@ -123,6 +249,7 @@ export default {
         { key: 'title', label: 'Título', sortable: true },
         { key: 'description', label: 'Descripción', sortable: true },
         { key: 'date', label: 'Fecha', sortable: true },
+        { key: 'type_order', label: 'Tipo de Pedido', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -135,9 +262,8 @@ export default {
   },
   created() {
     let self = this;
-    self.getAll();
+    self.getAll('ALIMENTACION');
   },
-
   methods: {
 
     onFiltered (filteredItems) {
@@ -146,12 +272,18 @@ export default {
       this.currentPage = 1
     },
 
-    getAll() {
+    handleClick(tab, event) {
+      let self = this
+      self.getAll(event.originalTarget.innerText)
+    },
+
+    getAll(type_order) {
+      console.log(type_order)
       let self = this;
       self.loading = true;
 
       self.$store.state.services.orderService
-        .getAll()
+        .get(type_order)
         .then(r => {
           self.loading = false; 
           self.items = r.data.data;
@@ -160,7 +292,7 @@ export default {
         .catch(r => {});
     },
 
-        //funcion para eliminar registro
+    //funcion para eliminar registro
     destroy(data){
       let self = this
 
@@ -189,7 +321,6 @@ export default {
       });
     },
   },
-
   mounted(){
     $("body").resize()
   },

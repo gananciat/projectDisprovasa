@@ -133,7 +133,16 @@ export default {
           { icon: "circle-o", text: "Escuelas", path: "/school" },
         ]
       },
-      
+      {
+        icon: "cog",
+        text: "Pedidos",
+        children: [
+          { icon: "circle-o", text: "Pedido realizados", path: "/school/management/order" },
+          { icon: "circle-o", text: "Pedido de alimentación", path: "/school/1/management/order/new/alimentacion/A" },
+          { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/1/management/order/new/gratuidad/G" },
+          { icon: "circle-o", text: "Pedido de utiles", path: "/school/1/management/order/new/utiles/U" },
+        ]
+      },      
       {
         icon: "user",
         text: "Acceso",

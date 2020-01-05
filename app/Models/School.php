@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class School extends Model
 {
     protected $table = 'schools';
-    protected $fillable = ['name','bill','logo','direction','nit','code_high_school','code_primary','municipalities_id','people_id','current'];
+    protected $fillable = ['name','bill','logo','direction','nit','code_high_school','code_primary','municipalities_id','people_id','current','complete'];
 
     public function setNameAttribute($value) {
         $this->attributes['name'] = mb_strtoupper($value);

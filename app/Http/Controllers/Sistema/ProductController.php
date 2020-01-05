@@ -60,7 +60,7 @@ class ProductController extends ApiController
             'presentations_id' => 'required|integer|exists:presentations,id',
             'price' => 'required|numeric|between:0.01,100000',
             'camouflage' => 'required|boolean', 
-            //'propierty' => 'required|integer'
+            'propierty' => 'required|string'
         ];
         
         $this->validate($request, $rules, $messages);
@@ -78,10 +78,10 @@ class ProductController extends ApiController
                     case 3:
                         $propierty = Product::UTILES;
                         break;
-                    default:
                 }
+
                 $data = $request->all();
-                $data['propierty'] = Product::ALIMENTACION;
+                $data['propierty'] = $propierty;
 
                 $existe = Product::where([
                     ['name', '=', $request->name],
