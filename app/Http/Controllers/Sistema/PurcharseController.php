@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sistema;
 
+use App\Models\Quantify;
 use App\Models\Purcharse;
 use Illuminate\Http\Request;
 use App\Models\PurcharseDetail;
@@ -57,21 +58,18 @@ class PurcharseController extends ApiController
                     'quantity' => $detail['quantity']
                 ]);
 
-                
+                $quantify = Quantify::where('product_id',$detail['product_id'])->first();
+                if(!is_null($quantity)){
+                    $quantify->summary_purcharse = $detail[$quantity];
+                    $summary = $quantify->sumary_schools - $quantify->summary_purcharse;
+                    $quantify->substraction = $summary > 0 ? $sumary : 0;
+                    $quantify->save();
+                }
             }
 
         DB::commit();
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Purcharse  $purcharse
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Purcharse $purcharse)
-    {
-        //
+        return $this->showOne($purcharse,201);
     }
 
     /**

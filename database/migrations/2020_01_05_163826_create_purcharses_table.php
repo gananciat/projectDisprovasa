@@ -19,6 +19,7 @@ class CreatePurcharsesTable extends Migration
             $table->date('date');
             $table->string('no_prof',90);
             $table->decimal('total',11,2);
+            $table->boolean('cancel')->default(0);
             $table->timestamps();
 
             $table->foreign('provider_id')->references('id')->on('provider');
