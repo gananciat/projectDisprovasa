@@ -17,9 +17,6 @@ import Provider from '@/components/ingresos/Provider'
 import InformationSchool from '@/components/administracion_escuela/InformationSchool'
 import NewSchool from '@/components/administracion_escuela/NewSchool'
 
-/* IMPORT SCHOOL */
-import OrderSchool from '@/components/gestion_escuela/Order'
-import NewOrder from '@/components/gestion_escuela/NewOrder'
 
 Vue.use(Router)
 
@@ -48,13 +45,6 @@ const routes = [
     { path: '/provider', name: 'Provider', component: Provider, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
-    
-
-    /* ROUTER SCHOOL */
-    { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({
