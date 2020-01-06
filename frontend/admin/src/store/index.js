@@ -20,7 +20,7 @@ const state = {
     //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
 
     base_url: 'http://sistematio.test/',
-    client_secret: 'VudeNR9L08VsBw4cIu7IQNEpBmJnkv84teFvFvei'
+    client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'
 }
 
 const mutations = {
