@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sistema;
 
+use App\Models\Order;
 use App\Models\Quantify;
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
@@ -10,12 +11,13 @@ use App\Models\ProgressOrder;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use Illuminate\Database\Eloquent\Builder;
 
 class DetailOrderController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -55,7 +57,6 @@ class DetailOrderController extends ApiController
             'orders_id' => 'required|integer|exists:orders,id',
             'quantity' => 'required|numeric',
             'sale_price' => 'required|numeric',
-            'subtotal' => 'required|numeric',
             'observation' => 'nullable|max:125',
             'products_id' => 'required|integer|exists:products,id',
         ];
@@ -65,12 +66,13 @@ class DetailOrderController extends ApiController
         try {
             DB::beginTransaction();
 
+                $order = Order::find($request->orders_id);
                 $estado_orden = OrderStatus::where('status',OrderStatus::PEDIDO)->first();
 
                 $insert_detalle_orden = new DetailOrder();
                 $insert_detalle_orden->quantity = $request->quantity;
                 $insert_detalle_orden->sale_price = $request->sale_price;
-                $insert_detalle_orden->subtotal = $request->subtotal;
+                $insert_detalle_orden->subtotal = $request->quantity*$request->sale_price;
                 $insert_detalle_orden->observation = $request->observation;
                 $insert_detalle_orden->products_id = $request->products_id;
                 $insert_detalle_orden->orders_id = $request->orders_id;
@@ -98,6 +100,9 @@ class DetailOrderController extends ApiController
                 $insert_quantify->products_id = $insert_detalle_orden->products_id;
                 $insert_quantify->save();
 
+                $order->total += $insert_detalle_orden->subtotal;
+                $order->save();
+
             DB::commit();
 
             return $this->showOne($insert_detalle_orden, 201);
@@ -113,9 +118,25 @@ class DetailOrderController extends ApiController
      * @param  \App\Models\DetailOrder  $detailOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(DetailOrder $detail_order)
+    public function show($detail_order)
     {
-        //
+        $detail_order = Order::select("id","order","title","description","type_order","date","total","complete","schools_id","people_id","created_at")
+                                ->with(['person:id,cui,name_one,name_two,last_name_one,last_name_two',
+                                        'school:id,name,municipalities_id',
+                                        'school.municipality:id,name,departaments_id',
+                                        'school.municipality.departament:id,name',
+                                        'details:id,quantity,sale_price,subtotal,observation,complete,products_id,orders_id',
+                                        'details.product:id,name,presentations_id,categories_id',
+                                        'details.product.presentation:id,name',
+                                        'details.product.category:id,name',
+                                        'details.progress:id,purchased_amount,original_quantity,order_statuses_id,detail_orders_id',
+                                        'details.progress.order_status:id,status'])
+                                ->withCount(['details as detail_complete' => function(Builder $query) {
+                                    $query->where('complete', true);
+                                }, 'details as detail_total'])
+                                ->where('id',$detail_order)->get();
+
+        return $this->showAll($detail_order);
     }
 
     /**
@@ -138,35 +159,43 @@ class DetailOrderController extends ApiController
      */
     public function update(Request $request, DetailOrder $detail_order)
     {
-        $messages = [
-            'products_id.exists'    => 'Debe de seleccionar la menos un producto para la orden.',
-        ];
-
         $rules = [
             'quantity' => 'required|numeric',
-            'sale_price' => 'required|numeric',
-            'subtotal' => 'required|numeric',
             'observation' => 'nullable|max:125',
-            'products_id' => 'required|integer|exists:products,id',
         ];
         
-        $this->validate($request, $rules, $messages);
+        $this->validate($request, $rules);
 
         try {
             DB::beginTransaction();
 
                 $estado_orden = OrderStatus::where('status',OrderStatus::PEDIDO)->first();
+                $order = Order::find($detail_order->orders_id);
 
                 $progress_order = ProgressOrder::where('detail_orders_id',$detail_order->id)->first();
                 if($request->quantity >= $progress_order->purchased_amount){
                     
+                    //Restamos el sub total anterior
+                    $order->total = $order->total - $detail_order->subtotal;
+
                     $detail_order->quantity = $request->quantity;
-                    $detail_order->sale_price = $request->sale_price;
-                    $detail_order->subtotal = $request->subtotal;
+                    $detail_order->subtotal = $detail_order->quantity*$detail_order->sale_price;
                     $detail_order->observation = $request->observation;
-                    $detail_order->products_id = $request->products_id;
                     $detail_order->complete = false;
 
+                    //Asignamos el nuevo subtotal al total
+                    $order->total = $order->total + $detail_order->subtotal;
+
+                    //Proceso para acumular producto por año
+                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
+
+                    if(is_null($insert_quantify)) {
+                        $insert_quantify = new Quantify();
+                        $insert_quantify->sumary_schools = $detail_order->quantity;
+                    } else {
+                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools - $progress_order->original_quantity;
+                        $insert_quantify->sumary_schools = $detail_order->quantity;
+                    }
 
                     $progress_order->original_quantity = $detail_order->quantity;
                     if($detail_order->quantity == $progress_order->purchased_amount){
@@ -175,25 +204,12 @@ class DetailOrderController extends ApiController
                     }
 
                     $progress_order->order_statuses_id = $estado_orden->id;
-                    $progress_order->products_id = $detail_order->products_id;
 
                     if (!$detail_order->isDirty()) {
                         return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
                     }
 
-                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
-
-                    if(is_null($insert_quantify)) {
-                        $insert_quantify = new Quantify();
-                        $insert_quantify->sumary_schools = $detail_order->quantity;
-                    } else {
-                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $detail_order->quantity;
-                    }
-    
-                    $insert_quantify->year = date('Y');
-                    $insert_quantify->products_id = $detail_order->products_id;
                     $insert_quantify->save();
-
                     $detail_order->save();
                     $progress_order->save();
                 } else {
@@ -223,8 +239,13 @@ class DetailOrderController extends ApiController
 
             DB::beginTransaction();
 
+                $order = Order::find($detail_order->orders_id);
                 if($detail_order->complete == false){
                     ProgressOrder::where('detail_orders_id',$detail_order->id)->delete();
+                    $order->total = $order->total - $detail_order->subtotal;
+                    $buscar = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
+                    $buscar->sumary_schools = $buscar->sumary_schools - $detail_order->quantity;
+                    $buscar->save();
                     $detail_order->delete();
                 } else {
                     return $this->errorResponse('No puede eliminar el detalle de la orden.',422);

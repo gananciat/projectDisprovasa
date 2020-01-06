@@ -26,8 +26,8 @@ import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 
 // Axios Configuration
-//let baseUrl = 'http://sistematio.test/' //base url desarrollo
-let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration

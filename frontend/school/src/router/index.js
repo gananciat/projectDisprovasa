@@ -10,6 +10,7 @@ import Login from '@/components/login/Index'
 /* IMPORT SCHOOL */
 import OrderSchool from '@/components/gestion_escuela/Order'
 import NewOrder from '@/components/gestion_escuela/NewOrder'
+import DetailOrder from '@/components/gestion_escuela/DetailOrder'
 
 Vue.use(Router)
 
@@ -31,9 +32,10 @@ const routes = [
 
     /* ROUTER SCHOOL */
     { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrder', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrderA', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrderG', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrderU', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/management/order/detail/:id', name: 'DetailOrder', component: DetailOrder, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({
