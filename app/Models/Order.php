@@ -33,12 +33,12 @@ class Order extends Model
 
     public function school()
     {
-        return $this->hasOne(School::class);
+        return $this->belongsTO(School::class,'schools_id');
     }
 
     public function person()
     {
-        return $this->hasOne(Person::class);
+        return $this->belongsTo(Person::class,'people_id');
     }
 
     public function month()

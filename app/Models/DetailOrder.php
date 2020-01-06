@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\OrderStatus;
 use App\Models\ProgressOrder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,7 +23,7 @@ class DetailOrder extends Model
 
     public function product()
     {
-        return $this->hasOne(Product::class);
+        return $this->belongsTo(Product::class,'products_id');
     }
 
     public function orders()
@@ -32,8 +31,8 @@ class DetailOrder extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function status()
+    public function progress()
     {
-        return $this->belongsToMany(OrderStatus::class)->using(ProgressOrder::class);            
+        return $this->hasOne(ProgressOrder::class,'detail_orders_id');            
     }    
 }

@@ -88,10 +88,6 @@ class OrderController extends ApiController
             DB::beginTransaction();
 
                 $estado_orden = OrderStatus::where('status',OrderStatus::PEDIDO)->first();
-                $person_school = PersonSchool::where([
-                    ['current','=',true],
-                    ['people_id','=',Auth::user()->people_id]
-                ])->first();
 
                 $mes = Month::find(date('n',strtotime($request->date)));
                 $anio = Year::where('year',date('Y',strtotime($request->date)))->first();
@@ -113,7 +109,7 @@ class OrderController extends ApiController
                 $insert_orden->title = $request->title;
                 $insert_orden->description = $request->description;
                 $insert_orden->date = date('Y-m-d',strtotime($request->date));
-                $insert_orden->schools_id = 1;
+                $insert_orden->schools_id = $request->schools_id;
                 $insert_orden->type_order = $propierty;
                 $insert_orden->people_id = Auth::user()->people_id;                
                 $insert_orden->months_id = $mes->id;             
@@ -151,6 +147,9 @@ class OrderController extends ApiController
                     $insert_quantify->year = $anio->year;
                     $insert_quantify->products_id = $insert_detalle_orden->products_id;
                     $insert_quantify->save();
+
+                    $insert_orden->total = $insert_orden->total + $insert_detalle_orden->subtotal;
+                    $insert_orden->save();
                 }
 
             DB::commit();

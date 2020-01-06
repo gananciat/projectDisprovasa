@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\DetailOrder;
 use App\Models\ProgressOrder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,13 +18,8 @@ class OrderStatus extends Model
         $this->attributes['status'] = strtoupper($valor);    
     }
 
-    public function details()
+    public function progress()
     {
-        return $this->belongsToMany(DetailOrder::class)->using(ProgressOrder::class);            
-    } 
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(ProgressOrder::class);
     }     
 }

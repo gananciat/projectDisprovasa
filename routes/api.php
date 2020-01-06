@@ -46,8 +46,12 @@ Route::resource('school_presidents', 'Sistema\SchoolPresidentController', ['exce
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
 Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
+<<<<<<< HEAD
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'show', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
+=======
+Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
+>>>>>>> ba47bbb325a12d4e44d90ee5c8de1064f14a632c
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

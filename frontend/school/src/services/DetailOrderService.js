@@ -7,6 +7,11 @@ class DetailOrderService {
       this.baseUrl = `${baseUrl}detail_orders`
   }
 
+  get(id) {
+      let self = this;
+      return self.axios.get(`${self.baseUrl}/${id}`);
+  }
+
   create(data) {
       let self = this;
       return self.axios.post(`${self.baseUrl}`, data);
