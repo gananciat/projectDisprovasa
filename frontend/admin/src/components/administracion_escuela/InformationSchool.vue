@@ -14,200 +14,196 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
-            <b-modal ref="modal_person" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop size="xl">
+            <b-modal ref="modal_person_phone" :title="title_person_phone" hide-footer class="modal-backdrop" no-close-on-backdrop size="sm">
 <form>
   <div class="row">
     <div class="col-md-12 col-sm-12">
-      <div class="row">
-        <div class="col-md-8 col-sm-12">
-          <div class="row">
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>CUI</label>
-                <input type="text" class="form-control" placeholder="número de dpi"
-                name="add_person_school.cui"
-                v-model="form_person_school.cui"
-                data-vv-as="número de dpi"
-                v-validate="'required|numeric|min:13|max:13'"
-                data-vv-scope="add_person_school"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.cui')}">
-                <FormError :attribute_name="'add_person_school.cui'" :errors_form="errors"> </FormError>
-              </div>
-            </div>    
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>Correo Electrónico</label>
-                <input type="text" class="form-control" placeholder="correo electrónico"
-                name="add_person_school.email"
-                v-model="form_person_school.email"
-                data-vv-as="correo electrónico"
-                v-validate="'required|email|max:100'"
-                data-vv-scope="add_person_school"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.email')}">
-                <FormError :attribute_name="'add_person_school.email'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>Primer Nombre</label>
-                <input type="text" class="form-control" placeholder="primer nombre"
-                name="add_person_school.name_one"
-                v-model="form_person_school.name_one"
-                data-vv-as="primer nombre"
-                v-validate="'required|max:25'"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.name_one')}">
-                <FormError :attribute_name="'add_person_school.name_one'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>Segundo Nombre</label>
-                <input type="text" class="form-control" placeholder="segundo nombre"
-                name="add_person_school.name_two"
-                v-model="form_person_school.name_two"
-                data-vv-as="segundo nombre"
-                v-validate="'max:25'"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.name_two')}">
-                <FormError :attribute_name="'add_person_school.name_two'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>Primer Apellido</label>
-                <input type="text" class="form-control" placeholder="primer apellido"
-                name="add_person_school.last_name_one"
-                v-model="form_person_school.last_name_one"
-                data-vv-as="primer apellido"
-                v-validate="'required|max:25'"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.last_name_one')}">
-                <FormError :attribute_name="'add_person_school.last_name_one'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-6 col-sm-12">
-              <div class="form-group">
-                <label>Segundo Apellido</label>
-                <input type="text" class="form-control" placeholder="segundo apellido"
-                name="add_person_school.last_name_two"
-                v-model="form_person_school.last_name_two"
-                data-vv-as="segundo apellido"
-                v-validate="'max:25'"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.last_name_two')}">
-                <FormError :attribute_name="'add_person_school.last_name_two'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Municipio</label>
-                <multiselect v-model="form_person_school.municipalities_id_people"
-                    v-validate="'required'" 
-                    data-vv-name="add_person_school.municipalities_id_people"
-                    data-vv-as="municipio"
-                    :options="municipalities" placeholder="seleccione municipio"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    :show-labels="false"
-                    label="name" track-by="id">
-                    <span slot="noResult">No se encontro ningún registro</span>
-                    </multiselect>
-                    <FormError :attribute_name="'add_person_school.municipalities_id_people'" :errors_form="errors"> </FormError>
-              </div>
-            </div>
-
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Dirección</label>
-                <input type="text" class="form-control" placeholder="dirección"
-                name="add_person_school.direction_people"
-                v-model="form_person_school.direction_people"
-                data-vv-as="dirección"
-                v-validate="'required|max:175'"
-                :class="{'input':true,'has-errors': errors.has('add_person_school.direction_people')}">
-                <FormError :attribute_name="'add_person_school.direction_people'" :errors_form="errors"> </FormError>
-              </div>
-            </div> 
-
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Rol</label>
-                <multiselect v-model="form_person_school.type_person"
-                    v-validate="'required'" 
-                    data-vv-name="add_person_school.type_person"
-                    data-vv-as="rol"
-                    :options="type_persons" placeholder="seleccione el rol"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    :show-labels="false"
-                    label="name" track-by="id">
-                    <span slot="noResult">No se encontro ningún registro</span>
-                    </multiselect>
-                    <FormError :attribute_name="'add_person_school.type_person'" :errors_form="errors"> </FormError>
-              </div>
-            </div>      
-
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                  <label></label>
-                  <b-form-checkbox
-                  v-model="form_person_school.president"
-                  name="president"
-                  >
-                    ¿Los datos que está registrando, pertenecen a un presidente?
-                  </b-form-checkbox>
-                  <div class="text-right"><strong>{{ form_person_school.president ? 'Si es Presidente':'No es Presidente' }}</strong></div>
-              </div>
-            </div>
-
-          </div>
+      <div class="col-md-12 col-sm-12">
+        <div class="form-group">
+          <label>Número de Teléfono</label>
+          <input type="text" class="form-control" placeholder="número de teléfono"
+          name="add_phone_person.number"
+          v-model="form_phone_person.number"
+          data-vv-as="número de teléfono"
+          v-validate="'required|numeric|min:8|max:8'"
+          data-vv-scope="add_phone_person"
+          :class="{'input':true,'has-errors': errors.has('add_phone_person.number')}">
+          <FormError :attribute_name="'add_phone_person.number'" :errors_form="errors"> </FormError>
         </div>
-        <div class="col-md-4 col-sm-12">
-          <div class="row">
-
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Número de Teléfono</label>
-                <input type="text" class="form-control" placeholder="número de teléfono"
-                name="add_phone_person.number"
-                v-model="form_phone_person.number"
-                data-vv-as="número de teléfono"
-                v-validate="'required|numeric|min:8|max:8'"
-                :class="{'input':true,'has-errors': errors.has('add_phone_person.number')}">
-                <FormError :attribute_name="'add_phone_person.number'" :errors_form="errors"> </FormError>
-              </div>
-            </div>           
-            <div class="col-md-12 col-sm-12">            
-              <div class="form-group">
-                <label>Compania</label>
-                <multiselect v-model="form_phone_person.companies_id"
-                    v-validate="'required'" 
-                    data-vv-name="add_phone_person.companies_id"
-                    data-vv-as="compania"
-                    :options="companies" placeholder="seleccione compania"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    :show-labels="false"
-                    label="name" track-by="id">
-                    <span slot="noResult">No se encontro ningún registro</span>
-                    </multiselect>
-                    <FormError :attribute_name="'add_phone_person.companies_id'" :errors_form="errors"> </FormError>
-              </div>
-            </div>
-            <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm">Agregar teléfono</button>
-            </div>
-          </div>
+      </div>           
+      <div class="col-md-12 col-sm-12">            
+        <div class="form-group">
+          <label>Compania</label>
+          <multiselect v-model="form_phone_person.companies_id"
+              v-validate="'required'" 
+              data-vv-name="add_phone_person.companies_id"
+              data-vv-as="compania"
+              :options="companies" placeholder="seleccione compania"  
+              :searchable="true"
+              :allow-empty="false"
+              :show-labels="false"
+              data-vv-scope="add_phone_person"
+              label="name" track-by="id">
+              <span slot="noResult">No se encontro ningún registro</span>
+              </multiselect>
+              <FormError :attribute_name="'add_phone_person.companies_id'" :errors_form="errors"> </FormError>
         </div>
-      </div>      
+      </div>
     </div>
     <hr>
     <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="addPersonPhone"><i class="fa fa-save"></i> Guardar</button>
+    </div>      
+  </div>
+</form>
+            </b-modal>            
+          </div>
+
+          <div class="col-lg-12">
+            <b-modal ref="modal_person" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop size="xl">
+<form>
+  <div class="row">
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>CUI</label>
+        <input type="text" class="form-control" placeholder="número de dpi"
+        name="add_person_school.cui"
+        v-model="form_person_school.cui"
+        data-vv-as="número de dpi"
+        v-validate="'required|numeric|min:13|max:13'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.cui')}">
+        <FormError :attribute_name="'add_person_school.cui'" :errors_form="errors"> </FormError>
+      </div>
+    </div>    
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <input type="text" class="form-control" placeholder="correo electrónico"
+        name="add_person_school.email"
+        v-model="form_person_school.email"
+        data-vv-as="correo electrónico"
+        v-validate="'required|email|max:100'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.email')}">
+        <FormError :attribute_name="'add_person_school.email'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Primer Nombre</label>
+        <input type="text" class="form-control" placeholder="primer nombre"
+        name="add_person_school.name_one"
+        v-model="form_person_school.name_one"
+        data-vv-as="primer nombre"
+        v-validate="'required|max:25'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.name_one')}">
+        <FormError :attribute_name="'add_person_school.name_one'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Segundo Nombre</label>
+        <input type="text" class="form-control" placeholder="segundo nombre"
+        name="add_person_school.name_two"
+        v-model="form_person_school.name_two"
+        data-vv-as="segundo nombre"
+        v-validate="'max:25'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.name_two')}">
+        <FormError :attribute_name="'add_person_school.name_two'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Primer Apellido</label>
+        <input type="text" class="form-control" placeholder="primer apellido"
+        name="add_person_school.last_name_one"
+        v-model="form_person_school.last_name_one"
+        data-vv-as="primer apellido"
+        v-validate="'required|max:25'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.last_name_one')}">
+        <FormError :attribute_name="'add_person_school.last_name_one'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <label>Segundo Apellido</label>
+        <input type="text" class="form-control" placeholder="segundo apellido"
+        name="add_person_school.last_name_two"
+        v-model="form_person_school.last_name_two"
+        data-vv-as="segundo apellido"
+        v-validate="'max:25'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.last_name_two')}">
+        <FormError :attribute_name="'add_person_school.last_name_two'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-12 col-sm-12">
+      <div class="form-group">
+        <label>Municipio</label>
+        <multiselect v-model="form_person_school.municipalities_id_people"
+            v-validate="'required'" 
+            data-vv-name="add_person_school.municipalities_id_people"
+            data-vv-as="municipio"
+            :options="municipalities" placeholder="seleccione municipio"  
+            :searchable="true"
+            :allow-empty="false"
+            :show-labels="false"
+            data-vv-scope="add_person_school"
+            label="name" track-by="id">
+            <span slot="noResult">No se encontro ningún registro</span>
+            </multiselect>
+            <FormError :attribute_name="'add_person_school.municipalities_id_people'" :errors_form="errors"> </FormError>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-sm-12">
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" class="form-control" placeholder="dirección"
+        name="add_person_school.direction_people"
+        v-model="form_person_school.direction_people"
+        data-vv-as="dirección"
+        v-validate="'required|max:175'"
+        data-vv-scope="add_person_school"
+        :class="{'input':true,'has-errors': errors.has('add_person_school.direction_people')}">
+        <FormError :attribute_name="'add_person_school.direction_people'" :errors_form="errors"> </FormError>
+      </div>
+    </div> 
+
+    <div class="col-md-12 col-sm-12">
+      <div class="form-group">
+        <label>Rol</label>
+        <multiselect v-model="form_person_school.type_person"
+            v-validate="'required'" 
+            data-vv-name="add_person_school.type_person"
+            data-vv-as="rol"
+            :options="type_persons" placeholder="seleccione el rol"  
+            :searchable="true"
+            :allow-empty="false"
+            :show-labels="false"
+            data-vv-scope="add_person_school"
+            label="name" track-by="id">
+            <span slot="noResult">No se encontro ningún registro</span>
+            </multiselect>
+            <FormError :attribute_name="'add_person_school.type_person'" :errors_form="errors"> </FormError>
+      </div>
+      
+    </div>        
+
+    <hr>
+    <div class="col-md-12 col-sm-12 text-right">
+      <button type="button" class="btn btn-primary btn-sm" @click="addOredit"><i class="fa fa-save"></i> Guardar</button>
     </div>      
   </div>
 </form>
@@ -357,28 +353,34 @@
                                 <th>Usuario</th>
                                 <th>Dirección</th>
                                 <th>Rol</th>
-                                <th>Teléfonos</th>
+                                <th>Teléfono</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody v-if="Object.keys(items).length !== 0">
                           <template v-for="(item, index) in items.people">
                             <tr v-bind:key="index">
-                                <td class="text-center" v-text="item.person.cui"></td>
-                                <td v-text="concat_name(item.person.name_one,item.person.name_two,item.person.last_name_one,item.person.last_name_two)"></td>
-                                <td class="text-center"><span class="badge bg-primary">{{ item.person.user.verified == 'VERIFICADO' ? 'ACTIVO' : 'INACTIVO' }}</span></td>
-                                <td>{{ item.person.municipality.departament.name+', '+item.person.municipality.name+', '+item.person.direction }}</td>
-                                <td v-text="item.person.user.rol.name"></td>
-                                <td>
+                                <td style="vertical-align:middle;" class="text-center" v-text="item.person.cui"></td>
+                                <td style="vertical-align:middle;" v-text="concat_name(item.person.name_one,item.person.name_two,item.person.last_name_one,item.person.last_name_two)"></td>
+                                <td style="vertical-align:middle;" class="text-center"><span class="badge bg-primary">{{ item.person.user.verified == 'VERIFICADO' ? 'ACTIVO' : 'INACTIVO' }}</span></td>
+                                <td style="vertical-align:middle;">{{ item.person.municipality.departament.name+', '+item.person.municipality.name+', '+item.person.direction }}</td>
+                                <td style="vertical-align:middle;" v-text="item.person.user.rol.name"></td>
+                                <td style="vertical-align:middle;" class="text-center">
+                                  <button type="button" class="btn btn-success btn-sm" @click="viewModalPhone(item.person.id)"><i class="fa fa-phone-square"></i></button> 
+                                  <hr>
                                   <template v-for="(item_phone, index_phone) in item.person.phons">
-                                    <b-button v-bind:key="index_phone" :variant="color(item_phone.company.name)">
+                                    <b-button v-bind:key="index_phone" class="btn btn-sm" style="font-size: 10px;"  :variant="color(item_phone.company.name)">
                                       {{ item_phone.company.name }}
-                                      <b-badge style="font-size: 12px;" variant="light">{{ item_phone.number }}<span class="sr-only"></span></b-badge>
+                                      <b-badge variant="light">{{ item_phone.number }}<span class="sr-only"></span></b-badge>
                                     </b-button>  
-                                  </template>                                
+                                    <button v-bind:key="index_phone+'Quitar'" type="button" class="btn btn-danger btn-sm" @click="quitarPersonPhone(item)"><i class="fa fa-tty"></i></button> 
+                                    <hr v-bind:key="index_phone+'Espacio'">                                    
+                                  </template>                               
                                 </td>
-                                <td class="text-center">
-                                    <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(item)"><i class="fa fa-trash"></i></button>
+                                <td style="vertical-align:middle;" class="text-center">
+                                    <button class="btn btn-primary btn-sm" @click="mapData(item)"><i class="fa fa-pencil"></i></button>
+                                    <br><br>
+                                    <button class="btn btn-danger btn-sm" @click="destroyPersonSchool(item)"><i class="fa fa-trash"></i></button>
                                 </td>                    
                             </tr>
                           </template>
@@ -654,6 +656,7 @@ export default {
           })
           self.getAll(self.schools_id);
           self.getComany()
+          self.getTypePersona()
         })
         .catch(r => {});
     },
@@ -734,6 +737,7 @@ export default {
 
     clearData(){
       let self = this
+      self.form_person_school.id = null
       self.form_person_school.cui = ''
       self.form_person_school.name_one = ''
       self.form_person_school.name_two = ''
@@ -742,7 +746,8 @@ export default {
       self.form_person_school.direction_people = ''
       self.form_person_school.email = ''
       self.form_person_school.municipalities_id_people = null
-      self.form_person_school.type_person = null    
+      self.form_person_school.type_person = null  
+      self.$refs['modal_person'].hide()        
     },
 
     //Obtener los roles
@@ -752,6 +757,7 @@ export default {
 
       self.type_persons.push({'id': 'DIRECTOR', 'name': 'DIRECTOR'})
       self.type_persons.push({'id': 'PROFESOR', 'name': 'PROFESOR'})
+      self.type_persons.push({'id': 'PRESIDENTE', 'name': 'PRESIDENTE'})
       self.type_persons.push({'id': 'OTRO', 'name': 'OTRO'})
 
       self.loading = false;
@@ -763,11 +769,184 @@ export default {
         self.clearData()
         self.getTypePersona()
     },
+
+    addOredit(){
+      let self = this
+      self.$validator.validateAll('add_person_school').then((result) => {
+          if (result) {
+              self.pasarMayusculas()
+              self.form_person_school.id === null ? self.addPersonSchool() : self.editPersonSchool()
+          }
+      });
+    },
+
+    mapData(item){
+      let self = this
+      self.loading = true
+        self.form_person_school.id = item.id
+        self.form_person_school.cui = item.person.cui
+        self.form_person_school.name_one = item.person.name_one
+        self.form_person_school.name_two = item.person.name_two
+        self.form_person_school.last_name_one = item.person.last_name_one
+        self.form_person_school.last_name_two = item.person.last_name_two
+        self.form_person_school.direction_people = item.person.direction
+        self.form_person_school.email = item.person.email
+        self.form_person_school.municipalities_id_people = {id: item.person.municipality.id, name: item.person.municipality.departament.name+' / '+item.person.municipality.name}
+        self.form_person_school.type_person = {id: item.type_person, name: item.type_person}  
+      self.loading = false
+      self.$refs['modal_person'].show()
+    },
+
+    addPersonSchool(){
+      let self = this
+      self.loading = true
+      let data = self.form_person_school
+      data.type_person = self.form_person_school.type_person.id
+      data.municipalities_id_people = self.form_person_school.municipalities_id_people.id
+       
+      self.$store.state.services.personschoolService
+        .create(data)
+        .then(r => {
+          self.loading = false
+          if(r.response){
+            self.$toastr.error(r.response.data.error, 'error')
+            return
+          }
+          self.$toastr.success('registro agregado con exito', 'exito')
+          self.getMunicipalities()
+          self.clearData()
+        })
+        .catch(r => {});
+    },
+
+    editPersonSchool(){
+      let self = this
+      self.loading = true
+      let data = self.form_person_school
+      data.type_person = self.form_person_school.type_person.id
+      data.municipalities_id_people = self.form_person_school.municipalities_id_people.id
+
+      self.$store.state.services.personschoolService
+        .update(data)
+        .then(r => {
+          self.loading = false
+          if(r.status != 201){
+            for (let value of Object.values(r.response.data)) {
+              self.$toastr.error(value, 'Mensaje')
+            }
+            return
+          }
+          self.$toastr.success('registro agregado con exito', 'exito')
+          self.getMunicipalities()
+          self.clearData()
+        })
+        .catch(r => {});
+    },    
+
+    destroyPersonSchool(data){
+      let self = this
+
+      self.$swal({
+        title: "¿Eliminar registro?",
+        text: "¿Está seguro de elminar el número de CUI "+ data.person.cui + '?',
+        type: "warning",
+        showCancelButton: true
+      }).then((result) => { 
+          if (result.value) { 
+              self.loading = true
+              self.$store.state.services.personschoolService
+                .destroy(data)
+                .then(r => {
+                  self.loading = false
+                  if(r.response){
+                    self.$toastr.error(r.response.data.error, 'error')
+                    return
+                  }
+                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  self.getMunicipalities()
+                })
+                .catch(r => {});
+          }
+      }); 
+    },
+
+    viewModalPhone(id){
+        let self = this
+        self.$refs['modal_person_phone'].show()
+        self.form_phone_person.people_id = id
+        self.form_phone_person.number = ''
+        self.form_phone_person.companies_id = null
+        self.getTypePersona()
+    },
+
+    addPersonPhone(){
+      let self = this
+      self.$validator.validateAll('add_phone_person').then((result) => {
+          if (result) {
+            self.loading = true
+            let data = self.form_phone_person
+            data.companies_id = self.form_phone_person.companies_id.id
+            
+            self.$store.state.services.phonepersonService
+              .create(data)
+              .then(r => {
+                self.loading = false
+                if(r.response){
+                  self.$toastr.error(r.response.data.error, 'error')
+                  return
+                }
+
+                self.$refs['modal_person_phone'].hide()
+                //Limpiar datos
+                self.form_phone_person.number = ''
+                self.form_phone_person.companies_id = null
+                self.form_phone_person.people_id = null
+                self.$validator.reset()
+                self.$validator.reset()
+
+                self.$toastr.success('registro actualizado con exito', 'exito')
+                self.getMunicipalities()
+              })
+              .catch(r => {});
+          }
+      });
+    },
+
+    quitarPersonPhone(data){
+      let self = this
+
+      self.$swal({
+        title: "¿Eliminar registro?",
+        text: "¿Está seguro de elminar el número de teléfono "+ data.number + '?',
+        type: "warning",
+        showCancelButton: true
+      }).then((result) => { 
+          if (result.value) { 
+              self.loading = true
+              self.$store.state.services.phonepersonService
+                .destroy(data)
+                .then(r => {
+                  self.loading = false
+                  if(r.response){
+                        self.$toastr.error(r.response.data.error, 'error')
+                        return
+                    }
+                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  self.getMunicipalities()
+                })
+                .catch(r => {});
+          }
+      }); 
+    },
   },
   computed:{
       title(){
           let self = this
           return self.form_person_school.id == null ? 'Agregar persona' : 'Editar persona con cui'+self.form_person_school.cui
+      },
+      title_person_phone(){
+          let self = this
+          return 'Agregar número de teléfono'
       }
   },
   mounted(){

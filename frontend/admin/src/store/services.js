@@ -18,6 +18,8 @@ import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
 import SchoolService from '../services/SchoolService'
 import PhoneSchoolService from '../services/PhoneSchoolService'
+import PersonSchoolService from '../services/PersonSchoolService'
+import PhonePersonService from '../services/PhonePersonService'
 import ProviderService from '../services/ProviderService'
 import PurchaseService from '../services/PurchaseService'
 
@@ -91,7 +93,9 @@ export default {
     productService: new ProductService(Axios, baseUrl),
     priceService: new PriceService(Axios, baseUrl),
     schoolService: new SchoolService(Axios, baseUrl),
+    personschoolService: new PersonSchoolService(Axios, baseUrl),
     phoneschoolService: new PhoneSchoolService(Axios, baseUrl),
+    phonepersonService: new PhonePersonService(Axios, baseUrl),
     purchaseService: new PurchaseService(Axios, baseUrl),
     providerService: new ProviderService(Axios, baseUrl),
 

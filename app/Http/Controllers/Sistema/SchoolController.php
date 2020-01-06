@@ -205,13 +205,15 @@ class SchoolController extends ApiController
      */
     public function show(School $school)
     {
-        $school = School::with(
+        $school = School::with([
                                 'municipality:id,name,departaments_id',
                                 'municipality.departament:id,name',
                                 'person:id,cui,name_one,name_two,last_name_one,last_name_two',
                                 'phons:id,number,companies_id,schools_id',
                                 'phons.company:id,name',
-                                'people:id,type_person,current,schools_id,people_id',
+                                'people' => function ($query) {
+                                    $query->where('current', true);
+                                },
                                 'people.person:id,cui,name_one,name_two,last_name_one,last_name_two,email,municipalities_id,direction',
                                 'people.person.phons:id,number,companies_id,people_id',
                                 'people.person.phons.company:id,name',
@@ -220,7 +222,7 @@ class SchoolController extends ApiController
                                 'people.person.user:id,verified,people_id,rols_id,current_school',
                                 'people.person.user.rol:id,name',
                                 'people.person.school_president:id,current,people_id,schools_id'
-                              )
+                            ])
                             ->where('id',$school->id)
                             ->get();
         return $this->showAll($school);
