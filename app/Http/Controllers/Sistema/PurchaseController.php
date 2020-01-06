@@ -15,7 +15,7 @@ class PurchaseController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
     /**
      * Display a listing of the resource.
@@ -71,7 +71,7 @@ class PurchaseController extends ApiController
                 if(!is_null($quantify)){
                     $quantify->sumary_purchase = $quantify->sumary_purchase + $detail['quantity'];
                     $summary = $quantify->sumary_schools - $quantify->summary_purcharse;
-                    $quantify->subtraction = $summary > 0 ? $sumary : 0;
+                    $quantify->subtraction = $summary > 0 ? $summary : 0;
                     $quantify->save();
                 }
             }
