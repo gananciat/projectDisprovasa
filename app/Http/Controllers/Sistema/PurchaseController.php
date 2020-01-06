@@ -10,12 +10,13 @@ use App\Models\PurcharseDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
+use App\Models\Product;
 
 class PurchaseController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
     /**
      * Display a listing of the resource.
@@ -68,11 +69,18 @@ class PurchaseController extends ApiController
                 $year = Carbon::now()->year;
                 $quantify = Quantify::where('products_id', $detail['product_id'])->where('year',$year)->first();
 
+                //Consultar Stock
+                $consultar = Product::find($detail['product_id']);
+                $stock = !is_null($consultar) ? $consultar->stock : 0;
+
                 if(!is_null($quantify)){
                     $quantify->sumary_purchase = $quantify->sumary_purchase + $detail['quantity'];
-                    $summary = $quantify->sumary_schools - $quantify->sumary_purcharse;
+                    $summary = $quantify->sumary_schools - ($quantify->sumary_purcharse + $stock);
                     $quantify->subtraction = $summary > 0 ? $summary : 0;
                     $quantify->save();
+
+                    $consultar->stock += $detail['quantity'];
+                    $consultar->save();
                 }
             }
 
@@ -98,9 +106,17 @@ class PurchaseController extends ApiController
                 $year = Carbon::parse($purchase->date)->year;
                 $quantify = Quantify::where('products_id', $detail->product_id)->where('year',$year)->first();
                 if(!is_null($quantify)){
+
+                    //Consultar Stock
+                    $consultar = Product::find($detail->product_id);
+                    $consultar->stock -= $detail->quantity;
+                    $consultar->save();
+
+                    $stock = !is_null($consultar) ? $consultar->stock : 0;
+
                     $quantify->sumary_purchase = $quantify->sumary_purchase - $detail->quantity;
-                    $summary = $quantify->sumary_schools - $quantify->summary_purcharse;
-                    $quantify->subtraction = $summary > 0 ? $sumary : 0;
+                    $summary = $quantify->sumary_schools - ($quantify->summary_purcharse + $stock);
+                    $quantify->subtraction = $summary > 0 ? $summary : 0;
                     $quantify->save();
                 }
             }     

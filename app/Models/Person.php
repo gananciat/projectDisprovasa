@@ -64,7 +64,7 @@ class Person extends Model
 
     public function phons()
     {
-        return $this->hasMany(PhonePerson::class);
+        return $this->hasMany(PhonePerson::class,'people_id');
     }
 
     public function schools()
@@ -79,7 +79,7 @@ class Person extends Model
 
     public function school_president()
     {
-        return $this->belongsTo(SchoolPresident::class);
+        return $this->hasMany(SchoolPresident::class,'people_id');
     }
 
     public function orders()

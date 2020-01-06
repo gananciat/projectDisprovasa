@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Quantify;
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
@@ -17,7 +18,7 @@ class DetailOrderController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     /**
@@ -87,6 +88,8 @@ class DetailOrderController extends ApiController
                 $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                 $insert_progreso_orden->save();
 
+                $buscar_stock = Product::find($insert_detalle_orden->products_id);
+                $stock = !is_null($buscar_stock) ? $buscar_stock->stock : 0;
                 $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',date('Y'))->first();
 
                 if(is_null($insert_quantify)) {
@@ -95,7 +98,7 @@ class DetailOrderController extends ApiController
                     $insert_quantify->subtraction = $insert_quantify->sumary_schools;
                 } else {
                     $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-                    $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
+                    $insert_quantify->subtraction = $insert_quantify->sumary_schools - ($insert_quantify->sumary_purchase + $stock);
                 }
 
                 $insert_quantify->year = date('Y');
@@ -188,6 +191,10 @@ class DetailOrderController extends ApiController
                     //Asignamos el nuevo subtotal al total
                     $order->total = $order->total + $detail_order->subtotal;
 
+                    //Verificar stock
+                    $buscar_stock = Product::find($detail_order->products_id);
+                    $stock = !is_null($buscar_stock) ? $buscar_stock->stock : 0;
+
                     //Proceso para acumular producto por año
                     $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
 
@@ -198,7 +205,7 @@ class DetailOrderController extends ApiController
                     } else {
                         $insert_quantify->sumary_schools = $insert_quantify->sumary_schools - $progress_order->original_quantity;
                         $insert_quantify->sumary_schools = $detail_order->quantity;
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - ($insert_quantify->sumary_purchase + $stock);
                     }
 
                     $progress_order->original_quantity = $detail_order->quantity;
