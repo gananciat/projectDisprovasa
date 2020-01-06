@@ -17,6 +17,7 @@ import PresentationService from '../services/PresentationService'
 import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
 import SchoolService from '../services/SchoolService'
+import PhoneSchoolService from '../services/PhoneSchoolService'
 import ProviderService from '../services/ProviderService'
 import PurchaseService from '../services/PurchaseService'
 
@@ -28,7 +29,7 @@ import DetailOrderService from '../services/DetailOrderService'
 
 // Axios Configuration
 //let baseUrl = 'http://sistematio.test/' //base url desarrollo
-let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistemapro.test:8000/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
@@ -90,6 +91,7 @@ export default {
     productService: new ProductService(Axios, baseUrl),
     priceService: new PriceService(Axios, baseUrl),
     schoolService: new SchoolService(Axios, baseUrl),
+    phoneschoolService: new PhoneSchoolService(Axios, baseUrl),
     purchaseService: new PurchaseService(Axios, baseUrl),
     providerService: new ProviderService(Axios, baseUrl),
 
