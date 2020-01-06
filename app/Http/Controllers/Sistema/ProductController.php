@@ -23,7 +23,7 @@ class ProductController extends ApiController
      */
     public function index()
     {
-        $products = Product::with('category','presentation','prices')->get();
+        $products = Product::with('category','presentation','prices','quantify')->get();
         return $this->showAll($products);
     }
 

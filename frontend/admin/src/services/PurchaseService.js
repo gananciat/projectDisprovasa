@@ -1,10 +1,10 @@
-class providerService {
+class purchaseService {
     axios
     baseUrl
 
     constructor(axios, baseUrl) {
         this.axios = axios
-        this.baseUrl = `${baseUrl}providers`
+        this.baseUrl = `${baseUrl}purchases`
     }
 
     getAll() {
@@ -15,11 +15,6 @@ class providerService {
     get(id) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${id}`);
-    }
-
-    getByNit(nit) {
-        let self = this;
-        return self.axios.get(`${self.baseUrl}_show_by_nit/${nit}`);
     }
 
     create(data) {
@@ -38,4 +33,4 @@ class providerService {
     }
 }
 
-export default providerService
+export default purchaseService

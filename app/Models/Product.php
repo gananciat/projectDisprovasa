@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Price;
 use App\Models\Category;
+use App\Models\Quantify;
 use App\Models\Sentence;
 use App\Models\DetailOrder;
 use App\Models\Presentation;
@@ -49,5 +50,10 @@ class Product extends Model
     public function detail()
     {
         return $this->belongsTo(DetailOrder::class);
+    }
+
+    public function quantify()
+    {
+        return $this->hasOne(Quantify::class,'products_id');
     }
 }
