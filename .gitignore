@@ -18,3 +18,4 @@ frontend/school/bundle/
 frontend/school/node_modules/
 public/bundle
 resources/views/home.blade.php
+resources/views/escuela.blade.php

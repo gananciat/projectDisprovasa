@@ -12,6 +12,7 @@ use App\Models\DetailOrder;
 use App\Models\Month;
 use App\Models\OrderStatus;
 use App\Models\PersonSchool;
+use App\Models\Product;
 use App\Models\ProgressOrder;
 use App\Models\Quantify;
 use App\Models\Year;
@@ -135,13 +136,18 @@ class OrderController extends ApiController
                     $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                     $insert_progreso_orden->save();
 
+                    $buscar_stock = Product::find($insert_detalle_orden->products_id);
+                    $stock = !is_null($buscar_stock) ? $buscar_stock->stock : 0;
+                    
                     $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
 
                     if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
                         $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools;
                     } else {
                         $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - ($insert_quantify->sumary_purchase + $stock);
                     }
 
                     $insert_quantify->year = $anio->year;
@@ -255,6 +261,7 @@ class OrderController extends ApiController
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
+    //falta
     public function destroy(Order $order)
     {
         try {
