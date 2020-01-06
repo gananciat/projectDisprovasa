@@ -1,17 +1,26 @@
 input:valid {
-  border-color: green;
-  height: 34px;
+    border-color: green;
+    height: 34px;
 }
 
 input:invalid {
-  border-color: red;
-  height: 34px;
+    border-color: red;
+    height: 34px;
 }
 
 textarea:invalid {
-  border-color: red;
+    border-color: red;
 }
 
 textarea:valid {
-  border-color: green;
+    border-color: green;
+}
+
+.h-tooltip {
+    z-index: 99999!important;
+}
+
+.ribbon-wrapper.ribbon-xl {
+    height: 100%;
+    width: 175px;
 }

@@ -16,10 +16,11 @@ const state = {
     is_login: false,
     token_expired: null,
     client_id: 2,
-    base_url: 'http://wwww.project.com/',
-    client_secret: 'EV5SsYtXroE1gUrBTMyt72vP5fJcRI55fWPzNWYJ'
     //base_url: 'http://wwww.project.com/',
     //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
+
+    base_url: 'http://sistematio.test/',
+    client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'
 }
 
 const mutations = {

@@ -11,7 +11,7 @@
     </aside>
     <!-- /.control-sidebar -->
 
-    <fab
+    <fab v-if="isLogin"
       :position-type="'fixed'"
       :ripple-color="'light'"
       :icon-size="'small'"
