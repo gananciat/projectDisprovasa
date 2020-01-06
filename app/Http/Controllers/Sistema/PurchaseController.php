@@ -70,7 +70,7 @@ class PurchaseController extends ApiController
 
                 if(!is_null($quantify)){
                     $quantify->sumary_purchase = $quantify->sumary_purchase + $detail['quantity'];
-                    $summary = $quantify->sumary_schools - $quantify->summary_purcharse;
+                    $summary = $quantify->sumary_schools - $quantify->sumary_purcharse;
                     $quantify->subtraction = $summary > 0 ? $sumary : 0;
                     $quantify->save();
                 }

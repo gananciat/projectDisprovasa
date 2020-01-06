@@ -140,8 +140,10 @@ class OrderController extends ApiController
                     if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
                         $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools;
                     } else {
                         $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
 
                     $insert_quantify->year = $anio->year;
@@ -255,6 +257,7 @@ class OrderController extends ApiController
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
+    //falta
     public function destroy(Order $order)
     {
         try {

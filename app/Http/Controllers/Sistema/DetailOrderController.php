@@ -92,8 +92,10 @@ class DetailOrderController extends ApiController
                 if(is_null($insert_quantify)) {
                     $insert_quantify = new Quantify();
                     $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
+                    $insert_quantify->subtraction = $insert_quantify->sumary_schools;
                 } else {
                     $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                    $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                 }
 
                 $insert_quantify->year = date('Y');
@@ -192,9 +194,11 @@ class DetailOrderController extends ApiController
                     if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
                         $insert_quantify->sumary_schools = $detail_order->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools;
                     } else {
                         $insert_quantify->sumary_schools = $insert_quantify->sumary_schools - $progress_order->original_quantity;
                         $insert_quantify->sumary_schools = $detail_order->quantity;
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
 
                     $progress_order->original_quantity = $detail_order->quantity;
@@ -245,6 +249,7 @@ class DetailOrderController extends ApiController
                     $order->total = $order->total - $detail_order->subtotal;
                     $buscar = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
                     $buscar->sumary_schools = $buscar->sumary_schools - $detail_order->quantity;
+                    $buscar->subtraction = $detail_order->quantity + $buscar->sumary_purchase;
                     $buscar->save();
                     $detail_order->delete();
                 } else {
