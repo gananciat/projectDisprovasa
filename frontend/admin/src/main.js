@@ -119,8 +119,13 @@ const options = {
  
 Vue.use(VueSweetalert2,options)
 
+import Vue2Filters from 'vue2-filters'
+Vue.use(Vue2Filters)
+
 //volver a validar
 store.dispatch('autoLogin')
+
+
 
 /* eslint-disable no-new */
 new Vue({

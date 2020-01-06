@@ -38,13 +38,20 @@ Route::resource('presentations', 'Sistema\PresentationController', ['except' => 
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('products', 'Sistema\ProductController', ['except' => ['create']]);
 Route::resource('providers', 'Sistema\ProviderController', ['except' => ['create']]);
+Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\providerController@showByNit');
+
 Route::resource('products.prices', 'Sistema\ProductPriceController', ['except' => ['edit']]);
 Route::resource('schools', 'Sistema\SchoolController', ['except' => ['create', 'edit']]);
 Route::resource('school_presidents', 'Sistema\SchoolPresidentController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
 Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
+<<<<<<< HEAD
+Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'show', 'edit']]);
+Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
+=======
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
+>>>>>>> ba47bbb325a12d4e44d90ee5c8de1064f14a632c
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

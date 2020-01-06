@@ -72,49 +72,6 @@
     </div>
     <!-- /.sidebar -->
   </aside> 
-<!-- <aside class="main-sidebar">
-        <section class="sidebar">      
-          <ul class="sidebar-menu">
-            <li class="header"> Titulo Menu</li>
-            <li>
-              <a href="#">
-                <i class="fa fa-tasks"></i> <span>Escritorio</span>
-              </a>
-            </li>  
-            <template v-for="item, i in items">
-                <li class="treeview">
-                  <a href="#">
-                    <i class="fa fa-laptop"></i>
-                    <span>{{item.text}}</span>
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </a>
-                  <ul class="treeview-menu">
-                   <template v-for="child, c in item.children" :index="(i.toString() + c)">
-                    <router-link tag="li" :to="''+child.path" exact>
-                            <a><i :class="'fa fa-' + child.icon"></i>{{child.text}}</a>
-                        </router-link>
-                   </template>
-                   </ul>
-
-                </li>
-            </template>
-
-            <li> 
-              <a href="#">
-                <i class="fa fa-plus-square"></i> <span>Ayuda</span>
-                <small class="label pull-right bg-red">PDF</small>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                <small class="label pull-right bg-yellow">IT</small>
-              </a>
-            </li>
-                        
-          </ul>
-        </section>
-      </aside>-->
 </template>
 
 <script>
@@ -137,7 +94,9 @@ export default {
         icon: "shopping-cart",
         text: "Ingresos",
         children: [
-          { icon: "circle-o", text: "Proveedores", path: "/provider" } ]
+          { icon: "circle-o", text: "Proveedores", path: "/provider" },
+          { icon: "circle-o", text: "Compras", path: "/purchase" }
+        ]
       },
      /* {
         icon: "cog",

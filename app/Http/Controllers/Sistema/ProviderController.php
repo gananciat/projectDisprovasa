@@ -72,6 +72,14 @@ class ProviderController extends ApiController
         return $this->showOne($provider);
     }
 
+    public function showByNit($nit)
+    {
+        $provider = Provider::where('nit',$nit)->first();
+        if(is_null($provider)) return $this->errorResponse('nit '.$nit. ' no coincide con ningun proveedor registrado',422);
+
+        return $this->showOne($provider);
+    }
+
     /**
      * Update the specified resource in storage.
      *

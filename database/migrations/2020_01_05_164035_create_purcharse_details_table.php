@@ -17,10 +17,11 @@ class CreatePurcharseDetailsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('purcharse_id');
             $table->unsignedBigInteger('product_id');
+            $table->decimal('purcharse_price',11,2);
             $table->integer('quantity');
             $table->timestamps();
 
-            $table->foreign('purcharse_id')->references('id')->on('purcharses');
+            $table->foreign('purcharse_id')->references('id')->on('purcharses')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products');
         });
     }
