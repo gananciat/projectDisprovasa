@@ -10,16 +10,21 @@ class CreateBalancesTable extends Migration
     {
         Schema::create('balances', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->decimal('balance',12,2);
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->boolean('positive_balance')->default(1);
-            $table->unsignedBigInteger('schools_id');
+            $table->decimal('balance',12,2); //El monto asignado por el MINEDUC
+            $table->decimal('subtraction',12,2)->default(0); //El monto total despues de la resta al realizar la facturación
+            $table->decimal('subtraction_temporary',12,2)->default(0); //El monto total despues de la resta al realizar un pedido
+            $table->date('start_date'); //Inicio de la fecha del desembolso
+            $table->date('end_date'); //Fin de la fecha del desembolso
+            $table->string('code',100); //Código de Primaria o Preprimaria 
+            $table->string('type_balance',20); //El monto puede ser asignado a ALIMENTACIÓN, GRATUIDAD o UTILES
+            $table->smallInteger('year'); //Año en que fue asignado el monto
+            $table->boolean('current')->default(1); //Llevar control si el monto se encuentra activo
+            $table->unsignedBigInteger('schools_id'); //ID de la escuela
             $table->foreign('schools_id')->references('id')->on('schools');
-            $table->unsignedBigInteger('people_id');
+            $table->unsignedBigInteger('people_id'); //ID de la persona que registra la información
             $table->foreign('people_id')->references('id')->on('people');    
-            $table->unsignedBigInteger('years_id');
-            $table->foreign('years_id')->references('id')->on('years');              
+            $table->unsignedBigInteger('disbursement_id'); //ID del titulo del desembolso
+            $table->foreign('disbursement_id')->references('id')->on('disbursement');              
             $table->timestamps();
         });
     }

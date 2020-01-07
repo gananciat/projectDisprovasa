@@ -289,7 +289,7 @@ export default {
 
       pickerOptions: {
         disabledDate(time) {
-          return time.getTime() < Date.now();
+          return Date.now();
         },
       },
 

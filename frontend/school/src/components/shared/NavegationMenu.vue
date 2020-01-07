@@ -2,31 +2,16 @@
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="#/" class="brand-link">
-      <img :src="getLogo" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">Escuela</span>
-    </a>
-
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar text-center">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img :src="getLogo" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">
-            <small>
-              {{userName}}
-              </small>
-            </a>
-        </div>
+        <div class="image"><img v-bind:src="getLogo" class="img-circle elevation-2" alt="Logo"></div>
+        <div class="info" style="font-size: 12px; color:white;">{{userName}}</div>
       </div>
 
       <!-- Sidebar Menu -->
-      <nav class="mt-2">
+      <nav class="mt-2 text-left">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
@@ -63,49 +48,6 @@
     </div>
     <!-- /.sidebar -->
   </aside> 
-<!-- <aside class="main-sidebar">
-        <section class="sidebar">      
-          <ul class="sidebar-menu">
-            <li class="header"> Titulo Menu</li>
-            <li>
-              <a href="#">
-                <i class="fa fa-tasks"></i> <span>Escritorio</span>
-              </a>
-            </li>  
-            <template v-for="item, i in items">
-                <li class="treeview">
-                  <a href="#">
-                    <i class="fa fa-laptop"></i>
-                    <span>{{item.text}}</span>
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </a>
-                  <ul class="treeview-menu">
-                   <template v-for="child, c in item.children" :index="(i.toString() + c)">
-                    <router-link tag="li" :to="''+child.path" exact>
-                            <a><i :class="'fa fa-' + child.icon"></i>{{child.text}}</a>
-                        </router-link>
-                   </template>
-                   </ul>
-
-                </li>
-            </template>
-
-            <li> 
-              <a href="#">
-                <i class="fa fa-plus-square"></i> <span>Ayuda</span>
-                <small class="label pull-right bg-red">PDF</small>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                <small class="label pull-right bg-yellow">IT</small>
-              </a>
-            </li>
-                        
-          </ul>
-        </section>
-      </aside>-->
 </template>
 
 <script>
@@ -155,11 +97,15 @@ export default {
 
     getLogo(){
       let self = this
+      let devolver = "'../../assets/logo.png'"
       var school = self.$store.state.school
+
       if(!_.isEmpty(school)){
-        return self.$store.state.base_url+school.school.logo
+        if(school.logo != null)
+          devolver = self.$store.state.base_url+school.school.logo
       }
-      return self.$store.state.base_url+'img/logo_empty.png'
+      console.log(devolver)
+      return devolver
     }
   }
 };

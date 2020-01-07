@@ -11,7 +11,7 @@ class Balance extends Model
 {
     protected $table = 'balances';
     protected $fillable = ['balance','start_date','end_date','positive_balance','schools_id',
-                          'people_id','years_id'];
+                          'people_id','year'];
 
     public function person()
     {
