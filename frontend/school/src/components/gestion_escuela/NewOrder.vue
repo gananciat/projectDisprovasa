@@ -51,6 +51,7 @@
                 :class="{'input':true,'has-errors': errors.has('menu.date')}"                
                 placeholder="Seleccionar una fecha"
                 format="dd/MM/yyyy"
+                :align="'center'"
                 @change="bloquear_fechas"
                 :picker-options="pickerOptions"
                 data-vv-scope="menu"
@@ -253,17 +254,20 @@
 </template>
 
 <script>
+import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
   name: "newschool",
   components: {
-      FormError
+      FormError,
+      moment
   },
   data() {
     return {
       loading: false,
       loading_detail: false,
       no_reservation: '',
+      calendario: [],
       title: '',
       items: {},
       products: [],
@@ -282,14 +286,15 @@ export default {
         order: '',
         title: '',
         description: '',
-        date: new Date(),
+        date: new Date().setDate(new Date().getDate() - 2),
         schools_id: '',
         detail_order: []
       },
 
       pickerOptions: {
         disabledDate(time) {
-          return Date.now();
+          var d = new Date();
+          return d.setDate(d.getDate() - 1) > time.getTime();
         },
       },
 
@@ -298,6 +303,7 @@ export default {
   created() {
     let self = this;
     self.form.schools_id = self.$store.state.school.schools_id
+    self.getCalendario()
   },
 
   methods: {
@@ -323,9 +329,35 @@ export default {
       return error
     },
 
+    getCalendario(){
+      let self = this
+      self.loading = true
+
+      self.$store.state.services.calendaryschoolService
+        .get(self.$store.state.school.schools_id)
+        .then(r => {
+          self.calendario = r.data.data
+          self.loading = false
+        })
+        .catch(r => {});   
+    },
+
     bloquear_fechas(){
       let self = this
-      console.log(self.form.date)
+      self.calendario.forEach(function (item) {
+        if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        {
+          self.$swal({
+            title: "ERROR",
+            text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+            type: "error",
+            showCancelButton: false
+          }).then((result) => {
+              self.form.date = ''
+          }); 
+          return 
+        }
+      });    
     },
 
     //Generar correlativo de la orden
@@ -370,13 +402,14 @@ export default {
     //Limpiar formulario
     clearData(){
         let self = this
+        var d = new Date();
 
         self.no_reservation = ''
         self.form.id = null
         self.form.order = null
         self.form.title = null
         self.form.description = null
-        self.form.date = new Date()
+        self.form.date = d.setDate(d.getDate() - 2)
         self.form.detail_order = []
         self.total = 0
 
@@ -528,9 +561,10 @@ export default {
       let self = this
       let renombrar = '';
       let message = ''
+      var d = new Date()
       self.form.title = null
       self.form.description = null
-      self.form.date = new Date()
+      self.form.date = null
       self.form.detail_order = []
       self.total = 0
       switch (self.$route.params.type_order) {

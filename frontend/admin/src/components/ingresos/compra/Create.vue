@@ -40,7 +40,7 @@
                             name="nit"
                             v-model="form.nit"
                             data-vv-as="nit proveedor"
-                            v-validate="'required'"
+                            v-validate="'required|max:13|min:7'"
                             @keyup.enter="onKeyProvider()"
                         :class="{'input':true,'has-errors': errors.has('nit')}">
                         <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
@@ -266,7 +266,11 @@ export default {
 
     onKeyProvider(){
         let self = this
-        self.getProvider(self.form.nit)
+        self.$validator.validateAll().then((result) => {
+          if (result) {
+              self.getProvider(self.form.nit)
+           }
+      });
     },
 
     //agregar detalle de compra

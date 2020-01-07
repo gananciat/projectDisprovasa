@@ -75,14 +75,14 @@
                           <span v-else class="badge bg-success"> Aceptada</span>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <b-button @click="$router.push(`/purchase_view_info/`+data.item.id)" variant="info" v-b-tooltip title="detalle compra" size="sm">
+                          <button type="button" @click="$router.push(`/purchase_view_info/`+data.item.id)" class="btn btn-info btn-sm">
                             <i class="fa fa-eye">
                               </i>
-                        </b-button>
-                        <b-button v-if="!data.item.cancel" @click="update(data.item)" variant="danger" v-b-tooltip size="sm" title="anular compra">
+                        </button>
+                        <button type="button" v-if="!data.item.cancel" @click="update(data.item)" class="btn btn-danger btn-sm" >
                             <i class="fa fa-ban">
                               </i>
-                        </b-button>
+                        </button>
                       </template>
 
                     </b-table>

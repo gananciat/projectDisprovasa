@@ -41,7 +41,7 @@
                           name="nit"
                           v-model="form.nit"
                           data-vv-as="nit proveedor"
-                          v-validate="'required'"
+                          v-validate="'required|max:13|min:7'"
                           :class="{'input':true,'has-errors': errors.has('nit')}">
                           <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
                       </div>
@@ -81,7 +81,7 @@
                             <div class="card-body">
                               
                               <div class="input-group input-group-sm form-group">
-                                <input placeholder="numero de telefono" type="text" class="form-control" v-model="phone">
+                                <input placeholder="numero de telefono" type="number" class="form-control" v-model="phone">
                                 <span class="input-group-append">
                                   <button @click="addPhone" type="button" class="btn btn-success btn-flat"><i class="fa fa-plus"></i></button>
                                 </span>
@@ -460,6 +460,10 @@ export default {
     //agregar telefono
     addPhone(){
       let self = this
+      if(self.phone === ''){
+        self.$toastr.error('debe escribir numero de teléfono','error')
+        return
+      }
       self.form.phones.push({
         number: self.phone
       })

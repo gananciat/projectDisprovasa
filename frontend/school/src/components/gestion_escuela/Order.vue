@@ -3,70 +3,6 @@
 
   <div class="content-wrapper" v-loading="loading">
     <!-- Content Header (Page header) -->
-
-    <!-- Modal para nuevo registro -->
-    <b-modal ref="nuevo" :title="'Editar orden # '+form.order" hide-footer class="modal-backdrop" no-close-on-backdrop>
-      <form>
-          <div class="row">
-            <div class="col-md-4 col-sm-12">
-              <div class="form-group">
-                <label>Fecha para la entrega del pedido</label>
-                <div class="block">
-                  <el-date-picker
-                    v-model="form.date"
-                    type="date"
-                    data-vv-name="date"
-                    data-vv-as="fecha"
-                    v-validate="'required|date_format:yyyy-MM-dd'"
-                    :class="{'input':true,'has-errors': errors.has('menu.date')}"                
-                    placeholder="Seleccionar una fecha"
-                    format="dd/MM/yyyy"
-                    data-vv-scope="menu"
-                    value-format="yyyy-MM-dd">
-                  </el-date-picker>
-                </div>
-                <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
-              </div>
-            </div>
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Menú</label>
-                <input type="text" class="form-control" placeholder="titulo del menú"
-                name="title"
-                v-model="form.title"
-                data-vv-as="titulo del menú"
-                v-validate="'required|min:5|max:125'"
-                data-vv-scope="menu"
-                :class="{'input':true,'has-errors': errors.has('menu.title')}">
-                <FormError :attribute_name="'menu.title'" :errors_form="errors"> </FormError>
-              </div>
-            </div>  
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Descripción</label>
-                <textarea class="form-control" 
-                cols="10" rows="3" 
-                placeholder="descripción del menú"
-                name="description"
-                v-model="form.description"
-                data-vv-as="descripción del menú"
-                v-validate="'required|min:5|max:1000'"
-                data-vv-scope="menu"
-                :class="{'input':true,'has-errors': errors.has('menu.description')}">
-                </textarea>
-                <FormError :attribute_name="'menu.description'" :errors_form="errors"> </FormError>
-              </div>
-            </div>                
-          </div>
-          <div class="row">
-            <div class="col-12 text-right">
-              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="cancelar" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-              <button type="button" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="update"><i class="fa fa-save"></i> Guardar</button>
-            </div>
-          </div>
-        </form>
-    </b-modal>
-
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -82,6 +18,75 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
+          <div class="col-lg-12" v-if="edit_form">
+            <div class="card text-white">
+              <div class="card-header bg-primary  text-center" style="font-size: 18px;"><div>Editar orden #{{ form.order }}</div></div>
+              <div class="card-body">
+<form>
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label>Fecha para la entrega del pedido</label>
+        <div class="block">
+          <el-date-picker
+            v-model="form.date"
+            type="date"
+            data-vv-name="date"
+            data-vv-as="fecha"
+            v-validate="'required|date_format:yyyy-MM-dd'"
+            :class="{'input':true,'has-errors': errors.has('menu.date')}"                
+            placeholder="Seleccionar una fecha"
+            format="dd/MM/yyyy"
+            :align="'center'"
+            @change="gh"
+            :picker-options="pickerOptions"
+            data-vv-scope="menu"
+            value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </div>
+        <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12">
+      <div class="form-group">
+        <label>Menú</label>
+        <input type="text" class="form-control" placeholder="titulo del menú"
+        name="title"
+        v-model="form.title"
+        data-vv-as="titulo del menú"
+        v-validate="'required|min:5|max:125'"
+        data-vv-scope="menu"
+        :class="{'input':true,'has-errors': errors.has('menu.title')}">
+        <FormError :attribute_name="'menu.title'" :errors_form="errors"> </FormError>
+      </div>
+    </div>  
+    <div class="col-md-12 col-sm-12">
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea class="form-control" 
+        cols="10" rows="3" 
+        placeholder="descripción del menú"
+        name="description"
+        v-model="form.description"
+        data-vv-as="descripción del menú"
+        v-validate="'required|min:5|max:1000'"
+        data-vv-scope="menu"
+        :class="{'input':true,'has-errors': errors.has('menu.description')}">
+        </textarea>
+        <FormError :attribute_name="'menu.description'" :errors_form="errors"> </FormError>
+      </div>
+    </div>                
+  </div>
+  <div class="row">
+    <div class="col-12 text-right">
+      <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="cancelar" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+      <button type="button" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="update"><i class="fa fa-save"></i> Guardar</button>
+    </div>
+  </div>
+</form>
+              </div>
+            </div>
+          </div>
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
@@ -149,12 +154,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -239,12 +244,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -329,12 +334,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -364,7 +369,7 @@
                             </div>
                         </b-row>
                         </div>
-                      </template>                    
+                      </template>                 
                   </el-tab-pane>
                 </el-tabs>
               </div>
@@ -384,17 +389,21 @@
 </template>
 
 <script>
+import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
   name: "order",
   components: {
-      FormError
+      FormError,
+      moment
   },
   data() {
     return {
       loading: false,
+      edit_form: false,
       modalidad: '',
       items: [],
+      calendario: [],
       fields: [
         { key: 'order', label: '#', sortable: true },
         { key: 'title', label: 'Título', sortable: true },
@@ -417,13 +426,22 @@ export default {
           description: '',
           date: '',
           order: ''
-      }      
+      } ,
+
+      pickerOptions: {
+        disabledDate(time) {
+          var d = new Date();
+          return d.setDate(d.getDate() - 1) > time.getTime();
+        },
+      },     
     };
   },
   created() {
     let self = this;
     self.getAll('ALIMENTACION');
+    self.getCalendario()
   },
+
   methods: {
     //Clasificar error
     interceptar_error(r){
@@ -473,6 +491,18 @@ export default {
       }      
     },
 
+    getCalendario(){
+      let self = this
+      self.loading = true
+      self.$store.state.services.calendaryschoolService
+        .get(self.$store.state.school.schools_id)
+        .then(r => {
+          self.calendario = r.data.data
+          self.loading = false
+        })
+        .catch(r => {});   
+    },
+
     getAll(type_order) {
       let self = this;
       self.loading = true;
@@ -496,8 +526,26 @@ export default {
         self.form.description = data.description
         self.form.date = data.date
         self.form.order = data.order
-        this.$refs['nuevo'].show()
+        self.edit_form = true
     },    
+
+    gh(){
+      let self = this
+      self.calendario.forEach(function (item) {
+        if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        {
+          self.$swal({
+            title: "ERROR",
+            text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+            type: "error",
+            showCancelButton: false
+          }).then((result) => {
+              self.form.date = ''
+          }); 
+          return 
+        }
+      });    
+    },
 
     //funcion, validar si se guarda o actualiza
     update(){
@@ -576,16 +624,10 @@ export default {
         self.$validator.reset()
     },
 
-    open(){
-        let self = this
-        this.$refs['nuevo'].show()
-        self.clearData()
-    },
-
     //cerrar modal limpiar registros
     close(){
         let self= this
-        self.$refs['nuevo'].hide()
+        self.edit_form = false
     }    
   },
   mounted(){

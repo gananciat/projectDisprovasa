@@ -166,7 +166,7 @@
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -237,6 +237,7 @@ export default {
         { key: 'category', label: 'Categoría', sortable: true },
         { key: 'presentation', label: 'Marca', sortable: true },
         { key: 'price', label: 'Precio', sortable: true },
+        { key: 'stock', label: 'Stock Actual', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
