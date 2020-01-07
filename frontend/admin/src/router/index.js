@@ -14,6 +14,7 @@ import Provider from '@/components/ingresos/Provider'
 import Purchase from '@/components/ingresos/compra/Index'
 import PurchaseCreate from '@/components/ingresos/compra/Create'
 import PurchaseViewInfo from '@/components/ingresos/compra/ViewInfo'
+import Balance from '@/components/administracion_escuela/balance/Index'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -49,6 +50,7 @@ const routes = [
     { path: '/purchase', name: 'Purcharse', component: Purchase, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase_create', name: 'PurchaseCreate', component: PurchaseCreate, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase_view_info/:id', name: 'PurchaseViewInfo', component: PurchaseViewInfo, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school_balance/:id', name: 'Balance', component: Balance, beforeEnter: multiguard([isLoggedIn]) },
 
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },

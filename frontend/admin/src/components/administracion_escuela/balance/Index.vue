@@ -1,14 +1,21 @@
 <template>
-<div v-loading="loading">
-
+<!--Contenido-->
+      <!-- Content Wrapper. Contains page content -->
+        <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Escuelas</h1> 
+          <div class="col-sm-8">
+            <h1 class="m-0 text-dark" v-if="school !== null">BALANCE {{ school.name }}</h1>
           </div><!-- /.col -->
+          <div class="col-sm-4">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">ESCUELAS</a></li>
+              <li class="breadcrumb-item active">BALANCE ESCUELA</li>
+            </ol>
+          </div>
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
@@ -22,9 +29,8 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de escuelas 
-                    <router-link class="btn btn-success btn-sm" v-b-tooltip title="agregar" to="/new/school" ><i class="fa fa-plus"></i> nuevo</router-link>
-                  </h3>
+                  <h3 class="card-title">Registro balance 
+                    <b-button variant="success" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
               <div class="card-body">
@@ -34,13 +40,16 @@
                 </div>
                 <!-- /.d-flex -->
                  <template>
+
                     <div class="col-sm-12">
                       <b-row>
+
                       <b-col md="4" class="my-1 form-inline">
                         <label>mostrando: </label>
                             <b-form-select :options="pageOptions" v-model="perPage" />
                           <label>entradas </label>
                       </b-col>
+
                       <b-col  class="my-1 form-group pull-right">
                           <b-input-group>
                             <b-form-input v-model="filter" placeholder="buscar" />
@@ -56,18 +65,21 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
-                      <template v-slot:cell(logo)="data">
-                        <div class="text-center">
-                          <img alt="Avatar" class="table-avatar" width="75px;" height="50px;" :src="getLogo(data.item.logo)">
-                        </div>
+                      <template v-slot:cell(name)="data">
+                        {{ data.item.name }}
                       </template>
-                      <template v-slot:cell(option)="data">    
-                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-b-tooltip title="mostrar información"><i class="fa fa-eye"></i></router-link>                  
+                      <template v-slot:cell(description)="data">
+                        {{data.item.description}}
+                      </template>
+                      <template v-slot:cell(option)="data">
+                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-b-tooltip title="editar">
+                              <i class="fa fa-pencil">
+                              </i>
+                          </button>
                           <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
-                          <router-link class="btn btn-success btn-sm" :to="'/school_balance/'+data.item.id" v-b-tooltip title="mostrar balance"><i class="fa fa-balance-scale"></i></router-link>  
                       </template>
 
                     </b-table>
@@ -100,7 +112,6 @@
             <!-- /.card -->
             <!-- /.card -->
           </div>
-          <!-- /.col-md-6 -->
         </div>
         <!-- /.row -->
       </div>
@@ -108,23 +119,22 @@
     </div>
     <!-- /.content -->
   </div>
-</div>
+  <!--Fin-Contenido-->
 </template>
 
 <script>
-import FormError from '../shared/FormError'
 export default {
-  name: "school",
-  components: {
-      FormError
-  },
+  name: 'index_balance',
   data() {
     return {
       loading: false,
+      school: null,
       items: [],
       fields: [
-        { key: 'logo', label: 'Logo', sortable: true },
-        { key: 'name', label: 'Nombre', sortable: true },
+        { key: 'year', label: 'Año', sortable: true },
+        { key: 'codigo', label: 'Codigo', sortable: true },
+        { key: 'property', label: 'Pertenece', sortable: true },
+        { key: 'balance', label: 'Balance', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -132,87 +142,44 @@ export default {
       perPage: 5,
       totalRows: 0,
       pageOptions: [ 5, 10, 25 ],
-      showStringEmpty: 'no hay registros que mostrar',
-    };
+      showStringEmpty: 'no hay balances que mostrar',
+    }
   },
+
   created() {
-    let self = this;
-    self.getAll();
+    let self = this
+    self.get(self.$route.params.id)
   },
 
   methods: {
-    //Clasificar error
-    interceptar_error(r){
-      let self = this
-      let error = 1;
-
-        if(r.response){
-            if(r.response.status === 422){
-                this.$toastr.info(r.response.data.error, 'Mensaje')
-                error = 0
-            }
-
-            if(r.response.status != 201 && r.response.status != 422){
-                for (let value of Object.values(r.response.data)) {
-                    self.$toastr.error(value, 'Mensaje')
-                }
-                error = 0
-            }
-        }
-      
-      return error
-    },
-
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length
       this.currentPage = 1
     },
 
-    getAll() {
+    get(id) {
       let self = this;
       self.loading = true;
 
       self.$store.state.services.schoolService
-        .getAll()
+        .getOne(id)
         .then(r => {
-          self.loading = false; 
-          self.items = r.data.data;
-          self.totalRows = self.items.length
+          self.loading = false
+          self.school = r.data.data
+          self.items = self.school.balances
         })
         .catch(r => {});
     },
 
-        //funcion para eliminar registro
-    destroy(data){
+    getPhones(phones){
       let self = this
-
-      self.$swal({
-        title: "¿Eliminar registro?",
-        text: "Esta seguro de elminar "+data.name + '?',
-        type: "warning",
-        showCancelButton: true
-      }).then((result) => { // <--
-          if (result.value) { // <-- if confirmed
-              self.loading = true
-              self.$store.state.services.schoolService
-                .destroy(data)
-                .then(r => {
-                  self.loading = false
-                  if( self.interceptar_error(r) == 0) return
-                  self.$toastr.success('registro eliminado con exito', 'exito') 
-                  self.getAll()
-                  self.close()
-                })
-                .catch(r => {});
-          }
-      });
-    },
-
-    getLogo(logo){
-      let self = this
-      return logo !== null ? self.$store.state.base_url+logo : self.$store.state.base_url+'img/logo_empty.png'
+      return phones.map(e => e.number).join(", ")
     }
   },
-};
+
+  computed:{
+  }
+  
+}
 </script>

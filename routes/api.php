@@ -51,3 +51,7 @@ Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['index', 'create', 'edit', 'update']]);
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
+Route::resource('disbursements', 'Sistema\DisbursementsController', ['except' => ['edit']]);
+Route::resource('balances', 'Sistema\BalanceController', ['except' => ['edit']]);
+Route::resource('schools.balances', 'Sistema\SchoolBalanceController', ['except' => ['edit']]);
+Route::name('schools_show')->get('schools_show/{id}', 'Sistema\schoolController@getOne');

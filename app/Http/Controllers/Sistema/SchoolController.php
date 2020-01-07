@@ -221,6 +221,7 @@ class SchoolController extends ApiController
                                 'municipality.departament:id,name',
                                 'person:id,cui,name_one,name_two,last_name_one,last_name_two',
                                 'phons:id,number,companies_id,schools_id',
+                                'balances',
                                 'phons.company:id,name',
                                 'people' => function ($query) {
                                     $query->where('current', true);
@@ -237,6 +238,14 @@ class SchoolController extends ApiController
                             ->where('id',$school->id)
                             ->get();
         return $this->showAll($school);
+    }
+
+
+    public function getOne($id)
+    {
+        $school = School::where('id',$id)->with('balances')->first();
+
+        return $this->showOne($school);
     }
 
     /**

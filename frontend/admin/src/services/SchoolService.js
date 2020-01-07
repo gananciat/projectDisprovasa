@@ -26,6 +26,16 @@ class schoolService {
       return self.axios.get(`${self.baseUrl}/${id}`);
   }
 
+  getOne(id) {
+      let self = this;
+      return self.axios.get(`${self.baseUrl}_show/${id}`);
+  }
+
+   getBalances(id) {
+      let self = this;
+      return self.axios.get(`${self.baseUrl}/${id}/balances`);
+  }
+
   create(data) {
       let self = this;
       return self.axios.post(`${self.baseUrl}`, data);

@@ -25,6 +25,8 @@ import PersonSchoolService from '../services/PersonSchoolService'
 import PhonePersonService from '../services/PhonePersonService'
 import ProviderService from '../services/ProviderService'
 import PurchaseService from '../services/PurchaseService'
+import BalanceService from '../services/BalanceService'
+import DisbursementService from '../services/DisbursementService'
 
 
 /* IMPORT SCHOOL */
@@ -103,11 +105,14 @@ export default {
     phonepersonService: new PhonePersonService(Axios, baseUrl),
     purchaseService: new PurchaseService(Axios, baseUrl),
     providerService: new ProviderService(Axios, baseUrl),
+    balanceService: new BalanceService(Axios, baseUrl),
+    disbursementService: new DisbursementService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
+   
 
 }
