@@ -4,7 +4,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#/" class="brand-link">
-      <img src="../../assets/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+      <img :src="getLogo" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8">
       <span class="brand-text font-weight-light">Escuela</span>
     </a>
@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="../../assets/logo.png" class="img-circle elevation-2" alt="User Image">
+          <img :src="getLogo" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
@@ -143,7 +143,16 @@ export default {
     userName(){
       let self = this
       self.id = self.$store.state.school.schools_id
-      return self.$store.state.usuario.email
+      return self.$store.state.people.name_one+' '+self.$store.state.people.last_name_one
+    },
+
+    getLogo(){
+      let self = this
+      var school = self.$store.state.school
+      if(!_.isEmpty(school)){
+        return self.$store.state.base_url+school.school.logo
+      }
+      return self.$store.state.base_url+'img/logo_empty.png'
     }
   }
 };

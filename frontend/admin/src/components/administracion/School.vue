@@ -56,6 +56,11 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
+                      <template v-slot:cell(logo)="data">
+                        <div class="text-center">
+                          <img alt="Avatar" class="table-avatar" width="75px;" height="50px;" :src="getLogo(data.item.logo)">
+                        </div>
+                      </template>
                       <template v-slot:cell(option)="data">    
                           <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
                           <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
@@ -117,6 +122,7 @@ export default {
       loading: false,
       items: [],
       fields: [
+        { key: 'logo', label: 'Logo', sortable: true },
         { key: 'name', label: 'Nombre', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
@@ -183,10 +189,11 @@ export default {
           }
       });
     },
-  },
 
-  mounted(){
-    $("body").resize()
+    getLogo(logo){
+      let self = this
+      return logo !== null ? self.$store.state.base_url+logo : self.$store.state.base_url+'img/logo_empty.png'
+    }
   },
 };
 </script>

@@ -220,104 +220,161 @@
                   <div class="col-md-12 col-sm-12">
 
 <form>
-  <div class="row">
-    <div class="col-md-12 col-sm-12">
-      <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" class="form-control" placeholder="nombre"
-        name="name"
-        v-model="form.name"
-        data-vv-as="nombre"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('name')}">
-        <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-      </div>
-    </div>
+  <div class="col-md-12 col-sm-12">
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12">
+                            <h3>Datos de la escuela</h3>
+                          </div>
+                          <div class="col-md-4 col-lg-4 col-xs-12 card">
+                            <div class="form-group">
+                              <label>Logotipo</label>
+                              <div class="input-group">
+                                  <input accept="image/*" type="file" @change="selectedFile">
+                              </div>
+                            </div>
+                            <div class="card">
+                              <div class="text-center">
+                                <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : 'src/assets/logo_empty.png'">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-8 col-lg-8 col-xs-12">
+                            <div class="row">
+                              <div class="col-md-12 col-sm-12">
+                                <div class="form-group">
+                                  <label>Nombre</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="nombre"
+                                    name="name"
+                                    v-model="form.name"
+                                    data-vv-as="nombre"
+                                    v-validate="'required|max:175'"
+                                    :class="{'input':true,'has-errors': errors.has('name')}"
+                                  />
+                                  <FormError :attribute_name="'name'" :errors_form="errors"></FormError>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                  <label>NIT</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="nit"
+                                    name="nit"
+                                    v-model="form.nit"
+                                    data-vv-as="nit"
+                                    v-validate="'required|max:13|min:7'"
+                                    :class="{'input':true,'has-errors': errors.has('nit')}"
+                                  />
+                                  <FormError :attribute_name="'nit'" :errors_form="errors"></FormError>
+                                </div>
+                              </div>
+                              <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                  <label>Código Primaria</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="código primaria"
+                                    name="code_primary"
+                                    v-model="form.code_primary"
+                                    data-vv-as="código primaria"
+                                    v-validate="'required|max:24'"
+                                    :class="{'input':true,'has-errors': errors.has('code_primary')}"
+                                  />
+                                  <FormError :attribute_name="'code_primary'" :errors_form="errors"></FormError>
+                                </div>
+                              </div>
 
-    <div class="col-md-4 col-sm-12">
-      <div class="form-group">
-        <label>NIT</label>
-        <input type="text" class="form-control" placeholder="nit"
-        name="nit"
-        v-model="form.nit"
-        data-vv-as="nit"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('nit')}">
-        <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
-      </div>
-    </div> 
-
-    <div class="col-md-4 col-sm-12">
-      <div class="form-group">
-        <label>Código Primaria</label>
-        <input type="text" class="form-control" placeholder="código primaria"
-        name="code_primary"
-        v-model="form.code_primary"
-        data-vv-as="código primaria"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('code_primary')}">
-        <FormError :attribute_name="'code_primary'" :errors_form="errors"> </FormError>
-      </div>
-    </div> 
-
-    <div class="col-md-4 col-sm-12">
-      <div class="form-group">
-        <label>Código Preprimaria</label>
-        <input type="text" class="form-control" placeholder="código preprimaria"
-        name="code_high_school"
-        v-model="form.code_high_school"
-        data-vv-as="código preprimaria"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('code_high_school')}">
-        <FormError :attribute_name="'code_high_school'" :errors_form="errors"> </FormError>
-      </div>
-    </div> 
-
-    <div class="col-md-12 col-sm-12">
-      <div class="form-group">
-        <label>Nombre Factura</label>
-        <input type="text" class="form-control" placeholder="nombre a facturar"
-        name="bill"
-        v-model="form.bill"
-        data-vv-as="nombre a facturar"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('bill')}">
-        <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
-      </div>
-    </div>  
-
-    <div class="col-md-5 col-sm-12">
-      <div class="form-group">
-        <label>Municipio</label>
-        <multiselect v-model="form.municipalities_id"
-            v-validate="'required'" 
-            data-vv-name="municipalities_id"
-            data-vv-as="municipio"
-            :options="municipalities" placeholder="seleccione municipio"  
-            :searchable="true"
-            :allow-empty="false"
-            :show-labels="false"
-            label="name" track-by="id">
-            <span slot="noResult">No se encontro ningún registro</span>
-            </multiselect>
-            <FormError :attribute_name="'municipalities_id'" :errors_form="errors"> </FormError>
-      </div>
-    </div>
-
-    <div class="col-md-7 col-sm-12">
-      <div class="form-group">
-        <label>Dirección</label>
-        <input type="text" class="form-control" placeholder="dirección"
-        name="direction"
-        v-model="form.direction"
-        data-vv-as="dirección"
-        v-validate="'required'"
-        :class="{'input':true,'has-errors': errors.has('direction')}">
-        <FormError :attribute_name="'direction'" :errors_form="errors"> </FormError>
-      </div>
-    </div> 
-
-  </div>
+                              <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                  <label>Código Preprimaria</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="código preprimaria"
+                                    name="code_high_school"
+                                    v-model="form.code_high_school"
+                                    data-vv-as="código preprimaria"
+                                    v-validate="'required|max:24'"
+                                    :class="{'input':true,'has-errors': errors.has('code_high_school')}"
+                                  />
+                                  <FormError
+                                    :attribute_name="'code_high_school'"
+                                    :errors_form="errors"
+                                  ></FormError>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-12 col-sm-12">
+                                <div class="form-group">
+                                  <label>Nombre Factura</label>
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="nombre a facturar"
+                                    name="bill"
+                                    v-model="form.bill"
+                                    data-vv-as="nombre a facturar"
+                                    v-validate="'required|max:175'"
+                                    :class="{'input':true,'has-errors': errors.has('bill')}"
+                                  />
+                                  <FormError :attribute_name="'bill'" :errors_form="errors"></FormError>
+                                </div>
+                              </div>
+                            </div>
+                            
+                        <div class="row">
+                          <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                              <label>Municipio</label>
+                              <multiselect
+                                v-model="form.municipalities_id"
+                                v-validate="'required'"
+                                data-vv-name="municipalities_id"
+                                data-vv-as="municipio"
+                                :options="municipalities"
+                                placeholder="seleccione municipio"
+                                :searchable="true"
+                                :allow-empty="false"
+                                :show-labels="false"
+                                label="name"
+                                track-by="id"
+                              >
+                                <span slot="noResult">No se encontro ningún registro</span>
+                              </multiselect>
+                              <FormError
+                                :attribute_name="'municipalities_id'"
+                                :errors_form="errors"
+                              ></FormError>
+                            </div>
+                          </div>
+                          <div class="col-md-12 col-sm-12">
+                            <div class="form-group">
+                              <label>Dirección</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                placeholder="dirección"
+                                name="direction"
+                                v-model="form.direction"
+                                data-vv-as="dirección"
+                                v-validate="'required|max:175'"
+                                :class="{'input':true,'has-errors': errors.has('direction')}"
+                              />
+                              <FormError :attribute_name="'direction'" :errors_form="errors"></FormError>
+                            </div>
+                          </div>
+                        </div>
+                          </div>
+                        </div>
+                      </div>
   <hr>
   <div class="row">
     <div class="col-12 text-right">
@@ -490,6 +547,7 @@ export default {
     return {
       loading: false,
       items: {},
+      logo: '',
       municipalities: [],
       companies: [],
       type_persons: [],
@@ -525,7 +583,8 @@ export default {
         direction: '',
         municipalities_id: '',
         name: '',
-        nit: '',        
+        nit: '',
+        logo: null        
       }
     };
   },
@@ -593,6 +652,7 @@ export default {
           self.form.direction = self.items.direction
           self.form.municipalities_id = {'id': self.items.municipality.id, 'name': self.items.municipality.departament.name+' / '+self.items.municipality.name}
           self.form.nit = self.items.nit
+          self.logo = self.items.logo !== null ? self.$store.state.base_url+self.items.logo : self.$store.state.base_url+'img/logo_empty.png'
           self.loading = false; 
         })
         .catch(r => {});
@@ -626,6 +686,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form
+      data.logo = self.logo
       data.municipalities_id = self.form.municipalities_id.id
        
       self.$store.state.services.schoolService
@@ -937,6 +998,15 @@ export default {
                 .catch(r => {});
           }
       }); 
+    },
+
+    selectedFile(e) {
+      let self = this
+      self.$store.state.services.schoolService.getBase64(e.target.files[0])
+      .then(data =>{
+          self.logo = data
+        } 
+      ); 
     },
   },
   computed:{

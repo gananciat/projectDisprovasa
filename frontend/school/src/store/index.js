@@ -14,16 +14,19 @@ const state = {
     token: null,
     is_login: false,
     school: {},
+    people: {},
     school_name: '',
     token_expired: null,
     client_id: 2,
-    base_url: 'http://sistemapro.test:8000/',
+    base_url: 'http://www.project.com/',
+    //base_url: 'http://sistemapro.test:8000/',
     client_secret: 'upsPNIkks5Fdax5nSbCRdf5lLarAyQZL9fT9suxE'
 }
 
 const mutations = {
     setUser(state, usuario) {
         state.usuario = usuario.user
+        state.people = usuario.people
         state.school = usuario.school
         state.school_name = state.school.school.name
     },

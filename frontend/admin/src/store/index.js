@@ -16,15 +16,16 @@ const state = {
     is_login: false,
     token_expired: null,
     client_id: 2,
-    //base_url: 'http://wwww.project.com/',
+    base_url: 'http://www.project.com/',
     //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
 
-    base_url: 'http://sistemapro.test:8000/',
+    //base_url: 'http://sistemapro.test:8000/',
     client_secret: 'upsPNIkks5Fdax5nSbCRdf5lLarAyQZL9fT9suxE'
 }
 
 const mutations = {
     setUser(state, usuario) {
+        console.log(usuario)
         state.usuario = usuario
     },
 
