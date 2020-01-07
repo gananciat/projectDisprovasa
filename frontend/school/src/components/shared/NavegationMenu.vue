@@ -97,7 +97,7 @@ export default {
 
     getLogo(){
       let self = this
-      let devolver = "'../../assets/logo.png'"
+      let devolver = "../../assets/logo.png"
       var school = self.$store.state.school
 
       if(!_.isEmpty(school)){
