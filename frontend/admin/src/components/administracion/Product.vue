@@ -237,6 +237,7 @@ export default {
         { key: 'category', label: 'Categoría', sortable: true },
         { key: 'presentation', label: 'Marca', sortable: true },
         { key: 'price', label: 'Precio', sortable: true },
+        { key: 'stock', label: 'Stock Actual', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
