@@ -48,6 +48,6 @@ Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
-
+Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['index', 'create', 'edit', 'update']]);
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

@@ -51,6 +51,8 @@
                 :class="{'input':true,'has-errors': errors.has('menu.date')}"                
                 placeholder="Seleccionar una fecha"
                 format="dd/MM/yyyy"
+                @change="bloquear_fechas"
+                :picker-options="pickerOptions"
                 data-vv-scope="menu"
                 value-format="yyyy-MM-dd">
               </el-date-picker>
@@ -167,7 +169,7 @@
               </div>
             </div>                               
             <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm" @click="addProductDetail">Agregar producto</button>
+              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
             </div>      
           </div>
         </div>
@@ -233,7 +235,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" v-if="!loading_detail" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" v-if="!loading_detail" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                       </div>
@@ -283,7 +285,14 @@ export default {
         date: new Date(),
         schools_id: '',
         detail_order: []
-      }
+      },
+
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now();
+        },
+      },
+
     };
   },
   created() {
@@ -292,6 +301,33 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
+
+    bloquear_fechas(){
+      let self = this
+      console.log(self.form.date)
+    },
+
     //Generar correlativo de la orden
     generationOrder(){
       let self = this
@@ -304,12 +340,8 @@ export default {
           .create(data)
           .then(r => {
             self.loading = false
-            if(r.response){
-              self.$toastr.error(r.response.data.error, 'error')
-              return
-            }
+            self.interceptar_error(r) == 0 ? '' : self.$toastr.success('número de reservación creado', 'exito') 
             self.no_reservation = r.data.data.correlative+'-'+r.data.data.year
-            self.$toastr.success('número de pedido reservado', 'exito')
           })
           .catch(r => {});
       }
@@ -382,11 +414,8 @@ export default {
               .create(data)
               .then(r => {
                 self.loading = false
-                if(r.response){
-                  self.$toastr.error(r.response.data.error, 'error')
-                  return
-                }
-                self.$toastr.success('registro agregado con exito', 'exito')
+                if( self.interceptar_error(r) == 0) return
+                self.$toastr.success('registro agregado con exito', 'exito') 
                 self.$router.push('/school/management/order') 
               })
               .catch(r => {});                     

@@ -31,12 +31,13 @@
         <div class="form-group">
           <label>Nombre</label>
           <input type="text" class="form-control" placeholder="nombre"
-          name="name"
+          name="add.name"
           v-model="form.name"
           data-vv-as="nombre"
           v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('name')}">
-          <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.name')}">
+          <FormError :attribute_name="'add.name'" :errors_form="errors"> </FormError>
         </div>
       </div>
 
@@ -44,11 +45,12 @@
         <div class="form-group">
           <label>NIT</label>
           <input type="text" class="form-control" placeholder="nit"
-          name="nit"
+          name="add.nit"
           v-model="form.nit"
           data-vv-as="nit"
           v-validate="'required|max:13|min:7'"
-          :class="{'input':true,'has-errors': errors.has('nit')}">
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.nit')}">
           <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
         </div>
       </div> 
@@ -57,12 +59,13 @@
         <div class="form-group">
           <label>Código Primaria</label>
           <input type="text" class="form-control" placeholder="código primaria"
-          name="code_primary"
+          name="add.code_primary"
           v-model="form.code_primary"
           data-vv-as="código primaria"
           v-validate="'required|max:24'"
-          :class="{'input':true,'has-errors': errors.has('code_primary')}">
-          <FormError :attribute_name="'code_primary'" :errors_form="errors"> </FormError>
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.code_primary')}">
+          <FormError :attribute_name="'add.code_primary'" :errors_form="errors"> </FormError>
         </div>
       </div> 
 
@@ -70,12 +73,13 @@
         <div class="form-group">
           <label>Código Preprimaria</label>
           <input type="text" class="form-control" placeholder="código preprimaria"
-          name="code_high_school"
+          name="add.code_high_school"
           v-model="form.code_high_school"
           data-vv-as="código preprimaria"
           v-validate="'required|max:24'"
-          :class="{'input':true,'has-errors': errors.has('code_high_school')}">
-          <FormError :attribute_name="'code_high_school'" :errors_form="errors"> </FormError>
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.code_high_school')}">
+          <FormError :attribute_name="'add.code_high_school'" :errors_form="errors"> </FormError>
         </div>
       </div> 
 
@@ -83,11 +87,12 @@
         <div class="form-group">
           <label>Nombre Factura</label>
           <input type="text" class="form-control" placeholder="nombre a facturar"
-          name="bill"
+          name="add.bill"
           v-model="form.bill"
           data-vv-as="nombre a facturar"
           v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('bill')}">
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.bill')}">
           <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
         </div>
       </div>  
@@ -97,16 +102,17 @@
           <label>Municipio</label>
           <multiselect v-model="form.municipalities_id"
               v-validate="'required'" 
-              data-vv-name="municipalities_id"
+              data-vv-name="add.municipalities_id"
               data-vv-as="municipio"
               :options="municipalities" placeholder="seleccione municipio"  
               :searchable="true"
               :allow-empty="false"
               :show-labels="false"
+              data-vv-scope="add"
               label="name" track-by="id">
               <span slot="noResult">No se encontro ningún registro</span>
               </multiselect>
-              <FormError :attribute_name="'municipalities_id'" :errors_form="errors"> </FormError>
+              <FormError :attribute_name="'add.municipalities_id'" :errors_form="errors"> </FormError>
         </div>
       </div>
 
@@ -114,12 +120,13 @@
         <div class="form-group">
           <label>Dirección</label>
           <input type="text" class="form-control" placeholder="dirección"
-          name="direction"
+          name="add.direction"
           v-model="form.direction"
           data-vv-as="dirección"
           v-validate="'required|max:175'"
-          :class="{'input':true,'has-errors': errors.has('direction')}">
-          <FormError :attribute_name="'direction'" :errors_form="errors"> </FormError>
+          data-vv-scope="add"
+          :class="{'input':true,'has-errors': errors.has('add.direction')}">
+          <FormError :attribute_name="'add.direction'" :errors_form="errors"> </FormError>
         </div>
       </div> 
     </div>
@@ -162,7 +169,7 @@
             </div>
           </div>
           <div class="col-md-12 col-sm-12 text-right">
-            <button type="button" class="btn btn-success btn-sm" @click="addPhoneSchool">Agregar teléfono</button>
+            <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="addPhoneSchool">Agregar teléfono</button>
           </div>            
         </div>
       </div>
@@ -182,7 +189,7 @@
                     <td v-text="item.number"></td>
                     <td v-text="item.name"></td>
                     <td>
-                        <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(index)">
+                        <button class="btn btn-danger btn-sm" v-b-tooltip title="eliminar" @click="quitarPhoneSchool(index)">
                           Quitar
                         </button>
                     </td>                    
@@ -208,12 +215,13 @@
             <div class="form-group">
               <label>CUI</label>
               <input type="text" class="form-control" placeholder="número de dpi"
-              name="cui"
+              name="add.cui"
               v-model="form.cui"
               data-vv-as="número de dpi"
               v-validate="'required|numeric|min:13|max:13'"
-              :class="{'input':true,'has-errors': errors.has('cui')}">
-              <FormError :attribute_name="'cui'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.cui')}">
+              <FormError :attribute_name="'add.cui'" :errors_form="errors"> </FormError>
             </div>
           </div>    
 
@@ -221,12 +229,13 @@
             <div class="form-group">
               <label>Correo Electrónico</label>
               <input type="text" class="form-control" placeholder="correo electrónico"
-              name="email"
+              name="add.email"
               v-model="form.email"
               data-vv-as="correo electrónico"
               v-validate="'required|email|max:100'"
-              :class="{'input':true,'has-errors': errors.has('email')}">
-              <FormError :attribute_name="'email'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.email')}">
+              <FormError :attribute_name="'add.email'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -234,12 +243,13 @@
             <div class="form-group">
               <label>Primer Nombre</label>
               <input type="text" class="form-control" placeholder="primer nombre"
-              name="name_one"
+              name="add.name_one"
               v-model="form.name_one"
               data-vv-as="primer nombre"
               v-validate="'required|max:25'"
-              :class="{'input':true,'has-errors': errors.has('name_one')}">
-              <FormError :attribute_name="'name_one'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.name_one')}">
+              <FormError :attribute_name="'add.name_one'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -247,12 +257,13 @@
             <div class="form-group">
               <label>Segundo Nombre</label>
               <input type="text" class="form-control" placeholder="segundo nombre"
-              name="name_two"
+              name="add.name_two"
               v-model="form.name_two"
               data-vv-as="segundo nombre"
               v-validate="'max:25'"
-              :class="{'input':true,'has-errors': errors.has('name_two')}">
-              <FormError :attribute_name="'name_two'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.name_two')}">
+              <FormError :attribute_name="'add.name_two'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -260,12 +271,13 @@
             <div class="form-group">
               <label>Primer Apellido</label>
               <input type="text" class="form-control" placeholder="primer apellido"
-              name="last_name_one"
+              name="add.last_name_one"
               v-model="form.last_name_one"
               data-vv-as="primer apellido"
               v-validate="'required|max:25'"
-              :class="{'input':true,'has-errors': errors.has('last_name_one')}">
-              <FormError :attribute_name="'last_name_one'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.last_name_one')}">
+              <FormError :attribute_name="'add.last_name_one'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -273,12 +285,13 @@
             <div class="form-group">
               <label>Segundo Apellido</label>
               <input type="text" class="form-control" placeholder="segundo apellido"
-              name="last_name_two"
+              name="add.last_name_two"
               v-model="form.last_name_two"
               data-vv-as="segundo apellido"
               v-validate="'max:25'"
-              :class="{'input':true,'has-errors': errors.has('last_name_two')}">
-              <FormError :attribute_name="'last_name_two'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.last_name_two')}">
+              <FormError :attribute_name="'add.last_name_two'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -287,16 +300,17 @@
               <label>Municipio</label>
               <multiselect v-model="form.municipalities_id_people"
                   v-validate="'required'" 
-                  data-vv-name="municipalities_id_people"
+                  data-vv-name="add.municipalities_id_people"
                   data-vv-as="municipio"
                   :options="municipalities" placeholder="seleccione municipio"  
                   :searchable="true"
                   :allow-empty="false"
                   :show-labels="false"
+                  data-vv-scope="add"
                   label="name" track-by="id">
                   <span slot="noResult">No se encontro ningún registro</span>
                   </multiselect>
-                  <FormError :attribute_name="'municipalities_id_people'" :errors_form="errors"> </FormError>
+                  <FormError :attribute_name="'add.municipalities_id_people'" :errors_form="errors"> </FormError>
             </div>
           </div>
 
@@ -304,12 +318,13 @@
             <div class="form-group">
               <label>Dirección</label>
               <input type="text" class="form-control" placeholder="dirección"
-              name="direction_people"
+              name="add.direction_people"
               v-model="form.direction_people"
               data-vv-as="dirección"
               v-validate="'required|max:175'"
-              :class="{'input':true,'has-errors': errors.has('direction_people')}">
-              <FormError :attribute_name="'direction_people'" :errors_form="errors"> </FormError>
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.direction_people')}">
+              <FormError :attribute_name="'add.direction_people'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -318,16 +333,17 @@
               <label>Rol</label>
               <multiselect v-model="form.type_person"
                   v-validate="'required'" 
-                  data-vv-name="type_person"
+                  data-vv-name="add.type_person"
                   data-vv-as="rol"
                   :options="type_persons" placeholder="seleccione el rol"  
                   :searchable="true"
                   :allow-empty="false"
                   :show-labels="false"
+                  data-vv-scope="add"
                   label="name" track-by="id">
                   <span slot="noResult">No se encontro ningún registro</span>
                   </multiselect>
-                  <FormError :attribute_name="'type_person'" :errors_form="errors"> </FormError>
+                  <FormError :attribute_name="'add.type_person'" :errors_form="errors"> </FormError>
             </div>
           </div>      
 
@@ -379,7 +395,7 @@
             </div>
           </div>
           <div class="col-md-12 col-sm-12 text-right">
-            <button type="button" class="btn btn-success btn-sm" @click="addPhonePerson">Agregar teléfono</button>
+            <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="addPhonePerson">Agregar teléfono</button>
           </div>
           <hr>
           <div class="col-md-12 col-sm-12">
@@ -398,7 +414,7 @@
                         <td v-text="item.number"></td>
                         <td v-text="item.name"></td>
                         <td>
-                            <button class="btn btn-danger btn-sm" @click="quitarPhonePerson(index)">
+                            <button class="btn btn-danger btn-sm" v-b-tooltip title="eliminar" @click="quitarPhonePerson(index)">
                               Quitar
                             </button>
                         </td>                    
@@ -414,7 +430,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-    <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+    <button type="button" class="btn btn-primary btn-sm" v-b-tooltip title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                 </div>
@@ -480,15 +496,32 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
+
     //funcion, validar si se guarda o actualiza
     createOrEdit(){
       let self = this
       let existe = true
-
-      self.number_phone_school = '00000000'
-      self.companies_id_phone_school = {'id': 1, 'name': 'TIGO'}
-      self.number_phone_person = '00000000'
-      self.companies_id_phone_person = {'id': 1, 'name': 'TIGO'}
 
       if(self.form.phone_school.length == 0){
         self.$toastr.error('es necesario registrar al meno un número de teléfono para la escuela.', 'error')
@@ -501,7 +534,7 @@ export default {
       }
 
       if(existe == true){
-        self.$validator.validateAll().then((result) => {
+        self.$validator.validateAll('add').then((result) => {
             if (result) {
               self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
@@ -554,11 +587,8 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            self.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          self.$toastr.success('registro agregado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro agregado con exito', 'exito')         
           self.clearData()
         })
         .catch(r => {});
@@ -585,6 +615,7 @@ export default {
     getTypePersona(){
       let self = this;
       self.loading = true;
+      self.type_persons = []
 
       self.type_persons.push({'id': 'DIRECTOR', 'name': 'DIRECTOR'})
       self.type_persons.push({'id': 'PROFESOR', 'name': 'PROFESOR'})
@@ -640,6 +671,9 @@ export default {
           self.number_phone_school = ''
           self.companies_id_phone_school = null                                      
         }
+
+        self.$validator.reset()
+        self.$validator.reset()
       }
     },
 
@@ -682,6 +716,9 @@ export default {
           self.number_phone_person = ''
           self.companies_id_phone_person = null                                    
         }
+
+        self.$validator.reset()
+        self.$validator.reset()
       }
     },
 

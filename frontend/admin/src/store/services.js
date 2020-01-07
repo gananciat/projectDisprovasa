@@ -5,6 +5,9 @@ import auth from '../auth'
 import moment from 'moment'
 import { isNullOrUndefined } from 'util';
 
+//import toastr
+import VueToastr2 from 'vue-toastr-2'
+import 'vue-toastr-2/dist/vue-toastr-2.min.css'
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
@@ -28,10 +31,11 @@ import PurchaseService from '../services/PurchaseService'
 import ReservationService from '../services/ReservationService'
 import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
+import CalendarySchoolService from '../services/CalendarySchoolService'
 
 // Axios Configuration
 //let baseUrl = 'http://sistematio.test/' //base url desarrollo
-let baseUrl = 'http://sistemapro.test:8000/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 
 // Axios Configuration
@@ -103,4 +107,6 @@ export default {
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
+    calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
+
 }

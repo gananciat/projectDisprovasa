@@ -52,7 +52,7 @@
     </div>
     <hr>
     <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" class="btn btn-primary btn-sm" @click="addPersonPhone"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" class="btn btn-primary btn-sm" v-b-tooltip title="guardar" @click="addPersonPhone"><i class="fa fa-save"></i> Guardar</button>
     </div>      
   </div>
 </form>
@@ -203,7 +203,7 @@
 
     <hr>
     <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" class="btn btn-primary btn-sm" @click="addOredit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" class="btn btn-primary btn-sm" v-b-tooltip title="guardar" @click="addOredit"><i class="fa fa-save"></i> Guardar</button>
     </div>      
   </div>
 </form>
@@ -321,7 +321,7 @@
   <hr>
   <div class="row">
     <div class="col-12 text-right">
-      <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" class="btn btn-primary btn-sm" v-b-tooltip title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
     </div>
   </div>
 </form>
@@ -338,7 +338,7 @@
               <div class="card-header bg-primary">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Lista de personas asignadas</h3>
-                  <button type="button" class="btn btn-success btn-sm" @click="viewModal"><i class="fa fa-plus"></i></button>                  
+                  <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar persona" @click="viewModal"><i class="fa fa-plus"></i></button>                  
                 </div>
               </div>
               <div class="card-body">
@@ -366,21 +366,21 @@
                                 <td style="vertical-align:middle;">{{ item.person.municipality.departament.name+', '+item.person.municipality.name+', '+item.person.direction }}</td>
                                 <td style="vertical-align:middle;" v-text="item.person.user.rol.name"></td>
                                 <td style="vertical-align:middle;" class="text-center">
-                                  <button type="button" class="btn btn-success btn-sm" @click="viewModalPhone(item.person.id)"><i class="fa fa-phone-square"></i></button> 
+                                  <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="viewModalPhone(item.person.id)"><i class="fa fa-phone-square"></i></button> 
                                   <hr>
                                   <template v-for="(item_phone, index_phone) in item.person.phons">
                                     <b-button v-bind:key="index_phone" class="btn btn-sm" style="font-size: 10px;"  :variant="color(item_phone.company.name)">
                                       {{ item_phone.company.name }}
                                       <b-badge variant="light">{{ item_phone.number }}<span class="sr-only"></span></b-badge>
                                     </b-button>  
-                                    <button v-bind:key="index_phone+'Quitar'" type="button" class="btn btn-danger btn-sm" @click="quitarPersonPhone(item)"><i class="fa fa-tty"></i></button> 
+                                    <button v-bind:key="index_phone+'Quitar'" v-b-tooltip title="eliminar teléfono" type="button" class="btn btn-danger btn-sm" @click="quitarPersonPhone(item)"><i class="fa fa-tty"></i></button> 
                                     <hr v-bind:key="index_phone+'Espacio'">                                    
                                   </template>                               
                                 </td>
                                 <td style="vertical-align:middle;" class="text-center">
-                                    <button class="btn btn-primary btn-sm" @click="mapData(item)"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-primary btn-sm" v-b-tooltip title="editar" @click="mapData(item)"><i class="fa fa-pencil"></i></button>
                                     <br><br>
-                                    <button class="btn btn-danger btn-sm" @click="destroyPersonSchool(item)"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-danger btn-sm" v-b-tooltip title="eliminar" @click="destroyPersonSchool(item)"><i class="fa fa-trash"></i></button>
                                 </td>                    
                             </tr>
                           </template>
@@ -437,7 +437,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-    <button type="button" class="btn btn-success btn-sm" @click="addPhoneSchool">Agregar teléfono</button>
+    <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="addPhoneSchool">Agregar teléfono</button>
   </div>
   <hr>
   <div class="col-md-12 col-sm-12">
@@ -456,7 +456,7 @@
                 <td class="text-center" v-text="item.number"></td>
                 <td v-text="item.company.name"></td>
                 <td class="text-center">
-                    <button class="btn btn-danger btn-sm" @click="quitarPhoneSchool(item)"><i class="fa fa-trash"></i></button>
+                    <button class="btn btn-danger btn-sm" v-b-tooltip title="eliminar teléfono" @click="quitarPhoneSchool(item)"><i class="fa fa-trash"></i></button>
                 </td>                    
             </tr>
           </template>
@@ -536,6 +536,28 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
+
     //Funcion para concatenar el nombre
     concat_name(nombre_uno, nombre_dos, apellido_uno, apellido_dos){
         let concat = ''
@@ -632,11 +654,8 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            self.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          self.$toastr.success('registro actualizado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro actualizado con exito', 'exito')  
           self.getMunicipalities()
         })
         .catch(r => {});
@@ -689,10 +708,8 @@ export default {
               .create(data)
               .then(r => {
                 self.loading = false
-                if(r.response){
-                  self.$toastr.error(r.response.data.error, 'error')
-                  return
-                }
+                if( self.interceptar_error(r) == 0) return
+                self.$toastr.success('registro actualizado con exito', 'exito')  
 
                 //Limpiar datos
                 self.form_phone_school.number = ''
@@ -700,7 +717,6 @@ export default {
                 self.$validator.reset()
                 self.$validator.reset()
 
-                self.$toastr.success('registro actualizado con exito', 'exito')
                 self.getMunicipalities()
               })
               .catch(r => {});
@@ -723,11 +739,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        self.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
-                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')  
                   self.getMunicipalities()
                 })
                 .catch(r => {});
@@ -754,6 +767,7 @@ export default {
     getTypePersona(){
       let self = this;
       self.loading = true;
+      self.type_persons = []
 
       self.type_persons.push({'id': 'DIRECTOR', 'name': 'DIRECTOR'})
       self.type_persons.push({'id': 'PROFESOR', 'name': 'PROFESOR'})
@@ -801,6 +815,7 @@ export default {
       let self = this
       self.loading = true
       let data = self.form_person_school
+      data.schools_id = self.schools_id
       data.type_person = self.form_person_school.type_person.id
       data.municipalities_id_people = self.form_person_school.municipalities_id_people.id
        
@@ -808,11 +823,8 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            self.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          self.$toastr.success('registro agregado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro agregado con exito', 'exito')  
           self.getMunicipalities()
           self.clearData()
         })
@@ -830,13 +842,8 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.status != 201){
-            for (let value of Object.values(r.response.data)) {
-              self.$toastr.error(value, 'Mensaje')
-            }
-            return
-          }
-          self.$toastr.success('registro agregado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro actualizado con exito', 'exito')  
           self.getMunicipalities()
           self.clearData()
         })
@@ -858,11 +865,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                    self.$toastr.error(r.response.data.error, 'error')
-                    return
-                  }
-                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')  
                   self.getMunicipalities()
                 })
                 .catch(r => {});
@@ -891,10 +895,8 @@ export default {
               .create(data)
               .then(r => {
                 self.loading = false
-                if(r.response){
-                  self.$toastr.error(r.response.data.error, 'error')
-                  return
-                }
+                if( self.interceptar_error(r) == 0) return
+                self.$toastr.success('registro agregado con exito', 'exito')  
 
                 self.$refs['modal_person_phone'].hide()
                 //Limpiar datos
@@ -904,7 +906,6 @@ export default {
                 self.$validator.reset()
                 self.$validator.reset()
 
-                self.$toastr.success('registro actualizado con exito', 'exito')
                 self.getMunicipalities()
               })
               .catch(r => {});
@@ -927,11 +928,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        self.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
-                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')  
                   self.getMunicipalities()
                 })
                 .catch(r => {});

@@ -12,12 +12,12 @@ class CalendarSchool extends Model
     use SoftDeletes;
 
     protected $table = 'calendar_schools';
-    protected $fillable = ['date','schools_id','people_id'];
+    protected $fillable = ['date','schools_id','people_id','title'];
     protected $dates = ['deleted_at'];
 
     public function person()
     {
-        return $this->hasOne(Person::class);
+        return $this->belongsTo(Person::class,'people_id');
     }
 
     public function school()

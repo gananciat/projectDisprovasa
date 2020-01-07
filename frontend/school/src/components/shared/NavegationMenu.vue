@@ -123,7 +123,14 @@ export default {
           { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/0/management/order/new/gratuidad/G" },
           { icon: "circle-o", text: "Pedido de utiles", path: "/school/0/management/order/new/utiles/U" },
         ]
-      },      
+      }, 
+      {
+        icon: "cog",
+        text: "Calendario",
+        children: [
+          { icon: "circle-o", text: "Configuración", path: "/school/management/calendar" },
+        ]
+      },     
     ]
   }),
 

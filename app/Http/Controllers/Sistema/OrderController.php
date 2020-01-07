@@ -66,12 +66,14 @@ class OrderController extends ApiController
     public function store(Request $request)
     {
         $messages = [
+            'schools_id.exists'    => 'Debe de seleccionar la menos una escuela.',
             'detail_order.products_id.exists'    => 'Debe de seleccionar la menos un producto para la orden.',
             'title.unique'    => 'El título de la orden debe ser único.',
             'date.after_or_equal'    => 'La fecha tiene que ser igual o mayor a '.date('d/m/Y').'.',
         ];
 
         $rules = [
+            'schools_id' => 'required|integer|exists:schools,id',
             'order' => 'required|string',
             'title' => 'required|string|max:125|unique:orders,title',
             'description' => 'required|string|max:1000',
@@ -215,19 +217,21 @@ class OrderController extends ApiController
     {
         $messages = [
             'title.unique'    => 'El título de la orden debe ser único.',
-            'date.after_or_equal'    => 'La fecha tiene que ser igual o mayor a '.date('d/m/Y').'.',
         ];
 
         $rules = [
             'title' => 'required|string|max:125|unique:orders,title,'.$order->id,
             'description' => 'required|string|max:200',
-            'date' => 'required|date|after_or_equal:'.date('Y-m-d'),
+            'date' => 'required|date',
         ];
         
         $this->validate($request, $rules, $messages);
 
         try {
             DB::beginTransaction();
+
+                if(date('Y-m-d',strtotime($request->date)) < $order->date)
+                    return $this->errorResponse('La fecha que desea actualizar es incorrecta.', 422);
 
                 $mes = Month::find(date('n',strtotime($request->date)));
                 $anio = Year::where('year',date('Y',strtotime($request->date)))->first();
@@ -278,6 +282,12 @@ class OrderController extends ApiController
 
                     foreach ($detalle_orden as $key => $value) {
                         ProgressOrder::where('detail_orders_id',$value->id)->delete();
+
+                        $buscar = Quantify::where('products_id',$value->products_id)->where('year',date('Y'))->first();
+                        $buscar->sumary_schools = $buscar->sumary_schools - $value->quantity;
+                        $buscar->subtraction = $value->quantity + $buscar->sumary_purchase;
+                        $buscar->save();
+
                         $value->forceDelete();
                     }
 

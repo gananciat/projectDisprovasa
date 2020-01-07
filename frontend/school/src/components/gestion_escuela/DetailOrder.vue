@@ -134,8 +134,8 @@
                     </div>
                 </div>                               
                 <div class="col-md-12 col-sm-12 text-right">
-                    <button type="button" class="btn btn-danger btn-md" @click="clearData"><i class="fa fa-undo"></i> Cancelar</button>
-                    <button type="button" class="btn btn-success btn-md" @click="create">Agregar producto</button>
+                    <button type="button" class="btn btn-danger btn-md" v-b-tooltip.hover title="cancelar" @click="clearData"><i class="fa fa-undo"></i> Cancelar</button>
+                    <button type="button" class="btn btn-success btn-md" v-b-tooltip.hover title="agregar" @click="create">Agregar producto</button>
                 </div>      
             </div>
         </div>
@@ -301,6 +301,25 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                return 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                return 0
+            }
+        }
+    },
+
     getAll(id){
       let self = this;
       self.loading = true;
@@ -353,15 +372,11 @@ export default {
                         .create(data)
                         .then(r => {
                             self.loading = false
-                            if(r.response){
-                            self.$toastr.error(r.response.data.error, 'error')
-                            return
-                            }
-                            self.$toastr.success('registro agregado con exito', 'exito')
+                            if( self.interceptar_error(r) == 0) return
+                            self.$toastr.success('registro agregado con exito', 'exito') 
                             self.getAll(self.form.orders_id)
                             self.clearData()
-                        })
-                        .catch(r => {});                     
+                        }).catch(r => {});                     
                     }
                 });                
             }
@@ -391,11 +406,8 @@ export default {
                             .update(data)
                             .then(r => {
                                 self.loading = false
-                                if(r.response){
-                                    this.$toastr.error(r.response.data.error, 'error')
-                                    return
-                                }
-                                this.$toastr.success('registro actualizado con exito', 'exito')
+                                if( self.interceptar_error(r) == 0) return
+                                self.$toastr.success('registro actualizado con exito', 'exito') 
                                 self.getAll(self.form.orders_id)
                                 self.clearData()
                             })
@@ -422,13 +434,10 @@ export default {
                 .destroy(data)
                 .then(r => {
                     self.loading = false
-                    if(r.response){
-                            this.$toastr.error(r.response.data.error, 'error')
-                            return
-                        }
-                    this.$toastr.success('registro eliminado con exito', 'exito')
-                        self.getAll(self.form.orders_id)
-                        self.clearData()
+                    if( self.interceptar_error(r) == 0) return
+                    self.$toastr.success('registro eliminado con exito', 'exito') 
+                    self.getAll(self.form.orders_id)
+                    self.clearData()
                 })
                 .catch(r => {});
           }

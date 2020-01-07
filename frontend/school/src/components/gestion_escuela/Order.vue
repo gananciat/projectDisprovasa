@@ -60,8 +60,8 @@
           </div>
           <div class="row">
             <div class="col-12 text-right">
-              <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-              <button type="button" class="btn btn-primary btn-sm" @click="update"><i class="fa fa-save"></i> Guardar</button>
+              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="cancelar" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+              <button type="button" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="update"><i class="fa fa-save"></i> Guardar</button>
             </div>
           </div>
         </form>
@@ -149,12 +149,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -239,12 +239,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -274,7 +274,7 @@
                             </div>
                         </b-row>
                         </div>
-                      </template>
+                      </template> 
                   </el-tab-pane>
                   <el-tab-pane label="UTILES">
                     <h1>Pedidos de utiles</h1>
@@ -329,12 +329,12 @@
                             {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover title="mostrar información" v-if="!data.item.complete" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                
-                              <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                              <button type="button" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -425,6 +425,27 @@ export default {
     self.getAll('ALIMENTACION');
   },
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
 
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -490,11 +511,8 @@ export default {
                 .update(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                    this.$toastr.error(r.response.data.error, 'error')
-                    return
-                  }
-                  this.$toastr.success('registro actualizado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return 
+                  self.$toastr.success('registro actualizado con exito', 'exito') 
                   self.getAll(r.data.data.type_order)
                   self.close()
                 })
@@ -531,11 +549,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
-                  this.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito') 
                   self.getAll(r.data.data.type_order)
                   self.close()
                 })

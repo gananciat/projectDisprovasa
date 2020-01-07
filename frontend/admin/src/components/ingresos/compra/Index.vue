@@ -75,7 +75,7 @@
                           <span v-else class="badge bg-success"> Aceptada</span>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <b-button @click="$router.push(`/purchase_view_info/`+data.item.id)" variant="info" v-b-tooltip size="sm" title="detalle compra">
+                          <b-button @click="$router.push(`/purchase_view_info/`+data.item.id)" variant="info" v-b-tooltip title="detalle compra" size="sm">
                             <i class="fa fa-eye">
                               </i>
                         </b-button>

@@ -53,12 +53,12 @@ class PersonSchoolController extends ApiController
             'schools_id.exists'    => 'Debe de seleccionar la menos una escuela.',
             'cui'    => 'El número de DPI debe de tener entre :min y :max digitos.',
             'municipalities_id_people.exists'    => 'Debe de seleccionar la menos un municipio para la persona.',
-            'type_person.starts_with'    => 'Solo se aceptan los valores de '.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO
+            'type_person.starts_with'    => 'Solo se aceptan los valores de '.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO.','.PersonSchool::PRESIDENTE
         ];
 
         $rules = [
             'schools_id' => 'required|integer|exists:schools,id',
-            'cui' => 'required|digits_between:13,15|unique:people,cui',
+            'cui' => 'required|digits_between:13,15',
             'name_one' => 'required|string|max:25',
             'name_two' => 'nullable|string|max:50',
             'last_name_one' => 'required|string|max:25',
@@ -67,15 +67,14 @@ class PersonSchoolController extends ApiController
             'email' => 'required|email|max:125|unique:people,email',
             'municipalities_id_people' => 'required|integer|exists:municipalities,id',
 
-            'type_person' => 'required|starts_with:'.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO
+            'type_person' => 'required|starts_with:'.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO.','.PersonSchool::PRESIDENTE
         ];
         
         $this->validate($request, $rules, $messages);
 
         try {
             DB::beginTransaction();
-                $request = $request->all();
-
+ 
                 $insert = Person::where('cui',$request->cui)->first();
 
                 if(is_null($insert)) {
@@ -112,6 +111,7 @@ class PersonSchoolController extends ApiController
                     $insert_user = new User();
                 }
 
+                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
                 $insert_user->email = $insert->email;
                 $insert_user->password = Hash::make($this->generarPassword(16));
                 $insert_user->remember_token = Str::random(20);
@@ -119,7 +119,7 @@ class PersonSchoolController extends ApiController
                 $insert_user->verification_token = User::generarVerificationToken();
                 $insert_user->admin = User::USUARIO_REGULAR;
                 $insert_user->people_id = $insert->id;
-                $insert_user->rols_id = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+                $insert_user->rols_id = $rol->id;
                 $insert_user->save();                
 
                 if(Rol::ROL_PRESIDENTE == $asignar_persona_escuela->type_person){
@@ -180,7 +180,7 @@ class PersonSchoolController extends ApiController
         $messages = [
             'cui'    => 'El número de DPI debe de tener entre :min y :max digitos.',
             'municipalities_id_people.exists'    => 'Debe de seleccionar la menos un municipio para la persona.',
-            'type_person.starts_with'    => 'Solo se aceptan los valores de '.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO
+            'type_person.starts_with'    => 'Solo se aceptan los valores de '.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO.','.PersonSchool::PRESIDENTE
         ];
 
         $rules = [
@@ -193,7 +193,7 @@ class PersonSchoolController extends ApiController
             'email' => 'required|email|max:125|unique:people,email,'.$person_school->people_id,
             'municipalities_id_people' => 'required|integer|exists:municipalities,id',
 
-            'type_person' => 'required|starts_with:'.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO
+            'type_person' => 'required|starts_with:'.PersonSchool::DIRECTOR.','.PersonSchool::PROFESOR.','.PersonSchool::OTRO.','.PersonSchool::PRESIDENTE
         ];
         
         $this->validate($request, $rules, $messages);

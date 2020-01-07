@@ -10,6 +10,7 @@ class PersonSchool extends Model
 {
     const DIRECTOR = 'DIRECTOR';
     const PROFESOR = 'PROFESOR';
+    const PRESIDENTE = 'PRESIDENTE';
     const OTRO = 'OTRO';
 
     protected $table = 'person_schools';

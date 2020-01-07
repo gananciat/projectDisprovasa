@@ -10,7 +10,8 @@ class CreateCalendarSchoolsTable extends Migration
     {
         Schema::create('calendar_schools', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('date')->unique();
+            $table->string('title',50);
+            $table->date('date');
             $table->unsignedBigInteger('schools_id');
             $table->foreign('schools_id')->references('id')->on('schools');
             $table->unsignedBigInteger('people_id');

@@ -23,7 +23,7 @@
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Lista de escuelas 
-                    <router-link class="btn btn-success btn-sm" to="/new/school" ><i class="fa fa-plus"></i> nuevo</router-link>
+                    <router-link class="btn btn-success btn-sm" v-b-tooltip title="agregar" to="/new/school" ><i class="fa fa-plus"></i> nuevo</router-link>
                   </h3>
                 </div>
               </div>
@@ -57,8 +57,8 @@
                        @filtered="onFiltered">
                       <!-- A virtual column -->
                       <template v-slot:cell(option)="data">    
-                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-b-tooltip title="mostrar información"><i class="fa fa-eye"></i></router-link>                  
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -134,6 +134,27 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
 
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -171,11 +192,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
-                  this.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito') 
                   self.getAll()
                   self.close()
                 })

@@ -83,7 +83,7 @@ class SchoolController extends ApiController
 
             'president' => 'required|boolean',
 
-            'cui' => 'required|digits_between:13,15|unique:people,cui',
+            'cui' => 'required|digits_between:13,15',
             'name_one' => 'required|string|max:25',
             'name_two' => 'nullable|string|max:50',
             'last_name_one' => 'required|string|max:25',
@@ -309,6 +309,19 @@ class SchoolController extends ApiController
             DB::beginTransaction();
 
                 $message = '';
+
+                $asignados = PersonSchool::where('schools_id',$school->id)->where('current',true)->get();
+
+                foreach ($asignados as $key => $value) {
+                    $user = User::where('people_id',$value->people_id)->first();
+                    $user->password = Hash::make($this->generarPassword(16));
+                    $user->remember_token = Str::random(20);
+                    $user->verified = User::USUARIO_NO_VERIFICADO;
+                    $user->verification_token = User::generarVerificationToken();
+                    $user->admin = User::USUARIO_REGULAR;
+                    $user->save(); 
+                }                
+
                 $orders = Order::where('schools_id',$school->id)->count();
         
                 if($orders > 0) {
@@ -324,20 +337,12 @@ class SchoolController extends ApiController
                 else {
                     $message = $school->name.' fue eliminada.';
                     
-                    $user = User::where('people_id',PersonSchool::select('people_id')->where('schools_id', $school->id)->first())->first();
-                    $user->password = Hash::make($this->generarPassword(16));
-                    $user->remember_token = Str::random(20);
-                    $user->verified = User::USUARIO_NO_VERIFICADO;
-                    $user->verification_token = User::generarVerificationToken();
-                    $user->admin = User::USUARIO_REGULAR;
-                    $user->save();   
-                    
                     PersonSchool::where('schools_id', $school->id)->delete();
                     PhoneSchool::where('schools_id', $school->id)->delete();
                     $school->delete();
                 }
         
-                return $this->errorResponse($message, 201);
+                return $this->errorResponse($message, 422);
 
             DB::commit();
         } catch (\Exception $e) {

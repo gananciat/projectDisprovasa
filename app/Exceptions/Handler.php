@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
         }
         
         if ($exception instanceof RouteNotFoundException){
-            return $this->errorResponse("La ruta no fue encontrada", 404);
+            return $this->errorResponse("La ruta no fue encontrada", 422);
         }
 
         if ($exception instanceof ValidationException) {
@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof ModelNotFoundException) {
             $modelo = strtolower(class_basename($exception->getModel()));
-            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el ID especificado", 404);
+            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el ID especificado", 422);
         }
         
         if ($exception instanceof AuthenticationException) {
@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
         
         if ($exception instanceof MissingScopeException) {
 
-            return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
+            return $this->errorResponse("No posee permisos para ejectura esta acción", 422);
         }
 
         if ($exception instanceof AuthenticationException) {
@@ -71,11 +71,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof NotFoundHttpException) {
-            return $this->errorResponse("No se encontró la URL especificada", 404);
+            return $this->errorResponse("No se encontró la URL especificada", 422);
         }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
-            return $this->errorResponse("El método especificado en la petición no es válido", 405);
+            return $this->errorResponse("El método especificado en la petición no es válido", 422);
         }
 
         if ($exception instanceof HttpException) {
@@ -138,7 +138,7 @@ class Handler extends ExceptionHandler
                     break;                                       
             }
 
-            return $this->errorResponse($message, 409);
+            return $this->errorResponse($message, 422);
         }
 
         if ($exception instanceof TokenMismatchException)
@@ -157,7 +157,7 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception)
     {
-        return response()->json($exception->errors(), 422);
+        return response()->json($exception->errors(), 409);
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)
@@ -167,7 +167,7 @@ class Handler extends ExceptionHandler
             return redirect()->guest('login');
         }
 
-        return $this->errorResponse('No autenticado', 401);
+        return $this->errorResponse('No autenticado', 422);
     }
 
     protected function isFrontend($request)

@@ -181,6 +181,27 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
 
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -211,11 +232,8 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          this.$toastr.success('registro agregado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro agregado con exito', 'exito')
           self.close()
           self.getAll()
         })
@@ -232,11 +250,8 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          this.$toastr.success('registro actualizado con exito', 'exito')
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro modificado con exito', 'exito')
           self.getAll()
           self.close()
         })
@@ -259,11 +274,8 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
-                  this.$toastr.success('registro eliminado con exito', 'exito')
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')
                   self.getAll()
                   self.close()
                 })

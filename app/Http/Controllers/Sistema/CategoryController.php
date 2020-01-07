@@ -23,7 +23,7 @@ class CategoryController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|string|max:75|unique:categories,name',
+            'name' => 'required|string|max:10|unique:categories,name',
             'description' => 'nullable|string|max:250'
         ];
         
