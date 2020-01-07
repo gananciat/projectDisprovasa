@@ -14,6 +14,7 @@ const state = {
     token: null,
     is_login: false,
     school: {},
+    people: {},
     school_name: '',
     token_expired: null,
     client_id: 2,
@@ -24,6 +25,7 @@ const state = {
 const mutations = {
     setUser(state, usuario) {
         state.usuario = usuario.user
+        state.people = usuario.people
         state.school = usuario.school
         state.school_name = state.school.school.name
     },

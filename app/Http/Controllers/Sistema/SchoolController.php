@@ -18,12 +18,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\ApiController;
+use Illuminate\Support\Facades\Storage;
 
 class SchoolController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     /**
@@ -107,11 +108,21 @@ class SchoolController extends ApiController
                 if(!is_null(School::where('code_primary',$request->code_primary)->first()) && $request->code_primary != null)
                     return $this->errorResponse('El cóigo de primaria ya existe registrado.',403);
 
+                $imagePath = '';
+                if($request->logo != null || $request->logo != ''){
+                    if (preg_match('/^data:image\/(\w+);base64,/', $request->logo)) {
+                        $data_img = substr($request->logo, strpos($request->logo, ',') + 1);
+                        $data_img = base64_decode($data_img);
+                        $imagePath = $request->nit.'_'.time().'.png';
+                        Storage::disk('images')->put($imagePath, $data_img);
+                    } 
+                }
+
                 $insert = new School();
                 $insert->municipalities_id = $request->municipalities_id;
                 $insert->name = $request->name;
                 $insert->bill = $request->bill;
-                //$insert->logo = $request->logo;
+                $insert->logo = 'img/school_images/'.$imagePath;
                 $insert->direction = $request->direction;
                 $insert->nit = $request->nit;
                 $insert->code_high_school = $request->code_high_school;
@@ -281,6 +292,17 @@ class SchoolController extends ApiController
                 $school->code_high_school = $request->code_high_school;
                 $school->code_primary = $request->code_primary;
                 $school->people_id = Auth::user()->people_id;
+
+                if($request->logo != null || $request->logo != ''){
+                    $imagePath = '';
+                    if (preg_match('/^data:image\/(\w+);base64,/', $request->logo)) {
+                        $data = substr($request->logo, strpos($request->logo, ',') + 1);
+                        $data = base64_decode($data);
+                        $imagePath = $request->nit.'_'.time().'.png';
+                        Storage::disk('images')->put($imagePath, $data);
+                    }
+                    $school->logo = 'img/school_images/'.$imagePath;
+                }
 
                 if (!$school->isDirty()) {
                     return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);

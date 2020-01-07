@@ -27,108 +27,133 @@
       <div class="col-md-12 col-sm-12">
         <h3>Datos de la escuela</h3>
       </div>
-      <div class="col-md-12 col-sm-12">
+      <div class="col-md-4 col-lg-4 col-xs-12 card">
         <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" class="form-control" placeholder="nombre"
-          name="add.name"
-          v-model="form.name"
-          data-vv-as="nombre"
-          v-validate="'required|max:175'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.name')}">
-          <FormError :attribute_name="'add.name'" :errors_form="errors"> </FormError>
+          <label for="exampleInputFile">Logotipo</label>
+          <div class="input-group">
+            <div class="custom-file">
+              <input accept="image/*" type="file" class="custom-file-input" id="exampleInputFile" @change="selectedFile">
+              <label class="custom-file-label" for="exampleInputFile">sleccionar logo</label>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>NIT</label>
-          <input type="text" class="form-control" placeholder="nit"
-          name="add.nit"
-          v-model="form.nit"
-          data-vv-as="nit"
-          v-validate="'required|max:13|min:7'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.nit')}">
-          <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
+        <div class="card">
+          <div class="text-center">
+            <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : $store.state.base_url+'img/logo_empty.png'">
+          </div>
         </div>
-      </div> 
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>Código Primaria</label>
-          <input type="text" class="form-control" placeholder="código primaria"
-          name="add.code_primary"
-          v-model="form.code_primary"
-          data-vv-as="código primaria"
-          v-validate="'required|max:24'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.code_primary')}">
-          <FormError :attribute_name="'add.code_primary'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
-
-      <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <label>Código Preprimaria</label>
-          <input type="text" class="form-control" placeholder="código preprimaria"
-          name="add.code_high_school"
-          v-model="form.code_high_school"
-          data-vv-as="código preprimaria"
-          v-validate="'required|max:24'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.code_high_school')}">
-          <FormError :attribute_name="'add.code_high_school'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
-
-      <div class="col-md-12 col-sm-12">
-        <div class="form-group">
-          <label>Nombre Factura</label>
-          <input type="text" class="form-control" placeholder="nombre a facturar"
-          name="add.bill"
-          v-model="form.bill"
-          data-vv-as="nombre a facturar"
-          v-validate="'required|max:175'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.bill')}">
-          <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
-        </div>
-      </div>  
-
-      <div class="col-md-5 col-sm-12">
-        <div class="form-group">
-          <label>Municipio</label>
-          <multiselect v-model="form.municipalities_id"
-              v-validate="'required'" 
-              data-vv-name="add.municipalities_id"
-              data-vv-as="municipio"
-              :options="municipalities" placeholder="seleccione municipio"  
-              :searchable="true"
-              :allow-empty="false"
-              :show-labels="false"
+      </div>   
+      <div class="col-md-8 col-lg-8 col-xs-12">
+        <div class="row"> 
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" class="form-control" placeholder="nombre"
+              name="add.name"
+              v-model="form.name"
+              data-vv-as="nombre"
+              v-validate="'required|max:175'"
               data-vv-scope="add"
-              label="name" track-by="id">
-              <span slot="noResult">No se encontro ningún registro</span>
-              </multiselect>
-              <FormError :attribute_name="'add.municipalities_id'" :errors_form="errors"> </FormError>
+              :class="{'input':true,'has-errors': errors.has('add.name')}">
+              <FormError :attribute_name="'add.name'" :errors_form="errors"> </FormError>
+            </div>
+          </div>
+        </div>
+        <div class="row"> 
+          <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+              <label>NIT</label>
+              <input type="text" class="form-control" placeholder="nit"
+              name="add.nit"
+              v-model="form.nit"
+              data-vv-as="nit"
+              v-validate="'required|max:13|min:7'"
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.nit')}">
+              <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
+            </div>
+          </div> 
+
+          <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+              <label>Código Primaria</label>
+              <input type="text" class="form-control" placeholder="código primaria"
+              name="add.code_primary"
+              v-model="form.code_primary"
+              data-vv-as="código primaria"
+              v-validate="'required|max:24'"
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.code_primary')}">
+              <FormError :attribute_name="'add.code_primary'" :errors_form="errors"> </FormError>
+            </div>
+          </div> 
+
+          <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+              <label>Código Preprimaria</label>
+              <input type="text" class="form-control" placeholder="código preprimaria"
+              name="add.code_high_school"
+              v-model="form.code_high_school"
+              data-vv-as="código preprimaria"
+              v-validate="'required|max:24'"
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.code_high_school')}">
+              <FormError :attribute_name="'add.code_high_school'" :errors_form="errors"> </FormError>
+            </div>
+          </div> 
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group">
+              <label>Nombre Factura</label>
+              <input type="text" class="form-control" placeholder="nombre a facturar"
+              name="add.bill"
+              v-model="form.bill"
+              data-vv-as="nombre a facturar"
+              v-validate="'required|max:175'"
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.bill')}">
+              <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
+            </div>
+          </div>  
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group">
+              <label>Municipio</label>
+              <multiselect v-model="form.municipalities_id"
+                  v-validate="'required'" 
+                  data-vv-name="add.municipalities_id"
+                  data-vv-as="municipio"
+                  :options="municipalities" placeholder="seleccione municipio"  
+                  :searchable="true"
+                  :allow-empty="false"
+                  :show-labels="false"
+                  data-vv-scope="add"
+                  label="name" track-by="id">
+                  <span slot="noResult">No se encontro ningún registro</span>
+                  </multiselect>
+                  <FormError :attribute_name="'add.municipalities_id'" :errors_form="errors"> </FormError>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12">
+            <div class="form-group">
+              <label>Dirección</label>
+              <input type="text" class="form-control" placeholder="dirección"
+              name="add.direction"
+              v-model="form.direction"
+              data-vv-as="dirección"
+              v-validate="'required|max:175'"
+              data-vv-scope="add"
+              :class="{'input':true,'has-errors': errors.has('add.direction')}">
+              <FormError :attribute_name="'add.direction'" :errors_form="errors"> </FormError>
+            </div>
+          </div> 
         </div>
       </div>
-
-      <div class="col-md-7 col-sm-12">
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" class="form-control" placeholder="dirección"
-          name="add.direction"
-          v-model="form.direction"
-          data-vv-as="dirección"
-          v-validate="'required|max:175'"
-          data-vv-scope="add"
-          :class="{'input':true,'has-errors': errors.has('add.direction')}">
-          <FormError :attribute_name="'add.direction'" :errors_form="errors"> </FormError>
-        </div>
-      </div> 
     </div>
   </div>
   <hr>
@@ -445,54 +470,55 @@
 </template>
 
 <script>
-import FormError from '../shared/FormError'
+import FormError from "../shared/FormError";
 export default {
   name: "newschool",
   components: {
-      FormError
+    FormError
   },
   data() {
     return {
       loading: false,
       items: {},
+      logo: '',
       municipalities: [],
       type_persons: [],
       companies: [],
-      number_phone_school: '',
+      number_phone_school: "",
       companies_id_phone_school: null,
-      number_phone_person: '',
+      number_phone_person: "",
       companies_id_phone_person: null,
       form: {
         id: null,
-        bill: '',
-        code_high_school: '',
-        code_primary: '',
-        direction: '',
-        municipalities_id: '',
-        name: '',
-        nit: '',  
+        bill: "",
+        code_high_school: "",
+        code_primary: "",
+        direction: "",
+        municipalities_id: "",
+        name: "",
+        nit: "",
         phone_school: [],
         type_person: null,
         president: false,
+        logo: '',
 
-        cui: '',
-        name_one: '',
-        name_two: '',
-        last_name_one: '',
-        last_name_two: '',
-        direction_people: '',
-        email: '',
+        cui: "",
+        name_one: "",
+        name_two: "",
+        last_name_one: "",
+        last_name_two: "",
+        direction_people: "",
+        email: "",
         municipalities_id_people: null,
-        phone_people: [],
-
+        phone_people: []
       }
     };
   },
   created() {
     let self = this;
-    self.getMunicipalities()
-    self.getTypePersona()
-    self.getComany()
+    self.getMunicipalities();
+    self.getTypePersona();
+    self.getComany();
   },
 
   methods: {
@@ -528,9 +554,12 @@ export default {
         existe = false
       }
 
-      if(self.form.phone_people.length == 0){
-        self.$toastr.error('es necesario registrar al meno un número de teléfono para la persona.', 'error')
-        existe = false
+      if (self.form.phone_people.length == 0) {
+        self.$toastr.error(
+          "es necesario registrar al meno un número de teléfono para la persona.",
+          "error"
+        );
+        existe = false;
       }
 
       if(existe == true){
@@ -544,45 +573,40 @@ export default {
     },
 
     //Limpiar formulario
-    clearData(){
-        let self = this
+    clearData() {
+      let self = this;
 
-        Object.keys(self.form).forEach(function(key,index) {
-          if(typeof self.form[key] === "string") 
-            self.form[key] = ''
-          else if (typeof self.form[key] === "boolean") 
-            self.form[key] = false
-          else if (typeof self.form[key] === "number") 
-            self.form[key] = null
-        });
+      Object.keys(self.form).forEach(function(key, index) {
+        if (typeof self.form[key] === "string") self.form[key] = "";
+        else if (typeof self.form[key] === "boolean") self.form[key] = false;
+        else if (typeof self.form[key] === "number") self.form[key] = null;
+      });
 
-        self.form.phone_school = []
-        self.form.phone_people = []
-        self.$validator.reset()
-        self.$validator.reset()
-    },   
+      self.form.phone_school = [];
+      self.form.phone_people = [];
+      self.$validator.reset();
+      self.$validator.reset();
+    },
 
     //pasar a mayusculas
-    pasarMayusculas(){
-        let self = this
+    pasarMayusculas() {
+      let self = this;
 
-        Object.keys(self.form).forEach(function(key,index) {
-          
-          if(typeof self.form[key] === "string") 
-            self.form[key] = self.form[key].toUpperCase()
-
-        });
-    }, 
+      Object.keys(self.form).forEach(function(key, index) {
+        if (typeof self.form[key] === "string")
+          self.form[key] = self.form[key].toUpperCase();
+      });
+    },
 
     //funcion para guardar registro
-    create(){
-      let self = this
-      self.loading = true
-      let data = self.form
-      data.municipalities_id = self.form.municipalities_id.id
-      data.municipalities_id_people = self.form.municipalities_id_people.id
-      data.type_person = self.form.type_person.id
-      console.log(data)
+    create() {
+      let self = this;
+      self.loading = true;
+      let data = self.form;
+      data.municipalities_id = self.form.municipalities_id.id;
+      data.municipalities_id_people = self.form.municipalities_id_people.id;
+      data.type_person = self.form.type_person.id;
+      data.logo = self.logo
       self.$store.state.services.schoolService
         .create(data)
         .then(r => {
@@ -595,35 +619,38 @@ export default {
     },
 
     //Obtner los municipios
-    getMunicipalities(){
+    getMunicipalities() {
       let self = this;
       self.loading = true;
 
       self.$store.state.services.municipalityService
         .getAll()
         .then(r => {
-          self.loading = false; 
-          r.data.data.forEach( function ver(item) {
-            self.municipalities.push({'id': item.id, 'name': item.departament.name+' / '+item.name})
-          })
+          self.loading = false;
+          r.data.data.forEach(function ver(item) {
+            self.municipalities.push({
+              id: item.id,
+              name: item.departament.name + " / " + item.name
+            });
+          });
           self.getAll();
         })
         .catch(r => {});
     },
 
     //Obtener los roles
-    getTypePersona(){
+    getTypePersona() {
       let self = this;
       self.loading = true;
       self.type_persons = []
 
-      self.type_persons.push({'id': 'DIRECTOR', 'name': 'DIRECTOR'})
-      self.type_persons.push({'id': 'PROFESOR', 'name': 'PROFESOR'})
-      self.type_persons.push({'id': 'OTRO', 'name': 'OTRO'})
+      self.type_persons.push({ id: "DIRECTOR", name: "DIRECTOR" });
+      self.type_persons.push({ id: "PROFESOR", name: "PROFESOR" });
+      self.type_persons.push({ id: "OTRO", name: "OTRO" });
 
       self.loading = false;
-    }, 
-    
+    },
+
     //Obtner las companias
     getComany() {
       let self = this;
@@ -632,44 +659,49 @@ export default {
       self.$store.state.services.companyService
         .getAll()
         .then(r => {
-          self.loading = false; 
+          self.loading = false;
           self.companies = r.data.data;
         })
         .catch(r => {});
     },
-    
-    //Agregar número de teléfono de la escuela
-    addPhoneSchool(){
-      let self = this
-      let encontro = false
 
-      if(self.number_phone_school == '' || self.number_phone_school == null 
-        || self.companies_id_phone_school == '' || self.companies_id_phone_school == null)
-      {
+    //Agregar número de teléfono de la escuela
+    addPhoneSchool() {
+      let self = this;
+      let encontro = false;
+
+      if (
+        self.number_phone_school == "" ||
+        self.number_phone_school == null ||
+        self.companies_id_phone_school == "" ||
+        self.companies_id_phone_school == null
+      ) {
         self.$swal({
           title: "Advertencia",
-          text: 'La información que intenta agregar no es correcta.',
-          type: "warning",
-        })
+          text: "La información que intenta agregar no es correcta.",
+          type: "warning"
+        });
 
-        return
-      }
-      else 
-      {
-        self.form.phone_school.forEach( function verificar(item) {
-          if(item.number == self.number_phone_school) {
-            self.$toastr.warning('el número '+item.number+' ya fue agregado anteriormente.', 'advertencia')
-            encontro = true
+        return;
+      } else {
+        self.form.phone_school.forEach(function verificar(item) {
+          if (item.number == self.number_phone_school) {
+            self.$toastr.warning(
+              "el número " + item.number + " ya fue agregado anteriormente.",
+              "advertencia"
+            );
+            encontro = true;
           }
-        })
+        });
 
-        if(encontro == false){
+        if (encontro == false) {
           self.form.phone_school.push({
-                                        'number': self.number_phone_school, 
-                                        'name': self.companies_id_phone_school.name, 
-                                        'companies_id': self.companies_id_phone_school.id})
-          self.number_phone_school = ''
-          self.companies_id_phone_school = null                                      
+            number: self.number_phone_school,
+            name: self.companies_id_phone_school.name,
+            companies_id: self.companies_id_phone_school.id
+          });
+          self.number_phone_school = "";
+          self.companies_id_phone_school = null;
         }
 
         self.$validator.reset()
@@ -679,42 +711,47 @@ export default {
 
     //Quitar número de teléfono de la escuela
     quitarPhoneSchool(index) {
-        this.form.phone_school.splice(index, 1);
-    },  
-    
-    //Agregar número de teléfono de la persona
-    addPhonePerson(){
-      let self = this
-      let encontro = false
+      this.form.phone_school.splice(index, 1);
+    },
 
-      if(self.number_phone_person == '' || self.number_phone_person == null 
-        || self.companies_id_phone_person == '' || self.companies_id_phone_person == null)
-      {
+    //Agregar número de teléfono de la persona
+    addPhonePerson() {
+      let self = this;
+      let encontro = false;
+
+      if (
+        self.number_phone_person == "" ||
+        self.number_phone_person == null ||
+        self.companies_id_phone_person == "" ||
+        self.companies_id_phone_person == null
+      ) {
         self.$swal({
           title: "Advertencia",
-          text: 'La información que intenta agregar no es correcta.',
-          type: "warning",
-        })
+          text: "La información que intenta agregar no es correcta.",
+          type: "warning"
+        });
 
-        return
-      }
-      else 
-      {
-        self.form.phone_people.forEach( function verificar(item) {
-          if(item.number == self.number_phone_person) {
-            self.$toastr.warning('el número '+item.number+' ya fue agregado anteriormente.', 'advertencia')
-            encontro = true
+        return;
+      } else {
+        self.form.phone_people.forEach(function verificar(item) {
+          if (item.number == self.number_phone_person) {
+            self.$toastr.warning(
+              "el número " + item.number + " ya fue agregado anteriormente.",
+              "advertencia"
+            );
+            encontro = true;
           }
-        })
+        });
 
-        if(encontro == false){
+        if (encontro == false) {
           self.form.phone_people.push({
-                                        'number': self.number_phone_person, 
-                                        'name': self.companies_id_phone_person.name, 
-                                        'companies_id': self.companies_id_phone_person.id})
+            number: self.number_phone_person,
+            name: self.companies_id_phone_person.name,
+            companies_id: self.companies_id_phone_person.id
+          });
 
-          self.number_phone_person = ''
-          self.companies_id_phone_person = null                                    
+          self.number_phone_person = "";
+          self.companies_id_phone_person = null;
         }
 
         self.$validator.reset()
@@ -724,12 +761,20 @@ export default {
 
     //Quitar número de teléfono de la escuela
     quitarPhonePerson(index) {
-        this.form.phone_people.splice(index, 1);
-    },    
+      this.form.phone_people.splice(index, 1);
+    },
+
+    selectedFile(e) {
+      let self = this
+      var reader = new FileReader()
+      reader.readAsDataURL(e.target.files[0])
+      reader.onload = ()=> {
+        self.logo = reader.result
+      }
+    },
   },
 
-  mounted(){
-    $("body").resize()
-  },
+  computed: {
+  }
 };
 </script>
