@@ -19,6 +19,7 @@
             name="correo"
             data-vv-as="correo electronico"
             placeholder="Email"
+            @keypress.enter="beforeLogin"
             v-validate="'required|email'"
             :class="{'input':true,'has-errors': errors.has('correo')}">
             <FormError :attribute_name="'correo'" :errors_form="errors"> </FormError>
@@ -29,6 +30,7 @@
             name="contraseña"
             class="form-control" 
             v-model="credentials.password"
+            @keypress.enter="beforeLogin"
             placeholder="Password"
             v-validate="'required|min:6'"
             :class="{'input':true,'has-errors': errors.has('contraseña')}">

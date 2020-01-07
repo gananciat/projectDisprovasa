@@ -49,9 +49,10 @@ Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'ed
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['index', 'create', 'edit', 'update']]);
+Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'store', 'edit', 'destroy']]);
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
-Route::resource('disbursements', 'Sistema\DisbursementsController', ['except' => ['edit']]);
+Route::resource('disbursements', 'Sistema\DisbursementController', ['except' => ['edit']]);
 Route::resource('balances', 'Sistema\BalanceController', ['except' => ['edit']]);
 Route::resource('schools.balances', 'Sistema\SchoolBalanceController', ['except' => ['edit']]);
 Route::name('schools_show')->get('schools_show/{id}', 'Sistema\schoolController@getOne');
