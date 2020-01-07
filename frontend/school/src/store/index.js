@@ -18,7 +18,8 @@ const state = {
     school_name: '',
     token_expired: null,
     client_id: 2,
-    base_url: 'http://sistematio.test/',
+    base_url: 'http://sistemapro.test:8000/',
+    //base_url: 'http://sistematio.test/',
     client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'
 }
 

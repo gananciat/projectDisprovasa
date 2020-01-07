@@ -97,15 +97,12 @@ export default {
 
     getLogo(){
       let self = this
-      let devolver = "'../../assets/logo.png'"
       var school = self.$store.state.school
-
       if(!_.isEmpty(school)){
         if(school.logo != null)
-          devolver = self.$store.state.base_url+school.school.logo
+          return self.$store.state.base_url+school.school.logo
       }
-      console.log(devolver)
-      return devolver
+      return self.$store.state.base_url+'img/logo_empty.png'
     }
   }
 };

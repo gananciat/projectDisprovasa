@@ -75,11 +75,11 @@
                           <span v-else class="badge bg-success"> Aceptada</span>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button @click="$router.push(`/purchase_view_info/`+data.item.id)" class="btn btn-info btn-sm">
+                          <button type="button" @click="$router.push(`/purchase_view_info/`+data.item.id)" class="btn btn-info btn-sm">
                             <i class="fa fa-eye">
                               </i>
                         </button>
-                        <button v-if="!data.item.cancel" @click="update(data.item)" class="btn btn-danger btn-sm">
+                        <button type="button" v-if="!data.item.cancel" @click="update(data.item)" class="btn btn-danger btn-sm" >
                             <i class="fa fa-ban">
                               </i>
                         </button>
