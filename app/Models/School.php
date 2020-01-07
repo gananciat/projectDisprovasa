@@ -71,11 +71,6 @@ class School extends Model
         return $this->hasMany(CalendarSchool::class);
     }
 
-    public function balance()
-    {
-        return $this->hasMany(Balance::class);
-    }
-
     public function presidents()
     {
         return $this->hasMany(SchoolPresident::class,'schools_id');
@@ -84,5 +79,9 @@ class School extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function balances(){
+        return $this->hasMany(Balance::class,'schools_id');
     }
 }

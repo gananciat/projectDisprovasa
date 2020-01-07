@@ -20,7 +20,7 @@ const state = {
     //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
 
     base_url: 'http://sistemapro.test:8000/',
-    client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp',
+    client_secret: 'lpUqC0n6PaN5X0XpOSoNIOHQhbI0yEJRmJwFu4Dr',
 
     /*base_url: 'http://sistematio.test/',
     client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'*/
@@ -28,7 +28,6 @@ const state = {
 
 const mutations = {
     setUser(state, usuario) {
-        console.log(usuario)
         state.usuario = usuario
     },
 
