@@ -243,7 +243,7 @@ class SchoolController extends ApiController
 
     public function getOne($id)
     {
-        $school = School::where('id',$id)->with('balances')->first();
+        $school = School::where('id',$id)->with('balances.disbursement')->first();
 
         return $this->showOne($school);
     }

@@ -17,6 +17,7 @@ import PurchaseViewInfo from '@/components/ingresos/compra/ViewInfo'
 import Balance from '@/components/administracion_escuela/balance/Index'
 import ProgressOrder from '@/components/logistica/ProgressOrder'
 import AssignProduct from '@/components/logistica/AssignProduct'
+import CreateBalance from '@/components/administracion_escuela/balance/Create'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -55,6 +56,7 @@ const routes = [
     { path: '/school_balance/:id', name: 'Balance', component: Balance, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/progressorder', name: 'ProgressOrder', component: ProgressOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/assign_product/:id', name: 'AssignProduct', component: AssignProduct, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school_create_balance/:id', name: 'CreateBalance', component: CreateBalance, beforeEnter: multiguard([isLoggedIn]) },
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
