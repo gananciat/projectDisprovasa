@@ -71,7 +71,7 @@
             </div>
 
             <div class="col-lg-12">
-                <b-jumbotron header="Historial de la Calendarización">
+                <b-jumbotron :header="'Historial de la Calendarización del año '+anio">
                     <div class="timeline">
                         <template v-for="(item, index) in items">
                             <div class="time-label" v-bind:key="index">
@@ -118,6 +118,7 @@ export default {
       loading: false,
       items: [],
       schools_id: null,
+      anio: moment(new Date()).format("YYYY"),
       form: {
           title: '',
           date: new Date(),

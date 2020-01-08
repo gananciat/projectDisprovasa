@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-lg-12" v-if="edit_form">
             <div class="card text-white">
-              <div class="card-header bg-primary  text-center" style="font-size: 18px;"><div>Editar orden #{{ form.order }}</div></div>
+              <div class="card-header bg-primary text-center" style="font-size: 18px;"><div>Editar orden #{{ form.order }}</div></div>
               <div class="card-body">
 <form>
   <div class="row">

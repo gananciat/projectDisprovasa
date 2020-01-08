@@ -17,13 +17,10 @@ const state = {
     token_expired: null,
     client_id: 2,
     base_url: 'http://www.project.com/',
-    //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
+    client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
 
     //base_url: 'http://sistemapro.test:8000/',
-    client_secret: 'lpUqC0n6PaN5X0XpOSoNIOHQhbI0yEJRmJwFu4Dr',
-
-    /*base_url: 'http://sistematio.test/',
-    client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'*/
+    //client_secret: 'lpUqC0n6PaN5X0XpOSoNIOHQhbI0yEJRmJwFu4Dr',
 }
 
 const mutations = {
