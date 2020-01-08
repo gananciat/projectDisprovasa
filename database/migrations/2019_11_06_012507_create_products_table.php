@@ -12,6 +12,7 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->unique();
             $table->decimal('stock',10,2)->default(0);
+            $table->decimal('stock_temporary',10,2)->default(0);
             $table->string('propierty');
             $table->boolean('camouflage')->default(0);
             $table->unsignedBigInteger('categories_id');

@@ -33,10 +33,11 @@ class GratuidadImport implements ToCollection
                         $insert->name = mb_strtoupper($value[0]).', '.mb_strtoupper($value[2]);
                         $insert->propierty = Product::GRATUIDAD;
                         $insert->categories_id = $category->id;
+                        $insert->stock = random_int(1,100);
                         $insert->presentations_id = $insert_presentacion->id;
                         $insert->save();
     
-                        if($value[3] != ''){
+                        if($value[3] == ''){
                             $value[3] = 0;
                         }
                         
