@@ -99,7 +99,7 @@ export default {
       let self = this
       var school = self.$store.state.school
       if(!_.isEmpty(school)){
-        if(school.logo != null)
+        if(school.school.logo != null)
           return self.$store.state.base_url+school.school.logo
       }
       return self.$store.state.base_url+'img/logo_empty.png'
@@ -107,3 +107,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  /*.user-panel img {
+    height: auto;
+    width: 4.1rem;
+}*/
+</style>

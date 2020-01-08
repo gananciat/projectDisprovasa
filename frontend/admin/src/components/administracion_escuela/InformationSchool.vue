@@ -234,7 +234,7 @@
                             </div>
                             <div class="card">
                               <div class="text-center">
-                                <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : 'src/assets/logo_empty.png'">
+                                <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : $store.state.base_url+'img/logo_empty.png'">
                               </div>
                             </div>
                           </div>

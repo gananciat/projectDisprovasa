@@ -146,7 +146,7 @@
                         <div class="row" v-if="form.details.length > 0">
                             <!-- /.col -->
                             <div class="col-12 text-right">
-                            <button type="button" class="btn btn-danger btn-sm" @click="$router.push('/purcharse')"><i class="fa fa-undo"></i> Volver</button>
+                            <button type="button" class="btn btn-danger btn-sm" @click="$router.push('/purchase')"><i class="fa fa-undo"></i> Volver</button>
                             <button type="button" class="btn btn-primary btn-sm" @click="beforeCreate"><i class="fa fa-save"></i> Guardar</button>
                             </div>
                             <!-- /.col -->

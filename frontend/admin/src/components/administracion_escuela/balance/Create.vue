@@ -76,7 +76,7 @@
                                       :name="item2.end_date_validate"
                                       v-model="item2.end_date"
                                       :data-vv-as="'fecha fin '+item2.type_balance"
-                                      v-validate="'required'"
+                                      v-validate="dateRules(item2)"
                                       :class="{'input':true,'has-errors': errors.has(item2.end_date_validate)}">
                                     <FormError :attribute_name="item2.end_date_validate" :errors_form="errors"> </FormError>
                                   </div>
@@ -107,7 +107,7 @@
                   </div>
                 <div>
                     <!-- /.col -->
-                    <div class="col-12 text-right">
+                    <div class="col-12 text-right" v-if="validationButton">
                     <button type="button" class="btn btn-primary btn-sm" @click="beforeCreate"><i class="fa fa-save"></i> Guardar</button>
                     </div>
                     <!-- /.col -->
@@ -127,6 +127,7 @@
 
 <script>
 import FormError from '../../shared/FormError'
+import moment from 'moment'
 export default {
   name: 'Default',
   components: {
@@ -195,6 +196,9 @@ export default {
 
     mapForms(school){
       let self = this
+      self.$validator.reset()
+      self.$validator.reset()
+
       self.items = []
       var items = []
       if(school.code_primary !== ''){
@@ -244,6 +248,39 @@ export default {
       if(key == null){
         return 'balance '+type_balance+index
       }
+    },
+
+    
+    dateRules (item) {
+      if(item.start_date !== ''){
+        var year = moment(item.start_date).year()
+        var finish_date = year+'-12-31'
+        var theDate = moment(item.start_date)
+        var newDate = theDate.add(1, "days")
+        var init_date = moment(theDate.toString()).format('YYYY-MM-DD')
+        return {
+          required: true,
+          date_format: 'yyyy-MM-dd',
+          date_between: [init_date, finish_date, true]
+        };
+      }
+      return {
+        required: true
+      }
+        
+    }
+  },
+
+  computed: {
+    validationButton(){
+      let self = this
+      var valid = false
+      self.items.forEach(item => {
+        if(item.items.length > 0){
+          valid = true
+        }
+      })
+      return valid
     }
   },
 }

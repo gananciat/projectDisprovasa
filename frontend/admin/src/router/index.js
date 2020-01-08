@@ -31,7 +31,6 @@ Vue.use(Router)
 const isLoggedIn = (to, from, next) => {
     var user = store.state.usuario
     if(!_.isEmpty(user)){
-        console.log(user)
     }
     return store.state.is_login ? next() : next('/login')
 }

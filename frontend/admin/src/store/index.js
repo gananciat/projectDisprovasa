@@ -16,11 +16,11 @@ const state = {
     is_login: false,
     token_expired: null,
     client_id: 2,
-    base_url: 'http://www.project.com/',
-    client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
+    //base_url: 'http://www.project.com/',
+    //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
 
-    //base_url: 'http://sistemapro.test:8000/',
-    //client_secret: 'lpUqC0n6PaN5X0XpOSoNIOHQhbI0yEJRmJwFu4Dr',
+    base_url: 'http://sistemapro.test:8000/',
+    client_secret: 'De5cx21eIRUWBZLn8T4ejbmWVMOOtcnxKQJlvorz',
 }
 
 const mutations = {
