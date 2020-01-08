@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Sistema;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
-use App\Models\DetailOrder;
 use App\Models\Order;
-use App\Models\ProgressOrder;
+use App\Models\DetailOrder;
 use Illuminate\Http\Request;
+use App\Models\ProgressOrder;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
+use App\Models\OrderStatus;
+use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProgressOrderController extends ApiController
 {
@@ -55,38 +59,19 @@ class ProgressOrderController extends ApiController
      */
     public function show($progress_order)
     {
-        if(!is_null($progress_order)) {
-            $orders = Order::where('schools_id',$progress_order)->where('complete',false)->get();
-            $ids = array();
-    
-            foreach ($orders as $value) {
-                array_push($ids,$value->id);
-            }
-            
-            $details = DetailOrder::select('id','complete','products_id','orders_id')
-                                    ->with(['product:id,name,presentations_id',
-                                            'product.presentation:id,name',
-                                            'orders:id,order,title,type_order,date,schools_id',
-                                            'orders.school:id,name,code_primary,code_high_school',
-                                            'progress:id,original_quantity,purchased_amount,detail_orders_id',
-                                            ])         
-                                    ->whereIn('orders_id',$ids)                      
-                                    ->where('complete',false)->get();
-    
+        $orders = Order::select('id','order','title','date','total','schools_id','code')
+                        ->with('school:id,name')
+                        ->withCount([
+                                    'details as detail_complete' => function(Builder $query) {
+                                        $query->where('complete', true);
+                                    }, 
+                                    'details as detail_total'
+                                    ])
+                        ->where('type_order',mb_strtoupper($progress_order))
+                        ->where('complete',false)
+                        ->get();
 
-        }
-        else {
-            $details = DetailOrder::select('id','complete','products_id','orders_id')
-                                    ->with(['product:id,name,presentations_id',
-                                            'product.presentation:id,name',
-                                            'orders:id,order,title,type_order,date,schools_id',
-                                            'orders.school:id,name,code_primary,code_high_school',
-                                            'progress:id,original_quantity,purchased_amount,detail_orders_id',
-                                            ])                              
-                                    ->where('complete',false)->get();
-        }
-
-        return $this->showAll($details);
+        return $this->showAll($orders);
     }
 
     /**
@@ -95,9 +80,19 @@ class ProgressOrderController extends ApiController
      * @param  \App\Models\ProgressOrder  $progressOrder
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProgressOrder $progressOrder)
+    public function edit($progress_order)
     {
-        //
+        $details = DetailOrder::select('id','complete','products_id','orders_id')
+        ->with(['product:id,name,presentations_id,stock',
+                'product.presentation:id,name',
+                'orders:id,order,title,type_order,date,schools_id,code,total',
+                'orders.school:id,name,logo',
+                'progress:id,original_quantity,purchased_amount,detail_orders_id',
+                ])         
+        ->where('orders_id',$progress_order)                      
+        ->where('complete',false)->get();
+
+        return $this->showAll($details);
     }
 
     /**
@@ -107,9 +102,61 @@ class ProgressOrderController extends ApiController
      * @param  \App\Models\ProgressOrder  $progressOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProgressOrder $progressOrder)
+    public function update(Request $request, ProgressOrder $progress_order)
     {
-        //
+        try {
+            DB::beginTransaction();
+                $product = Product::find($progress_order->products_id);
+
+                if($request->purchased_amount > $product->stock)
+                    return $this->errorResponse('No hay suficiente stock para realizar el proceso.',422);
+
+                $detail_order = DetailOrder::find($progress_order->detail_orders_id);
+                $status = OrderStatus::PEDIDO;
+                $detail_order->complete = false;
+
+                if($request->purchased_amount > $progress_order->purchased_amount){
+                    $progress_order->purchased_amount = $request->purchased_amount;
+                    $product->stock = $product->stock - $request->purchased_amount;                    
+                }
+                elseif ($request->purchased_amount <= $progress_order->purchased_amount && $request->purchased_amount != 0){
+                    $product->stock = $product->stock + ($progress_order->purchased_amount-$request->purchased_amount); 
+                    $progress_order->purchased_amount = $request->purchased_amount;   
+                }else{
+                    $product->stock = $product->stock + $progress_order->purchased_amount; 
+                    $progress_order->purchased_amount = $request->purchased_amount;                                         
+                }
+
+                if($progress_order->purchased_amount == $progress_order->original_quantity){
+                    $status = OrderStatus::COMPLETADO;
+                    $detail_order->complete = true;
+                }
+                elseif($progress_order->purchased_amount < $progress_order->original_quantity && $progress_order->purchased_amount != 0){
+                    $status = OrderStatus::EN_PROCESO;
+                    $detail_order->complete = false;
+                }
+
+                $order_status = OrderStatus::where('status',$status)->first();
+                $progress_order->order_statuses_id = $order_status->id;
+
+                $product->save();
+                $detail_order->save();                
+                $progress_order->save();
+
+                $order_complete = DetailOrder::where('orders_id',$detail_order->orders_id)->where('complete',false)->count();
+                if($order_complete == 0){
+                    $order = Order::find($detail_order->orders_id);
+                    $order->complete = true;
+                    $order->save();
+                }
+
+            DB::commit();
+
+            return $this->showOne($detail_order,201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->errorResponse($e->getMessage(),409);
+        }
     }
 
     /**

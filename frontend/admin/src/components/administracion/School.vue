@@ -214,5 +214,10 @@ export default {
       return logo !== null ? self.$store.state.base_url+logo : self.$store.state.base_url+'img/logo_empty.png'
     }
   },
+
+  mounted(){
+        $("body").resize()
+  },
+
 };
 </script>

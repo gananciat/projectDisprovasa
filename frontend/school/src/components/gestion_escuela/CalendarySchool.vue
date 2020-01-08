@@ -108,7 +108,7 @@
 import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
-  name: "order",
+  name: "calendaryschool",
   components: {
       FormError,
       moment 

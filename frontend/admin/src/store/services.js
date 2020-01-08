@@ -27,6 +27,7 @@ import ProviderService from '../services/ProviderService'
 import PurchaseService from '../services/PurchaseService'
 import BalanceService from '../services/BalanceService'
 import DisbursementService from '../services/DisbursementService'
+import ProgressOrderService from '../services/ProgressOrderService'
 
 
 /* IMPORT SCHOOL */
@@ -107,6 +108,7 @@ export default {
     providerService: new ProviderService(Axios, baseUrl),
     balanceService: new BalanceService(Axios, baseUrl),
     disbursementService: new DisbursementService(Axios, baseUrl),
+    progressorderService: new ProgressOrderService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),

@@ -773,8 +773,8 @@ export default {
       }
     },
   },
-
-  computed: {
-  }
+  mounted(){
+        $("body").resize()
+  },
 };
 </script>

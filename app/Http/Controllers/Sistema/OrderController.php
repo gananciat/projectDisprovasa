@@ -83,6 +83,7 @@ class OrderController extends ApiController
             'detail_order.sale_price.*' => 'required|numeric',
             'detail_order.observation.*' => 'nullable|max:125',
             'detail_order.products_id.*' => 'required|integer|exists:products,id',
+            'code' => 'required',
         ];
         
         $this->validate($request, $rules, $messages);
@@ -117,6 +118,7 @@ class OrderController extends ApiController
                 $insert_orden->people_id = Auth::user()->people_id;                
                 $insert_orden->months_id = $mes->id;             
                 $insert_orden->years_id = $anio->id;
+                $insert_orden->code = $request->code;
                 $insert_orden->save();
 
                 for ($i=0; $i < count($request->detail_order); $i++) { 

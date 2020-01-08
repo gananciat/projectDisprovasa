@@ -211,7 +211,10 @@
                                                 </td>
                                                 <td style="vertical-align:middle;">{{ item.product.name+' / '+ item.product.presentation.name }}</td>
                                                 <td style="vertical-align:middle;">
-                                                    <div class="form-group">
+                                                    <p v-if="item.progress.purchased_amount == item.quantity">
+                                                        {{ item.observation }}
+                                                    </p>
+                                                    <div class="form-group" v-if="item.progress.purchased_amount != item.quantity">
                                                         <textarea class="form-control" 
                                                         rows="3" 
                                                         placeholder="observación del producto"
@@ -268,7 +271,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "newschool",
+  name: "detailorder",
   components: {
       FormError
   },
