@@ -292,9 +292,9 @@ export default {
       self.$store.state.services.productService
         .getAll()
         .then(r => {
-          self.loading = false; 
-          self.items = r.data.data;
+          self.items = r.data.data
           self.totalRows = self.items.length
+          self.loading = false
         })
         .catch(r => {});
     },

@@ -75,8 +75,9 @@ class PurchaseController extends ApiController
 
                 if(!is_null($quantify)){
                     $quantify->sumary_purchase = $quantify->sumary_purchase + $detail['quantity'];
-                    $summary = $quantify->sumary_schools - ($quantify->sumary_purcharse + $stock);
+                    $summary = $quantify->sumary_schools - ($quantify->sumary_purchase + 0);
                     $quantify->subtraction = $summary > 0 ? $summary : 0;
+
                     $quantify->save();
 
                     $consultar->stock += $detail['quantity'];
@@ -115,7 +116,7 @@ class PurchaseController extends ApiController
                     $stock = !is_null($consultar) ? $consultar->stock : 0;
 
                     $quantify->sumary_purchase = $quantify->sumary_purchase - $detail->quantity;
-                    $summary = $quantify->sumary_schools - ($quantify->summary_purcharse + $stock);
+                    $summary = $quantify->sumary_schools - ($quantify->sumary_purchase + $stock);
                     $quantify->subtraction = $summary > 0 ? $summary : 0;
                     $quantify->save();
                 }

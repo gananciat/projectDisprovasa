@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Price;
 use App\Models\Category;
-use App\Models\Quantify;
-use App\Models\Sentence;
 use App\Models\DetailOrder;
 use App\Models\Presentation;
+use App\Models\Price;
+use App\Models\Quantify;
+use App\Models\Sentence;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -54,6 +55,7 @@ class Product extends Model
 
     public function quantify()
     {
-        return $this->hasOne(Quantify::class,'products_id');
+        $year = Carbon::now()->year;
+        return $this->hasOne(Quantify::class,'products_id')->where('year',$year);
     }
 }

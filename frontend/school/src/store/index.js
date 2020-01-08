@@ -18,9 +18,12 @@ const state = {
     school_name: '',
     token_expired: null,
     client_id: 2,
-    //base_url: 'http://sistemapro.test:8000/',
+
     base_url: 'http://sistematio.test/',
     client_secret: 'pkOqeg1XEZty7FZBjEkDzUPa4TWlnwUsF5dmy6eC'
+
+    //base_url: 'http://sistemapro.test:8000/',
+    //client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'
 }
 
 const mutations = {

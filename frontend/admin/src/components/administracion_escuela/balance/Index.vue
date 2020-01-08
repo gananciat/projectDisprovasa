@@ -41,7 +41,7 @@
                 name="fecha_fin"
                 v-model="form.end_date"
                 data-vv-as="fecha fin"
-                v-validate="'required'"
+                v-validate="dateRules(form)"
               :class="{'input':true,'has-errors': errors.has('fecha_fin')}">
               <FormError :attribute_name="'fecha_fin'" :errors_form="errors"> </FormError>
               </div>
@@ -186,6 +186,7 @@
 
 <script>
 import FormError from '../../shared/FormError'
+import moment from 'moment'
 export default {
   name: 'index_balance',
   components: {
@@ -333,6 +334,25 @@ export default {
     close(){
         let self= this
         self.$refs['nuevo'].hide()
+    },
+
+     dateRules (item) {
+      if(item.start_date !== ''){
+        var year = moment(item.start_date).year()
+        var finish_date = year+'-12-31'
+        var theDate = moment(item.start_date)
+        var newDate = theDate.add(1, "days")
+        var init_date = moment(theDate.toString()).format('YYYY-MM-DD')
+        return {
+          required: true,
+          date_format: 'yyyy-MM-dd',
+          date_between: [init_date, finish_date, true]
+        };
+      }
+      return {
+        required: true
+      }
+        
     }
   },
 
