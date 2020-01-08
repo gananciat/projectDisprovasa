@@ -38,7 +38,7 @@
   <div class="tab-content" id="custom-tabs-one-tabContent">
     <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
       <div class="row">
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-2 col-sm-12">
           <div class="form-group">
             <label>Fecha para la entrega del pedido</label>
             <div class="block">
@@ -61,7 +61,7 @@
             <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
           </div>
         </div>
-        <div class="col-md-4 col-sm-12">            
+        <div class="col-md-2 col-sm-12">            
           <div class="form-group">
             <label>Código</label>
             <multiselect v-model="form.code"
@@ -460,19 +460,19 @@ export default {
     //funcion para guardar registro
     create(){
       let self = this
-      let data = self.form
-      data.order = self.no_reservation
-      data.code = self.form.code.id
-      data.type_order = self.title
 
       self.$swal({
         title: "Verificar",
-        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ data.order + "?",
+        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
         type: "info",
         showCancelButton: true
       }).then((result) => {
-          self.loading = true
           if (result.value) {
+            self.loading = true
+            let data = self.form
+            data.order = self.no_reservation
+            data.code = self.form.code.id
+            data.type_order = self.title            
             self.$store.state.services.orderService
               .create(data)
               .then(r => {

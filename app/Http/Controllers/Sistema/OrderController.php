@@ -140,23 +140,35 @@ class OrderController extends ApiController
                     $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                     $insert_progreso_orden->save();
 
-                    $buscar_stock = Product::find($insert_detalle_orden->products_id);
-                    $stock = !is_null($buscar_stock) ? $buscar_stock->stock : 0;
+                    $product = Product::find($insert_detalle_orden->products_id);
                     
                     $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
 
                     if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
-                        $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools;
+                        $insert_quantify->year = $anio->year;
+                        $insert_quantify->products_id = $product->products_id;
+                
+                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+        
+                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
+                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                        }
+                
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
+                
                     } else {
-                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - ($insert_quantify->sumary_purchase + $stock);
+                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                        
+                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
+                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                        }
+                
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
 
-                    $insert_quantify->year = $anio->year;
-                    $insert_quantify->products_id = $insert_detalle_orden->products_id;
                     $insert_quantify->save();
+                    $product->save();
 
                     $insert_orden->total = $insert_orden->total + $insert_detalle_orden->subtotal;
                     $insert_orden->save();
@@ -286,8 +298,8 @@ class OrderController extends ApiController
                         ProgressOrder::where('detail_orders_id',$value->id)->delete();
 
                         $buscar = Quantify::where('products_id',$value->products_id)->where('year',date('Y'))->first();
-                        $buscar->sumary_schools = $buscar->sumary_schools - $value->quantity;
-                        $buscar->subtraction = $value->quantity + $buscar->sumary_purchase;
+                        $buscar->sumary_purchase += $value->quantity;
+                        $buscar->subtraction = $buscar->sumary_schools - $buscar->sumary_purchase;
                         $buscar->save();
 
                         $value->forceDelete();

@@ -17,7 +17,12 @@ use App\Imports\MunicipioImport;
 use App\Imports\AlimentacionImport;
 use App\Imports\DepartamentoImport;
 use App\Imports\EscuelaImport;
+use App\Models\CalendarSchool;
+use App\Models\DetailOrder;
+use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\ProgressOrder;
+use App\Models\Reservation;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -188,5 +193,30 @@ class DatabaseSeeder extends Seeder
         $insert_order->status = 'completado';
         $insert_order->save();  
         echo 'ESTADO DE LA ORDEN: '.$insert_order->status.PHP_EOL;
+
+
+        for ($i=0; $i < 150; $i++) { 
+            $insert_reservation = new Reservation();
+            $insert_reservation->correlative = $i+1;
+            $insert_reservation->year = date('Y');
+            $insert_reservation->save();
+        }
+
+        //Generar compras aleatorias
+        factory(CalendarSchool::class, 30)->create();
+        factory(Order::class, 150)->create();
+        factory(DetailOrder::class, 5000)->create();
+
+        $detail_order = DetailOrder::all();
+
+        foreach ($detail_order as $key => $value) {
+            $insert = new ProgressOrder();
+            $insert->purchased_amount = 0;
+            $insert->order_statuses_id = 1;
+            $insert->detail_orders_id = $value->id;
+            $insert->products_id = $value->products_id;
+            $insert->original_quantity = $value->quantity;
+            $insert->save();
+        }
     }
 }
