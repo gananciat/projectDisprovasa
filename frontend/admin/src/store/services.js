@@ -28,6 +28,7 @@ import PurchaseService from '../services/PurchaseService'
 import BalanceService from '../services/BalanceService'
 import DisbursementService from '../services/DisbursementService'
 import ProgressOrderService from '../services/ProgressOrderService'
+import QuantifyService from '../services/QuantifyService'
 
 
 /* IMPORT SCHOOL */

@@ -95,6 +95,7 @@ export default {
         text: "Ingresos",
         children: [
           { icon: "circle-o", text: "Proveedores", path: "/provider" },
+          { icon: "circle-o", text: "Productos faltantes", path: "/missing_product" },
           { icon: "circle-o", text: "Compras", path: "/purchase" }
         ]
       },
