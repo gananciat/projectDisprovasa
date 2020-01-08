@@ -12,7 +12,7 @@
           </div><!-- /.col -->
           <div class="col-sm-4">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">ESCUELAS</a></li>
+              <li class="breadcrumb-item"><a href="#/school">ESCUELAS</a></li>
               <li class="breadcrumb-item active">BALANCE ESCUELA</li>
             </ol>
           </div>
@@ -21,16 +21,63 @@
     </div>
     <!-- /.content-header -->
 
+    <!-- Modal para nuevo registro -->
+        <b-modal ref="nuevo" size="lg" :title="'editar balance '+form.type_balance+' codigo '+form.code" hide-footer class="modal-backdrop" no-close-on-backdrop>
+          <form>
+            <div class="row">
+              <div class="form-group col-md-4 col-lg-4 col-xs-12">
+                <label>Fecha inicio</label>
+                <input type="date" class="form-control" placeholder="fecha inicio"
+                name="fecha_inicio"
+                v-model="form.start_date"
+                data-vv-as="fecha inicio"
+                v-validate="'required'"
+              :class="{'input':true,'has-errors': errors.has('fecha_innicio')}">
+              <FormError :attribute_name="'fecha_inicio'" :errors_form="errors"> </FormError>
+              </div>
+              <div class="form-group col-md-4 col-lg-4 col-xs-12">
+                <label>Fecha fin</label>
+                <input type="date" class="form-control" placeholder="fecha fin"
+                name="fecha_fin"
+                v-model="form.end_date"
+                data-vv-as="fecha fin"
+                v-validate="'required'"
+              :class="{'input':true,'has-errors': errors.has('fecha_fin')}">
+              <FormError :attribute_name="'fecha_fin'" :errors_form="errors"> </FormError>
+              </div>
+              <div class="form-group col-md-4 col-lg-4 col-xs-12">
+                <label>Balance</label>
+                <input type="text" class="form-control" placeholder="fecha inicio"
+                name="balance"
+                v-model="form.balance"
+                data-vv-as="Balance"
+                v-validate="'required|decimal'"
+              :class="{'input':true,'has-errors': errors.has('balance')}">
+              <FormError :attribute_name="'balance'" :errors_form="errors"> </FormError>
+              </div>
+            </div>
+              
+              <div class="row">
+                <!-- /.col -->
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+                  <button type="button" class="btn btn-primary btn-sm" @click="beforeEdit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+                <!-- /.col -->
+              </div>
+            </form>
+        </b-modal>
+
     <!-- Main content -->
-    <div class="content">
+    <div class="content" v-loading="loading">
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Registro balance 
-                    <b-button variant="success" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
+                  <h3 class="card-title" v-if="school !== null">Registro balance 
+                    <b-button variant="success" size="sm" @click="$router.push('/school_create_balance/'+school.id)"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
               <div class="card-body">
@@ -65,18 +112,33 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
-                      <template v-slot:cell(name)="data">
-                        {{ data.item.name }}
+                      <template v-slot:cell(year)="data">
+                        {{ data.item.year }}
                       </template>
-                      <template v-slot:cell(description)="data">
-                        {{data.item.description}}
+                      <template v-slot:cell(code)="data">
+                        {{ data.item.code }}
+                      </template>
+                      <template v-slot:cell(dates)="data">
+                        {{data.item.start_date | moment('DD/MM/YYYY')}} - {{data.item.end_date|moment('DD/MM/YYYY')}}
+                      </template>
+                      <template v-slot:cell(property)="data">
+                        {{ data.item.type_balance }}
+                      </template>
+                      <template v-slot:cell(disbursement)="data">
+                        {{ data.item.disbursement.name }}
+                      </template>
+                      <template v-slot:cell(balance)="data">
+                        {{data.item.balance | currency('Q ')}}
+                      </template>
+                      <template v-slot:cell(subtraction)="data">
+                        {{data.item.subtraction | currency('Q ')}}
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-b-tooltip title="editar">
+                          <button v-if="data.item.subtraction == 0" type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-b-tooltip title="editar">
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
+                          <button v-if="data.item.subtraction == 0" type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -123,8 +185,12 @@
 </template>
 
 <script>
+import FormError from '../../shared/FormError'
 export default {
   name: 'index_balance',
+  components: {
+    FormError
+  },
   data() {
     return {
       loading: false,
@@ -132,9 +198,12 @@ export default {
       items: [],
       fields: [
         { key: 'year', label: 'Año', sortable: true },
-        { key: 'codigo', label: 'Codigo', sortable: true },
+        { key: 'code', label: 'Codigo', sortable: true },
+        { key: 'dates', label: 'Fechas', sortable: true },
         { key: 'property', label: 'Pertenece', sortable: true },
+        { key: 'disbursement', label: 'Desembolso', sortable: true },
         { key: 'balance', label: 'Balance', sortable: true },
+        { key: 'subtraction', label: 'Balance actual', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -143,6 +212,14 @@ export default {
       totalRows: 0,
       pageOptions: [ 5, 10, 25 ],
       showStringEmpty: 'no hay balances que mostrar',
+      form: {
+        id: null,
+        start_date: '',
+        end_date: '',
+        balance: null,
+        type_balance: '',
+        code: ''
+      }
     }
   },
 
@@ -168,6 +245,7 @@ export default {
           self.loading = false
           self.school = r.data.data
           self.items = self.school.balances
+          self.totalRows = self.items.length
         })
         .catch(r => {});
     },
@@ -175,6 +253,86 @@ export default {
     getPhones(phones){
       let self = this
       return phones.map(e => e.number).join(", ")
+    },
+
+        //funcion para actualizar registro
+    update(){
+      let self = this
+      self.loading = true
+      let data = self.form
+      self.$store.state.services.balanceService
+        .update(data)
+        .then(r => {
+          self.loading = false
+          self.loading = false
+          if(r.response){
+                this.$toastr.error(r.response.data.error, 'error')
+                return
+            }
+          this.$toastr.success('registro eliminado con exito', 'exito')
+          self.get(self.school.id)
+          self.close()
+        })
+        .catch(r => {});
+    },
+
+    //funcion para eliminar registro
+    destroy(data){
+      let self = this
+
+      self.$swal({
+        title: "¿Eliminar registro?",
+        text: "Esta seguro de elminar "+data.code + '?',
+        type: "warning",
+        showCancelButton: true
+      }).then((result) => { // <--
+          if (result.value) { // <-- if confirmed
+              self.loading = true
+              self.$store.state.services.balanceService
+                .destroy(data)
+                .then(r => {
+                  self.loading = false
+                  self.loading = false
+                  if(r.response){
+                        this.$toastr.error(r.response.data.error, 'error')
+                        return
+                    }
+                  this.$toastr.success('registro eliminado con exito', 'exito')
+                  self.get(self.school.id)
+                  self.close()
+                })
+                .catch(r => {});
+          }
+      });
+    },
+
+    //funcion, validar si se guarda o actualiza
+    beforeEdit(){
+      this.$validator.validateAll().then((result) => {
+          if (result) {
+              self.update()
+           }
+      });
+
+      let self = this
+    },
+
+     //mapear datos a formulario
+    mapData(data){
+        let self = this
+        self.form.id = data.id
+        self.form.code = data.code
+        self.form.start_date = data.start_date
+        self.form.end_date = data.end_date
+        self.form.type_balance = data.type_balance
+        self.form.balance = data.balance
+        this.$refs['nuevo'].show()
+    },
+
+    //cerrar modal limpiar registros
+    close(){
+        let self= this
+        self.$refs['nuevo'].hide()
     }
   },
 

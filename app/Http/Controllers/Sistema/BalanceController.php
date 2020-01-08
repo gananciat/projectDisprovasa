@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Sistema;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use App\Models\Balance;
+use App\Models\Disbursement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
 class BalanceController extends ApiController
 {
@@ -19,6 +21,16 @@ class BalanceController extends ApiController
     {
         $balances = Balance::all();
         return $this->showAll($balances);
+    }
+
+    public function getDisbursement($items)
+    {
+        $disbursement = Disbursement::whereNotNull('id')->first();
+        if(count($items)){
+            $last_id = $items->last()->disbursement_id;
+            $disbursement = Disbursement::where('id','>',$last_id)->orderBy('id')->first();   
+        }
+        return $disbursement;
     }
 
     /**
@@ -38,24 +50,43 @@ class BalanceController extends ApiController
         DB::beginTransaction();
             $items = $request->items;
             foreach ($items as $item) {
-                $rules2 = [
-                    'balance'=>'required',
-                    'start_date'=>'required|date',
-                    'end_date'=>'required|date',
-                    'schools_id'=>'required|integer|exists:schools,id',
-                    'year'=>'required',
-                    'code',
-                    'type_balance',
-                    'current',
-                    'disbursement_id'=>'required|integer|exists:disbursement,id'
-                ];
+                foreach ($item['items'] as $item2) {
+                    $year = Carbon::parse($item2['start_date'])->year;
 
-                $this->validate($item, $rules2);
+                    $balances = Balance::where('year',$year)->where('schools_id',$item['school_id'])->where('type_balance',$item2['type_balance'])->where('code',$item['code'])->get();
+                    
+                    $disbursement = $this->getDisbursement($balances);
+                    if(is_null($disbursement)){
+                        return $this->errorResponse('ya no existen desembolsos registrados en la base de datos',421);
+                    }
 
-                $balance = Balance::create($item);
+                    $item2['year'] = $year;
+                    $item2['schools_id'] = $item['school_id'];
+                    $item2['disbursement_id'] = $disbursement->id;
+                    $item2['people_id'] = $request->user()->people_id;
+                    $item2['code'] = $item['code']; 
+
+                    $request2 = new Request($item2);
+
+                    $rules2 = [
+                        'balance'=>'required',
+                        'start_date'=>'required|date',
+                        'end_date'=>'required|date',
+                        'schools_id'=>'required|integer|exists:schools,id',
+                        'year'=>'required',
+                        'code'=>'required',
+                        'type_balance'=>'required',
+                        'disbursement_id'=>'required|integer|exists:disbursement,id'
+                    ];
+
+                    $this->validate($request2, $rules2);
+                    $balance = Balance::create($item2);
+                }
+
             }
         DB::commit();
-        return $this->showOne($items,201);
+        return response()->json(['message' => 
+            'registros guardados con exito'],200);
     }
 
     /**
@@ -79,7 +110,24 @@ class BalanceController extends ApiController
      */
     public function update(Request $request, Balance $balance)
     {
-        //
+        $rules = [
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'balance' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+
+        $balance->start_date = $request->start_date;
+        $balance->end_date = $request->end_date;
+        $balance->balance = $request->balance;
+
+        if (!$balance->isDirty()) {
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
+        }
+
+        $balance->save();
+        return $this->showOne($balance,201);
     }
 
     /**
@@ -90,6 +138,7 @@ class BalanceController extends ApiController
      */
     public function destroy(Balance $balance)
     {
-        //
+        $balance->delete();
+        return $this->showOne($balance,201);
     }
 }

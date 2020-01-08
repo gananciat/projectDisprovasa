@@ -31,6 +31,6 @@ class Balance extends Model
 
     public function disbursement()
     {
-        return $this->showOne(Disbursement::class,'disbursement_id');
+        return $this->belongsTo(Disbursement::class,'disbursement_id');
     }
 }
