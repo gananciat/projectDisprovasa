@@ -56,4 +56,4 @@ Route::resource('disbursements', 'Sistema\DisbursementController', ['except' => 
 Route::resource('balances', 'Sistema\BalanceController', ['except' => ['edit']]);
 Route::resource('schools.balances', 'Sistema\SchoolBalanceController', ['except' => ['edit']]);
 Route::name('schools_show')->get('schools_show/{id}', 'Sistema\schoolController@getOne');
-Route::resource('notifications', 'Reports\NotificationController', ['except' => ['edit']]);
+Route::resource('notifications', 'Reports\NotificationsController', ['except' => ['edit']]);

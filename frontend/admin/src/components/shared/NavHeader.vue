@@ -22,56 +22,53 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" v-if="notifications !== null">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-          <i class="fa fa-product-hunt">&nbsp;&nbsp;</i>
-          <span class="badge badge-danger navbar-badge">3</span>
+          <i class="fa fa-product-hunt">&nbsp;&nbsp;&nbsp;&nbsp;</i>
+          <span class="badge badge-danger navbar-badge">{{ notifications.low_products.length }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <span class="dropdown-item dropdown-header">{{ notifications.low_products.length }} productos bajos en stock</span>
+          <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
-            <div class="media">
+            <div class="media" v-for="(item, i) in products" :key="item.id">
               <img src="../../assets/product_icon.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
               <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  aciete 40
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                <h6 class="dropdown-item-title">
+                  <span class="float-right text-sm text-danger"><i class="fa fa-product-hunt"></i>{{ item.stock }}</span>
+                </h6>
+                <p class="text-sm">{{ item.name }}</p>
               </div>
             </div>
             <!-- Message End -->
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          <a href="#/product" class="dropdown-item dropdown-footer">{{ notifications.low_products.length - products.length }} Productos mas</a>
         </div>
       </li>
 
-      <li class="nav-item dropdown show">
+      <li class="nav-item dropdown show" v-if="notifications !== null">
         <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="true">
-          <i class="fa fa-shopping-cart">&nbsp;&nbsp;&nbsp;&nbsp;</i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <i class="fa fa-shopping-cart">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+          <span class="badge badge-primary navbar-badge">{{ notifications.orders.length }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
+          <span class="dropdown-item dropdown-header">{{ notifications.orders.length }} nuevos pedidos</span>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fa fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
+            <i class="fa fa-apple mr-2"></i> {{ alimentacion }} alimentacion
           </a>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
+            <i class="fa fa-file mr-2"></i> {{ gratuidad }} gratuidad
           </a>
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
+            <i class="fa fa-book mr-2"></i> {{ utiles }} utiles
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+          <a href="#/progressorder" class="dropdown-item dropdown-footer">Ver todos</a>
         </div>
       </li>
 
@@ -92,11 +89,17 @@ export default {
   data(){
     return {
       loading: false,
+      notifications: null,
+      alimentacion: 0,
+      gratuidad: 0,
+      utiles: 0,
+      products: []
     }
   },
 
   created(){
-
+    let self = this
+    self.getNotifications()
   },
 
   methods:{
@@ -112,6 +115,22 @@ export default {
         }).catch(e => {
 
       })
+    },
+
+    getNotifications(){
+      let self = this
+      self.loading = true
+      self.$store.state.services.reportService
+      .getNotifications()
+      .then(r=>{
+        self.loading = false
+        self.notifications = r.data
+        self.alimentacion = self.notifications.orders.filter(x=>x.type_order === 'ALIMENTACION').length
+        self.gratuidad = self.notifications.orders.filter(x=>x.type_order === 'GRATUIDAD').length
+        self.utiles = self.notifications.orders.filter(x=>x.type_order === 'UTILES').length
+        self.products = self.notifications.low_products.filter((item,idx) => idx < 5)
+
+      }).catch(e=>{})
     }
   }
 }
