@@ -1,9 +1,9 @@
 <template>
 
 <body class="login-page">
-<div class="login-box">
+<div class="login-box" style="margin-top: -150px;">
   <div class="login-logo">
-    <a href="#"><b>Sistema</b>Dispro</a>
+    <a><b>SISTEMA</b> DISPROVASA</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -37,8 +37,8 @@
         </div>
         <div class="row">
           <!-- /.col -->
-          <div class="col-4">
-            <button type="button" @click="beforeLogin" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+          <div class="col-5">
+            <button type="button" @click="beforeLogin" class="btn btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> ingresar</button>
           </div>
           <!-- /.col -->
         </div>
@@ -93,20 +93,17 @@ export default {
         }).catch(e => {
 
         })
-        },
+       },
 
-        beforeLogin(){
-          let self = this
-          self.$validator.validateAll().then((result) => {
-            if (result) {
-                self.login()
-              }
-          });
-        }
+      beforeLogin(){
+        let self = this
+        self.$validator.validateAll().then((result) => {
+          if (result) {
+              self.login()
+            }
+        });
+      }
 
-  },
-  mounted(){
-        $("body").resize()
   }
 }
 </script>

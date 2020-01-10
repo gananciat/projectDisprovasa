@@ -1,28 +1,29 @@
 <?php
 
-use App\User;
-use App\Models\Rol;
-use App\Models\Year;
-use App\Models\Month;
-use App\Models\Person;
-use App\Models\Company;
-use App\Imports\UtilImport;
-use Illuminate\Support\Str;
-use App\Imports\MarcaImport;
-use App\Models\Municipality;
-use Illuminate\Database\Seeder;
-use App\Imports\CategoriaImport;
-use App\Imports\GratuidadImport;
-use App\Imports\MunicipioImport;
 use App\Imports\AlimentacionImport;
+use App\Imports\CategoriaImport;
 use App\Imports\DepartamentoImport;
 use App\Imports\EscuelaImport;
+use App\Imports\GratuidadImport;
+use App\Imports\MarcaImport;
+use App\Imports\MenuImport;
+use App\Imports\MunicipioImport;
+use App\Imports\UtilImport;
 use App\Models\CalendarSchool;
+use App\Models\Company;
 use App\Models\DetailOrder;
+use App\Models\Month;
+use App\Models\Municipality;
 use App\Models\Order;
 use App\Models\OrderStatus;
+use App\Models\Person;
 use App\Models\ProgressOrder;
 use App\Models\Reservation;
+use App\Models\Rol;
+use App\Models\Year;
+use App\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -125,7 +126,43 @@ class DatabaseSeeder extends Seeder
         $insert_rol->name = 'administrador';
         $insert_rol->administrative = true;
         $insert_rol->save();
-        echo 'ROL: '.$insert_rol->name.PHP_EOL;        
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;  
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'gerente';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'bodega';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL; 
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'supervisor';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'compra';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;  
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'facturador';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL;  
+
+        $insert_rol = new Rol();
+        $insert_rol->name = 'repartidor';
+        $insert_rol->administrative = true;
+        $insert_rol->save();
+        echo 'ROL: '.$insert_rol->name.PHP_EOL; 
 
         $insert_rol = new Rol();
         $insert_rol->name = 'director';
@@ -161,7 +198,7 @@ class DatabaseSeeder extends Seeder
         $insert_person->direction = 'barrio belén';
         $insert_person->email = 'emisor.tarea@gmail.com';
         $insert_person->municipalities_id = $municipality->id;
-        $insert_person->save();  
+        $insert_person->save();
 
         $insert_user = new User();
         $insert_user->email = $insert_person->email;
@@ -174,9 +211,59 @@ class DatabaseSeeder extends Seeder
         $insert_user->rols_id = 1;
         $insert_user->current_school = 0;
         $insert_user->save();
+
+        $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912346';
+        $insert_person->name_one = 'Juan';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'Estrada';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'gerente@gmail.com';
+        $insert_person->municipalities_id = $municipality->id;
+        $insert_person->save();
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_ADMINISTRADOR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = 2;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+
+        $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912347';
+        $insert_person->name_one = 'Pedro';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'de la Cruz';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'compra@gmail.com';
+        $insert_person->municipalities_id = $municipality->id;
+        $insert_person->save();  
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_ADMINISTRADOR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = 5;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+        
         echo 'CUI: '.$insert_person->cui.'PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: ADMINISTRADOR'.PHP_EOL;  
     
-    
+        Excel::import(new MenuImport, 'database/seeds/Catalogos/Menu.xlsx'); 
+
         Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');  
 
         $insert_order = new OrderStatus();
@@ -205,7 +292,7 @@ class DatabaseSeeder extends Seeder
         //Generar compras aleatorias
         factory(CalendarSchool::class, 30)->create();
         factory(Order::class, 150)->create();
-        factory(DetailOrder::class, 5000)->create();
+        factory(DetailOrder::class, 100)->create();
 
         $detail_order = DetailOrder::all();
 

@@ -30,7 +30,7 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">{{ notifications.low_products.length }} productos bajos en stock</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a class="dropdown-item">
             <!-- Message Start -->
             <div class="media" v-for="(item, i) in products" :key="item.id">
               <img src="../../assets/product_icon.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
@@ -56,15 +56,15 @@
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <span class="dropdown-item dropdown-header">{{ notifications.orders.length }} nuevos pedidos</span>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a class="dropdown-item">
             <i class="fa fa-apple mr-2"></i> {{ alimentacion }} alimentacion
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a class="dropdown-item">
             <i class="fa fa-file mr-2"></i> {{ gratuidad }} gratuidad
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a class="dropdown-item">
             <i class="fa fa-book mr-2"></i> {{ utiles }} utiles
           </a>
           <div class="dropdown-divider"></div>

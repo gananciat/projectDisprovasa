@@ -42,23 +42,23 @@
           </li>
           <template>
             
-          <li class="nav-item" v-for="item in items" :key="item.text">
-            <a href="#/" class="nav-link" v-if="item.children.length === 0">
+          <li class="nav-item" v-for="item in getMenu" :key="item.text">
+            <a href="#/" class="nav-link" v-if="item.childrens.length === 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
               </p>
             </a>
-            <a href="#" class="nav-link" v-if="item.children.length > 0">
+            <a href="#" class="nav-link" v-if="item.childrens.length > 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" v-for="child in item.children" :key="child.text">
+            <ul class="nav nav-treeview" v-for="child in item.childrens" :key="child.text">
               <li class="nav-item">
-                <a :href="'#'+child.path" class="nav-link">
+                <a :href="'#/'+child.path" class="nav-link">
                   <i :class="'fa fa-'+child.icon+' nav-icon'"></i>
                   <p>{{child.text}}</p>
                 </a>
@@ -132,6 +132,11 @@ export default {
     userName(){
       let self = this
       return self.$store.state.usuario.email
+    },
+
+    getMenu(){
+      let self = this
+      return self.$store.state.menu
     }
   }
 };

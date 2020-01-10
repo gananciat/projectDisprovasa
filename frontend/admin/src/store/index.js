@@ -16,10 +16,12 @@ const state = {
     is_login: false,
     token_expired: null,
     client_id: 2,
+    menu: [],
+    permissions: [],
     //base_url: 'http://www.project.com/',
     //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
     base_url: 'http://sistemapro.test:8000/',
-    client_secret: 'OQGWU2g7kbiGEeG5SibZxLacU8LDS8325F36Yfrf',
+    client_secret: 'R3spjosUN8Gp0V0yvimjq2dXkObasaMoA5zYaaRp',
 
     //base_url: 'http://sistemapro.test:8000/',
     //client_secret: 'De5cx21eIRUWBZLn8T4ejbmWVMOOtcnxKQJlvorz',
@@ -28,6 +30,11 @@ const state = {
 const mutations = {
     setUser(state, usuario) {
         state.usuario = usuario
+    },
+
+    setMenu(state, menu) {
+        state.menu = menu.items
+        state.permissions = menu.permissions
     },
 
     setToken(state, token) {
@@ -79,6 +86,10 @@ const actions = {
             window.location.href = state.base_url+'escuela'
         }
         commit('setUser', user)
+    },
+
+    setMenu({ commit }, menu) {
+        commit('setMenu', menu)
     },
 }
 
