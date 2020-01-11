@@ -2,6 +2,10 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
+//Gráficas
+import HighchartsVue from 'highcharts-vue'
+Vue.use(HighchartsVue)
+
 //Tooltipe
 import VTooltip from 'v-tooltip'
 Vue.use(VTooltip)

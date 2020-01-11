@@ -709,11 +709,11 @@ export default {
       self.loading = true
       let data = self.form
       data.logo = self.logo
-      data.municipalities_id = self.form.municipalities_id.id
        
       self.$store.state.services.schoolService
         .update(data)
         .then(r => {
+          data.municipalities_id = self.form.municipalities_id.id
           self.loading = false
           if( self.interceptar_error(r) == 0) return
           self.$toastr.success('registro actualizado con exito', 'exito')  

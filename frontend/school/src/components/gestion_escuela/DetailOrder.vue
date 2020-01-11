@@ -361,7 +361,6 @@ export default {
             if (result) {
                 self.pasarMayusculas()
                 let data = self.form
-                data.products_id = self.form.products_id.id
 
                 self.$swal({
                     title: "Verificar",
@@ -369,8 +368,9 @@ export default {
                     type: "info",
                     showCancelButton: true
                 }).then((result) => {
-                    self.loading = true
                     if (result.value) {
+                        self.loading = true
+                        data.products_id = self.form.products_id.id
                         self.$store.state.services.detailorderService
                         .create(data)
                         .then(r => {
@@ -403,8 +403,8 @@ export default {
                     type: "info",
                     showCancelButton: true
                 }).then((result) => {
-                    self.loading = true
                     if (result.value) {
+                        self.loading = true
                         self.$store.state.services.detailorderService
                             .update(data)
                             .then(r => {
@@ -432,10 +432,10 @@ export default {
         showCancelButton: true
       }).then((result) => {
           if (result.value) {
-              self.loading = true
               self.$store.state.services.detailorderService
                 .destroy(data)
                 .then(r => {
+                    self.loading = true
                     self.loading = false
                     if( self.interceptar_error(r) == 0) return
                     self.$toastr.success('registro eliminado con exito', 'exito') 

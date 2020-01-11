@@ -142,8 +142,11 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
     }
 
+    $order->total += $cantidad * $price->price;
+
     $insert_quantify->save();
     $product->save();
+    $order->save();
 
     return [
         'quantity' => $cantidad,

@@ -138,7 +138,7 @@ class Handler extends ExceptionHandler
                     break;                                       
             }
 
-            return $this->errorResponse($message, 422);
+            return $this->errorResponse($exception, 422);
         }
 
         if ($exception instanceof TokenMismatchException)

@@ -219,7 +219,6 @@ export default {
 
     update(index, item){
         let self = this
-        console.log(item)
         if(self.stock_validate(item.product.stock,item.progress.purchased_amount))
             return
 

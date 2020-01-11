@@ -103,6 +103,7 @@ export default {
         text: "Logistica",
         children: [
           { icon: "circle-o", text: "Gestionar Pedido", path: "/progressorder" },
+          { icon: "circle-o", text: "Calendario", path: "/school/calendar" }
         ]
       },
       {
