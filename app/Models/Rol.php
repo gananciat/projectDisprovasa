@@ -20,7 +20,7 @@ class Rol extends Model
 
     public function menus()
     {
-        return $this->belongsToMany(Menu::class, 'menu_rols');
+        return $this->belongsToMany(Menu::class, 'menu_rols', 'rols_id', 'menus_id');
     }
 
     public function user()

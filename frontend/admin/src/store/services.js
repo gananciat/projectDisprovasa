@@ -28,6 +28,9 @@ import PurchaseService from '../services/PurchaseService'
 import BalanceService from '../services/BalanceService'
 import DisbursementService from '../services/DisbursementService'
 import ProgressOrderService from '../services/ProgressOrderService'
+import QuantifyService from '../services/QuantifyService'
+import ReportService from '../services/ReportService'
+import RolService from '../services/RolService'
 
 
 /* IMPORT SCHOOL */
@@ -109,6 +112,8 @@ export default {
     balanceService: new BalanceService(Axios, baseUrl),
     disbursementService: new DisbursementService(Axios, baseUrl),
     progressorderService: new ProgressOrderService(Axios, baseUrl),
+    reportService: new ReportService(Axios, baseUrl),
+    rolService: new RolService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),

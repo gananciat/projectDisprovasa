@@ -167,7 +167,7 @@ class Handler extends ExceptionHandler
             return redirect()->guest('login');
         }
 
-        return $this->errorResponse('No autenticado', 422);
+        return $this->errorResponse('No autenticado', 401);
     }
 
     protected function isFrontend($request)

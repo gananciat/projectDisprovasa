@@ -10,11 +10,12 @@ class CreateMenusTable extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->unique();
-            $table->string('route')->unique();
-            $table->smallInteger('recursive');
-            $table->unsignedBigInteger('icons_id');
-            $table->foreign('icons_id')->references('id')->on('icons');            
+            $table->string('name',150);
+            $table->string('route',150);
+            $table->string('route_name',100);
+            $table->unsignedBigInteger('father');
+            $table->boolean('hide')->default(0);
+            $table->string('icon',50);           
             $table->timestamps();
         });
     }

@@ -40,11 +40,18 @@ const isLoggedOut = (to, from, next) => {
     return store.state.is_login ? next('/') : next()
 }
 
+const permissionsValidations= (to, from, next) => {
+    var permissions = store.state.permissions
+    var perm = _.includes(permissions, to.name)
+    console.log(perm)
+    return perm ? next() : next('/') //redireccionamos al home del sistema
+}
+
 const routes = [
     { path: '/', name: 'Default', component: Default, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/example', name: 'ExampleIndex', component: ExampleIndex, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/login', name: 'Login', component: Login, beforeEnter: multiguard([isLoggedOut]) },
-    { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn,permissionsValidations]) },
     { path: '/company', name: 'Company', component: Company, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/presentation', name: 'Presentation', component: Presentation, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/product', name: 'Product', component: Product, beforeEnter: multiguard([isLoggedIn]) },
