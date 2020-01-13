@@ -19,7 +19,6 @@ class UserController extends ApiController
     public function index()
     {
         $usuarios = User::all();
-
         return $this->showAll($usuarios);
     }
 

@@ -1,6 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
+/public/bundle
+/public/bundle2
 /storage/*.key
 /vendor
 .env
@@ -12,5 +14,8 @@ npm-debug.log
 yarn-error.log
 frontend/admin/bundle/
 frontend/admin/node_modules/
+frontend/school/bundle/
+frontend/school/node_modules/
 public/bundle
 resources/views/home.blade.php
+resources/views/escuela.blade.php

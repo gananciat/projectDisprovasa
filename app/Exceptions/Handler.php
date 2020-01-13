@@ -39,14 +39,13 @@ class Handler extends ExceptionHandler
 
     public function render($request, Exception $exception)
     {
-        dd($exception);
         
         if($exception->getCode() === 401){
             return $this->errorResponse("Usuario o contraseña incorrectos", 401);
         }
         
         if ($exception instanceof RouteNotFoundException){
-            return $this->errorResponse("La ruta no fue encontrada", 404);
+            return $this->errorResponse("La ruta no fue encontrada", 422);
         }
 
         if ($exception instanceof ValidationException) {
@@ -55,7 +54,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof ModelNotFoundException) {
             $modelo = strtolower(class_basename($exception->getModel()));
-            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el ID especificado", 404);
+            return $this->errorResponse("No existe ninguna instancia de {$modelo} con el ID especificado", 422);
         }
         
         if ($exception instanceof AuthenticationException) {
@@ -64,7 +63,7 @@ class Handler extends ExceptionHandler
         
         if ($exception instanceof MissingScopeException) {
 
-            return $this->errorResponse("No posee permisos para ejectura esta acción", 403);
+            return $this->errorResponse("No posee permisos para ejectura esta acción", 422);
         }
 
         if ($exception instanceof AuthenticationException) {
@@ -72,11 +71,11 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof NotFoundHttpException) {
-            return $this->errorResponse("No se encontró la URL especificada", 404);
+            return $this->errorResponse("No se encontró la URL especificada", 422);
         }
 
         if ($exception instanceof MethodNotAllowedHttpException) {
-            return $this->errorResponse("El método especificado en la petición no es válido", 405);
+            return $this->errorResponse("El método especificado en la petición no es válido", 422);
         }
 
         if ($exception instanceof HttpException) {
@@ -130,13 +129,16 @@ class Handler extends ExceptionHandler
                     break;    
                 case 42703:
                     $message = "No existe una o varias columnas en la BD y que están referenciadas en el modelo";
-                    break;                 
+                    break; 
+                case 1054:
+                    $message = "No se encuentra la columna en la tabla";
+                    break;                
                 default:
                     $message = "BD";
                     break;                                       
             }
 
-            return $this->errorResponse($message, 409);
+            return $this->errorResponse($exception, 422);
         }
 
         if ($exception instanceof TokenMismatchException)
@@ -155,13 +157,7 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception)
     {
-        if($this->isFrontend($request))
-        {
-            return $request->ajax() ? response()->json($exception->errors(), 422) : 
-                                      redirect()->back()->withInput($request->input())->withErrors($exception->errors());
-        }
-
-        return $this->errorResponse($exception->errors(), $exception->status);
+        return response()->json($exception->errors(), 409);
     }
 
     protected function unauthenticated($request, AuthenticationException $exception)

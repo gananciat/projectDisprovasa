@@ -5,18 +5,45 @@ import auth from '../auth'
 import moment from 'moment'
 import { isNullOrUndefined } from 'util';
 
+//import toastr
+import VueToastr2 from 'vue-toastr-2'
+import 'vue-toastr-2/dist/vue-toastr-2.min.css'
 
 import exampleService from '../services/ExampleService'
 import loginService from '../services/LoginService'
+import YearService from '../services/YearService'
+import MonthService from '../services/MonthService'
 import CategoryService from '../services/CategoryService'
+import MunicipalityService from '../services/MunicipalityService'
 import CompanyService from '../services/CompanyService'
 import PresentationService from '../services/PresentationService'
 import ProductService from '../services/ProductService'
 import PriceService from '../services/PriceService'
+import SchoolService from '../services/SchoolService'
+import PhoneSchoolService from '../services/PhoneSchoolService'
+import PersonSchoolService from '../services/PersonSchoolService'
+import PhonePersonService from '../services/PhonePersonService'
+import ProviderService from '../services/ProviderService'
+import PurchaseService from '../services/PurchaseService'
+import BalanceService from '../services/BalanceService'
+import DisbursementService from '../services/DisbursementService'
+import ProgressOrderService from '../services/ProgressOrderService'
+import QuantifyService from '../services/QuantifyService'
+import ReportService from '../services/ReportService'
+import RolService from '../services/RolService'
+
+
+/* IMPORT SCHOOL */
+import ReservationService from '../services/ReservationService'
+import OrderService from '../services/OrderService'
+import DetailOrderService from '../services/DetailOrderService'
+import CalendarySchoolService from '../services/CalendarySchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
+//let baseUrl = 'http://sistemapro.test:8000/'
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -68,9 +95,31 @@ instance.interceptors.response.use(response => {
 export default {
     exampleService: new exampleService(Axios),
     loginService: new loginService(Axios, baseUrl),
+    yearService: new YearService(Axios, baseUrl),
+    monthService: new MonthService(Axios, baseUrl),
     categoryService: new CategoryService(Axios, baseUrl),
+    municipalityService: new MunicipalityService(Axios, baseUrl),
     companyService: new CompanyService(Axios, baseUrl),
     presentationService: new PresentationService(Axios, baseUrl),
     productService: new ProductService(Axios, baseUrl),
-    priceService: new PriceService(Axios, baseUrl)
+    priceService: new PriceService(Axios, baseUrl),
+    schoolService: new SchoolService(Axios, baseUrl),
+    personschoolService: new PersonSchoolService(Axios, baseUrl),
+    phoneschoolService: new PhoneSchoolService(Axios, baseUrl),
+    phonepersonService: new PhonePersonService(Axios, baseUrl),
+    purchaseService: new PurchaseService(Axios, baseUrl),
+    providerService: new ProviderService(Axios, baseUrl),
+    balanceService: new BalanceService(Axios, baseUrl),
+    disbursementService: new DisbursementService(Axios, baseUrl),
+    progressorderService: new ProgressOrderService(Axios, baseUrl),
+    reportService: new ReportService(Axios, baseUrl),
+    rolService: new RolService(Axios, baseUrl),
+
+    /* EXPORT SERVICE SCHOOL */
+    reservationService: new ReservationService(Axios, baseUrl),
+    orderService: new OrderService(Axios, baseUrl),
+    detailorderService: new DetailOrderService(Axios, baseUrl),
+    calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
+   
+
 }

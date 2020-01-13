@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait ApiResponser
 {
-  private function successResponse($data, $code)
+  protected function successResponse($data, $code = 200)
   {
     return response()->json($data, $code);
   }
@@ -34,6 +34,7 @@ trait ApiResponser
 
   protected function generarPassword($longitud)
   {
+    $password = '';
     $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890#.!@";
 
     for($i=0;$i<$longitud;$i++) {

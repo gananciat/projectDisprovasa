@@ -1,28 +1,5 @@
 <template>
 <div v-loading="loading">
-    <!-- Modal para nuevo registro -->
-  <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-    <form>
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" class="form-control" placeholder="nombre"
-          name="name"
-          v-model="form.name"
-          data-vv-as="nombre"
-          v-validate="'required'"
-         :class="{'input':true,'has-errors': errors.has('name')}">
-         <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-        </div>
-        <div class="row">
-          <!-- /.col -->
-          <div class="col-12 text-right">
-             <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-             <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-  </b-modal>
 
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -30,7 +7,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Compañias</h1> 
+            <h1 class="m-0 text-dark">Companias</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -40,12 +17,36 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
+        <!-- Modal para nuevo registro -->
+        <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
+          <form>
+              <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" class="form-control" placeholder="nombre"
+                name="name"
+                v-model="form.name"
+                data-vv-as="nombre"
+                v-validate="'required'"
+              :class="{'input':true,'has-errors': errors.has('name')}">
+              <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
+              </div>
+              <div class="row">
+                <!-- /.col -->
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+                  <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+                <!-- /.col -->
+              </div>
+            </form>
+        </b-modal>
+
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de compañias 
+                  <h3 class="card-title">Lista de companias 
                     <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
                 </div>
               </div>
@@ -142,7 +143,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "category",
+  name: "company",
   components: {
       FormError
   },
@@ -268,6 +269,7 @@ export default {
     createOrEdit(){
       this.$validator.validateAll().then((result) => {
           if (result) {
+              self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
            }
       });
@@ -299,6 +301,18 @@ export default {
         self.$validator.reset()
         self.$validator.reset()
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+
+        Object.keys(self.form).forEach(function(key,index) {
+          
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
     open(){
         let self = this

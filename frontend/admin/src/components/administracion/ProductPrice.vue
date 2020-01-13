@@ -6,7 +6,7 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
+          <div class="col-sm-12">
             <h1 class="m-0 text-dark">Precios de producto {{product.name}} </h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -18,7 +18,7 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="col-md-12 col-lg-12 col-xs-12">
               
               <div class="card">
                 <div class="card-header no-border">
@@ -48,7 +48,7 @@
                 </form>
               </div>
               </div>
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="card">
                 
               <div class="card-header no-border">
@@ -91,13 +91,6 @@
                        <template v-slot:cell(price)="data">
                          <small :class="data.item.current ? 'badge badge-success':'badge badge-danger'"> {{ data.item.price | currency('Q ') }}</small>
                       </template>
-                      <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'remover'">
-                              <i class="fa fa-minus">
-                              </i>
-                          </button>
-                      </template>
-
                     </b-table>
                     <b-row>
                         <b-col md="12" class="my-1">
@@ -153,7 +146,6 @@ export default {
       product: {},
       fields: [
         { key: 'price', label: 'Precio', sortable: true },
-        { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
       currentPage: 1,
@@ -287,12 +279,25 @@ export default {
     createOrEdit(){
       this.$validator.validateAll().then((result) => {
           if (result) {
+              self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
            }
       });
 
       let self = this
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+
+        Object.keys(self.form).forEach(function(key,index) {
+          
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
      //mapear datos a formulario
     mapData(data){

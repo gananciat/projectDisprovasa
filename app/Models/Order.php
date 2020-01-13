@@ -11,18 +11,34 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    const ALIMENTACION = 'ALIMENTACION';
+    const GRATUIDAD = 'GRATUIDAD';
+    const UTILES = 'UTILES';
+
     protected $table = 'orders';
     protected $fillable = ['order','title','description','date','total','schools_id',
-                           'people_id','months_id','years_id'];
+                           'people_id','months_id','years_id','complete','type_order','code'];
+
+    public function setOrderAttribute($value) {
+        $this->attributes['order'] = mb_strtoupper($value);
+    }
+
+    public function setTitleAttribute($value) {
+        $this->attributes['title'] = mb_strtoupper($value);
+    }
+
+    public function setDescriptionAttribute($value) {
+        $this->attributes['description'] = mb_strtoupper($value);
+    }
 
     public function school()
     {
-        return $this->hasOne(School::class);
+        return $this->belongsTO(School::class,'schools_id');
     }
 
     public function person()
     {
-        return $this->hasOne(Person::class);
+        return $this->belongsTo(Person::class,'people_id');
     }
 
     public function month()
@@ -37,7 +53,7 @@ class Order extends Model
 
     public function details()
     {
-        return $this->hasMany(DetailOrder::class);
+        return $this->hasMany(DetailOrder::class,'orders_id');
     }
 
     public function schools()

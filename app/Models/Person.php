@@ -8,6 +8,8 @@ use App\Models\School;
 use App\Models\Balance;
 use App\Models\PhonePerson;
 use App\Models\Municipality;
+use App\Models\PersonSchool;
+use App\Models\SchoolPresident;
 use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
@@ -47,12 +49,12 @@ class Person extends Model
 
     public function municipality()
     {
-        return $this->hasOne(Municipality::class);
+        return $this->belongsTO(Municipality::class,'municipalities_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class,'people_id');
     }
 
     public function school()
@@ -62,12 +64,22 @@ class Person extends Model
 
     public function phones()
     {
-        return $this->hasMany(PhonePerson::class);
+        return $this->hasMany(PhonePerson::class,'people_id');
     }
 
     public function schools()
     {
-        return $this->belongsToMany(School::class)->using(PersonSchool::class);        
+        return $this->belongsTo(PersonSchool::class);        
+    }
+
+    public function current_school()
+    {
+        return $this->hasOne(PersonSchool::class,'people_id')->where('current',true);        
+    }
+
+    public function school_president()
+    {
+        return $this->hasMany(SchoolPresident::class,'people_id');
     }
 
     public function orders()

@@ -9,36 +9,61 @@ use App\Models\PhoneSchool;
 use App\Models\Municipality;
 use App\Models\PersonSchool;
 use App\Models\CalendarSchool;
+use App\Models\SchoolPresident;
 use Illuminate\Database\Eloquent\Model;
 
 class School extends Model
 {
     protected $table = 'schools';
-    protected $fillable = ['name','logo','direction','nit','code','municipalities_id','people_id','current'];
+    protected $fillable = ['name','bill','logo','direction','nit','code_high_school','code_primary','municipalities_id','people_id','current','complete'];
+
+    public function setNameAttribute($value) {
+        $this->attributes['name'] = mb_strtoupper($value);
+    }
+
+    public function setBillAttribute($value) {
+        $this->attributes['bill'] = mb_strtoupper($value);
+    }
+
+    public function setDirectionAttribute($value) {
+        $this->attributes['direction'] = mb_strtoupper($value);
+    }
+
+    public function setNitAttribute($value) {
+        $this->attributes['nit'] = mb_strtoupper($value);
+    }
+
+    public function setCodeHighSchoolAttribute($value) {
+        $this->attributes['code_high_school'] = mb_strtoupper($value);
+    }
+
+    public function setCodePrimaryAttribute($value) {
+        $this->attributes['code_primary'] = mb_strtoupper($value);
+    }
 
     public function municipality()
     {
-        return $this->hasOne(Municipality::class);
+        return $this->belongsTO(Municipality::class,'municipalities_id');
     }
 
     public function person()
     {
-        return $this->hasOne(Person::class);
+        return $this->belongsTO(Person::class,'people_id');
     }
 
     public function phons()
     {
-        return $this->hasMany(PhoneSchool::class);
+        return $this->hasMany(PhoneSchool::class,'schools_id');
     }
 
     public function people()
     {
-        return $this->belongsToMany(Person::class)->using(PersonSchool::class);        
+        return $this->hasMany(PersonSchool::class,'schools_id');        
     }
 
     public function orders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class,'schools_id');
     }
 
     public function calendar()
@@ -46,13 +71,17 @@ class School extends Model
         return $this->hasMany(CalendarSchool::class);
     }
 
-    public function balance()
+    public function presidents()
     {
-        return $this->hasMany(Balance::class);
+        return $this->hasMany(SchoolPresident::class,'schools_id');
     }
 
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function balances(){
+        return $this->hasMany(Balance::class,'schools_id');
     }
 }

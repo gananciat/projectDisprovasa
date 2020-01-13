@@ -27,7 +27,7 @@
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
@@ -42,23 +42,23 @@
           </li>
           <template>
             
-          <li class="nav-item" v-for="item in items" :key="item.text">
-            <a href="#/" class="nav-link" v-if="item.children.length === 0">
+          <li class="nav-item" v-for="item in getMenu" :key="item.text">
+            <a href="#/" class="nav-link" v-if="item.childrens.length === 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
               </p>
             </a>
-            <a href="#" class="nav-link" v-if="item.children.length > 0">
+            <a href="#" class="nav-link" v-if="item.childrens.length > 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" v-for="child in item.children" :key="child.text">
+            <ul class="nav nav-treeview" v-for="child in item.childrens" :key="child.text">
               <li class="nav-item">
-                <a :href="'#'+child.path" class="nav-link">
+                <a :href="'#/'+child.path" class="nav-link">
                   <i :class="'fa fa-'+child.icon+' nav-icon'"></i>
                   <p>{{child.text}}</p>
                 </a>
@@ -72,49 +72,6 @@
     </div>
     <!-- /.sidebar -->
   </aside> 
-<!-- <aside class="main-sidebar">
-        <section class="sidebar">      
-          <ul class="sidebar-menu">
-            <li class="header"> Titulo Menu</li>
-            <li>
-              <a href="#">
-                <i class="fa fa-tasks"></i> <span>Escritorio</span>
-              </a>
-            </li>  
-            <template v-for="item, i in items">
-                <li class="treeview">
-                  <a href="#">
-                    <i class="fa fa-laptop"></i>
-                    <span>{{item.text}}</span>
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </a>
-                  <ul class="treeview-menu">
-                   <template v-for="child, c in item.children" :index="(i.toString() + c)">
-                    <router-link tag="li" :to="''+child.path" exact>
-                            <a><i :class="'fa fa-' + child.icon"></i>{{child.text}}</a>
-                        </router-link>
-                   </template>
-                   </ul>
-
-                </li>
-            </template>
-
-            <li> 
-              <a href="#">
-                <i class="fa fa-plus-square"></i> <span>Ayuda</span>
-                <small class="label pull-right bg-red">PDF</small>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                <small class="label pull-right bg-yellow">IT</small>
-              </a>
-            </li>
-                        
-          </ul>
-        </section>
-      </aside>-->
 </template>
 
 <script>
@@ -126,13 +83,30 @@ export default {
         icon: "cog",
         text: "Administración",
         children: [
-          { icon: "circle-o", text: "Categorias", path: "/category" },
-          { icon: "circle-o", text: "Compañias", path: "/company" },
-          { icon: "circle-o", text: "Presentaciones", path: "/presentation" },
-          { icon: "circle-o", text: "productos", path: "/product" },
+          { icon: "circle-o", text: "Categorías", path: "/category" },
+          { icon: "circle-o", text: "Companias", path: "/company" },
+          { icon: "circle-o", text: "Marcas", path: "/presentation" },
+          { icon: "circle-o", text: "Productos", path: "/product" },
+          { icon: "circle-o", text: "Escuelas", path: "/school" },
         ]
       },
-      
+      {
+        icon: "shopping-cart",
+        text: "Ingresos",
+        children: [
+          { icon: "circle-o", text: "Proveedores", path: "/provider" },
+          { icon: "circle-o", text: "Productos faltantes", path: "/missing_product" },
+          { icon: "circle-o", text: "Compras", path: "/purchase" }
+        ]
+      },
+      {
+        icon: "truck",
+        text: "Logistica",
+        children: [
+          { icon: "circle-o", text: "Gestionar Pedido", path: "/progressorder" },
+          { icon: "circle-o", text: "Calendario", path: "/school/calendar" }
+        ]
+      },
       {
         icon: "user",
         text: "Acceso",
@@ -159,6 +133,11 @@ export default {
     userName(){
       let self = this
       return self.$store.state.usuario.email
+    },
+
+    getMenu(){
+      let self = this
+      return self.$store.state.menu
     }
   }
 };

@@ -67,7 +67,7 @@ class PhoneSchoolController extends ApiController
      * @param  \App\Models\PhoneSchool  $phoneSchool
      * @return \Illuminate\Http\Response
      */
-    public function show(PhoneSchool $person_school)
+    public function show(PhoneSchool $phone_school)
     {
         //
     }
@@ -78,7 +78,7 @@ class PhoneSchoolController extends ApiController
      * @param  \App\Models\PhoneSchool  $phoneSchool
      * @return \Illuminate\Http\Response
      */
-    public function edit(PhoneSchool $person_school)
+    public function edit(PhoneSchool $phone_school)
     {
         //
     }
@@ -90,7 +90,7 @@ class PhoneSchoolController extends ApiController
      * @param  \App\Models\PhoneSchool  $phoneSchool
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PhoneSchool $person_school)
+    public function update(Request $request, PhoneSchool $phone_school)
     {
         //
     }
@@ -101,9 +101,9 @@ class PhoneSchoolController extends ApiController
      * @param  \App\Models\PhoneSchool  $phoneSchool
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PhoneSchool $person_school)
+    public function destroy(PhoneSchool $phone_school)
     {
-        $person_school->delete();
-        return $this->showOne($person_school,201);
+        $phone_school->delete();
+        return $this->showOne($phone_school,201);
     }
 }

@@ -1,85 +1,5 @@
 <template>
 <div v-loading="loading">
-    <!-- Modal para nuevo registro -->
-    <b-modal ref="new_price" title="Precios" hide-footer class="modal-backdrop" no-close-on-backdrop size="xl">
-        <price></price>
-   </b-modal>
-  <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop size="xl">
-    <form>
-        <div class="row">
-            <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4">
-            <label>Nombre</label>
-            <input type="text" class="form-control" placeholder="nombre"
-            name="name"
-            v-model="form.name"
-            data-vv-as="nombre"
-            v-validate="'required'"
-            :class="{'input':true,'has-errors': errors.has('name')}">
-            <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
-            </div>
-            <div class="form-group col-md-4 col-sm-6 col-lg-4">
-                <label for="categoria">Categoría producto</label>
-                <multiselect v-model="category"
-                    v-validate="'required'" 
-                    data-vv-name="category"
-                    data-vv-as="categoría producto"
-                    :options="categories" placeholder="seleccione categoría producto"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    label="name" track-by="id">
-                    <span slot="noResult">Ninguna categoría encontrada</span>
-                    </multiselect>
-                    <FormError :attribute_name="'category'" :errors_form="errors"> </FormError>
-            </div>
-              <div class="form-group col-md-4 col-sm-6 col-lg-4">
-                <label for="categoria">Presentación producto</label>
-                <multiselect v-model="presentation"
-                    v-validate="'required'" 
-                    data-vv-name="presentation"
-                    data-vv-as="presentación producto"
-                    :options="presentations" placeholder="seleccione presentación producto"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    label="name" track-by="id">
-                    <span slot="noResult">Ninguna presentación encontrada</span>
-                    </multiselect>
-                    <FormError :attribute_name="'presentation'" :errors_form="errors"> </FormError>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4" v-if="form.id === null">
-                <label>Precio</label>
-                <input type="text" class="form-control" placeholder="precio"
-                name="price"
-                v-model="form.price"
-                data-vv-as="precio producto"
-                v-validate="'required|decimal'"
-                :class="{'input':true,'has-errors': errors.has('price')}">
-                <FormError :attribute_name="'price'" :errors_form="errors"> </FormError>
-            </div>
-            <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4">
-                <label></label>
-                <b-form-checkbox
-                v-model="form.camouflage"
-                name="camouflage"
-                >
-                ¿Producto facturado con otro nombre ?
-                </b-form-checkbox>
-
-                <div><strong>{{ form.camouflage ? 'Si':'No' }}</strong></div>
-            </div>
-        </div>
-        <div class="row">
-          <!-- /.col -->
-          <div class="col-12 text-right">
-             <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
-             <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-  </b-modal>
-
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -96,13 +16,101 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <!-- Modal para nuevo registro -->
+            <b-modal ref="new_price" title="Precios" hide-footer class="modal-backdrop" no-close-on-backdrop size="s">
+                <price></price>
+            </b-modal>
+            <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop size="xl">
+              <form>
+                  <div class="row">
+                      <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4">
+                      <label>Nombre</label>
+                      <input type="text" class="form-control" placeholder="nombre"
+                      name="name"
+                      v-model="form.name"
+                      data-vv-as="nombre"
+                      v-validate="'required'"
+                      :class="{'input':true,'has-errors': errors.has('name')}">
+                      <FormError :attribute_name="'name'" :errors_form="errors"> </FormError>
+                      </div>
+                      <div class="form-group col-md-4 col-sm-6 col-lg-4">
+                          <label for="categoria">Categoría producto</label>
+                          <multiselect v-model="category"
+                              v-validate="'required'" 
+                              data-vv-name="category"
+                              data-vv-as="categoría producto"
+                              :options="categories" placeholder="seleccione categoría producto"  
+                              :searchable="true"
+                              :allow-empty="false"
+                              label="name" track-by="id">
+                              <span slot="noResult">Ninguna categoría encontrada</span>
+                              </multiselect>
+                              <FormError :attribute_name="'category'" :errors_form="errors"> </FormError>
+                      </div>
+                        <div class="form-group col-md-4 col-sm-6 col-lg-4">
+                          <label for="categoria">Marca producto</label>
+                          <multiselect v-model="presentation"
+                              v-validate="'required'" 
+                              data-vv-name="presentation"
+                              data-vv-as="marca producto"
+                              :options="presentations" placeholder="seleccione marca del producto"  
+                              :searchable="true"
+                              :allow-empty="false"
+                              label="name" track-by="id">
+                              <span slot="noResult">Ninguna marca encontrada</span>
+                              </multiselect>
+                              <FormError :attribute_name="'presentation'" :errors_form="errors"> </FormError>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4" v-if="form.id === null">
+                          <label>Precio</label>
+                          <input type="text" class="form-control" placeholder="precio"
+                          name="price"
+                          v-model="form.price"
+                          data-vv-as="precio producto"
+                          v-validate="'required|decimal'"
+                          :class="{'input':true,'has-errors': errors.has('price')}">
+                          <FormError :attribute_name="'price'" :errors_form="errors"> </FormError>
+                      </div>
+                      <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4">
+                          <label></label>
+                          <b-form-checkbox
+                          v-model="form.camouflage"
+                          name="camouflage"
+                          >
+                          ¿Producto facturado con otro nombre ?
+                          </b-form-checkbox>
+
+                          <div><strong>{{ form.camouflage ? 'Si':'No' }}</strong></div>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <!-- /.col -->
+                    <div class="col-12 text-right">
+                      <button type="button" class="btn btn-danger btn-sm" @click="close"><i class="fa fa-undo"></i> Cancelar</button>
+                      <button type="button" class="btn btn-primary btn-sm" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+                    </div>
+                    <!-- /.col -->
+                  </div>
+                </form>
+            </b-modal>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">Lista de productos 
-                    <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
+                    <b-button variant="success" @click="open('1','Alimentación')" size="sm"><i class="fa fa-plus"></i> alimentación</b-button>
+                    <b-button variant="success" @click="open('2','Gratuidad')" size="sm"><i class="fa fa-plus"></i> gratuidad</b-button>
+                    <b-button variant="success" @click="open('3','Utiles')" size="sm"><i class="fa fa-plus"></i> utiles</b-button>
+                  </h3>
                 </div>
               </div>
               <div class="card-body">
@@ -158,7 +166,7 @@
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -222,11 +230,14 @@ export default {
       presentations: [],
       category: null,
       presentation: null,
+      mensaje: '',
       fields: [
+        { key: 'propierty', label: 'Pertenece', sortable: true },
         { key: 'name', label: 'Nombre', sortable: true },
         { key: 'category', label: 'Categoría', sortable: true },
-        { key: 'presentation', label: 'Presentación', sortable: true },
+        { key: 'presentation', label: 'Marca', sortable: true },
         { key: 'price', label: 'Precio', sortable: true },
+        { key: 'stock', label: 'Stock Actual', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -241,7 +252,8 @@ export default {
           camouflage: false,
           categories_id: null,
           presentations_id: null,
-          price: null
+          price: null,
+          propierty: null,
       }
     };
   },
@@ -280,9 +292,9 @@ export default {
       self.$store.state.services.productService
         .getAll()
         .then(r => {
-          self.loading = false; 
-          self.items = r.data.data;
+          self.items = r.data.data
           self.totalRows = self.items.length
+          self.loading = false
         })
         .catch(r => {});
     },
@@ -368,7 +380,7 @@ export default {
       }).then((result) => { // <--
           if (result.value) { // <-- if confirmed
               self.loading = true
-              self.$store.state.services.companyService
+              self.$store.state.services.productService
                 .destroy(data)
                 .then(r => {
                   self.loading = false
@@ -387,13 +399,24 @@ export default {
 
     //funcion, validar si se guarda o actualiza
     createOrEdit(){
-        let self = this
+      let self = this
       this.$validator.validateAll().then((result) => {
           if (result) {
+              self.pasarMayusculas()
               self.form.id === null ? self.create() : self.update()
            }
       });
     },
+
+    //pasar a mayusculas
+    pasarMayusculas(){
+        let self = this
+        Object.keys(self.form).forEach(function(key,index) {
+          if(typeof self.form[key] === "string") 
+            self.form[key] = self.form[key].toUpperCase()
+
+        });
+    }, 
 
      //mapear datos a formulario
     mapData(data){
@@ -425,8 +448,10 @@ export default {
         self.$validator.reset()
     },
 
-    open(){
+    open(numero,titulo){
         let self = this
+        self.mensaje = titulo
+        self.form.propierty = numero
         this.$refs['nuevo'].show()
         self.clearData()
     },
@@ -463,7 +488,7 @@ export default {
   computed:{
       title(){
           let self = this
-          return self.form.id == null ? 'Nuevo producto' : 'Editar '+self.form.name
+          return self.form.id == null ? 'Nuevo producto de '+self.mensaje : 'Editar '+self.form.name
       },
 
   }

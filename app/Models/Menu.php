@@ -10,12 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Menu extends Model
 {
     protected $table = 'menus';
-    protected $fillableee = ['name','route','recursive','icons_id'];
-
-    public function icon()
-    {
-        return $this->hasOne(Icon::class);
-    }
+    protected $fillableee = ['name','route','recursive','icon','route_name','hide','father'];
 
     public function rols()
     {
