@@ -51,7 +51,9 @@ Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => [
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['create', 'edit', 'update']]);
 Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'store', 'destroy']]);
+Route::resource('rols', 'Sistema\RolController', ['except' => ['create', 'edit']]);
 Route::resource('rols.menus', 'Sistema\RolRolMenuController', ['except' => ['create', 'edit']]);
+Route::resource('persons', 'Sistema\PersonController', ['except' => ['create', 'edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

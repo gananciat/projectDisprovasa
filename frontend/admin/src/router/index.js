@@ -19,6 +19,8 @@ import ProgressOrder from '@/components/logistica/ProgressOrder'
 import AssignProduct from '@/components/logistica/AssignProduct'
 import CreateBalance from '@/components/administracion_escuela/balance/Create'
 import CalendarySchool from '@/components/logistica/CalendarySchool'
+import Person from '@/components/acceso/Person'
+import Rol from '@/components/acceso/Rol'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -31,8 +33,7 @@ Vue.use(Router)
 //validar authenticacion
 const isLoggedIn = (to, from, next) => {
     var user = store.state.usuario
-    if(!_.isEmpty(user)){
-    }
+    if (!_.isEmpty(user)) {}
     return store.state.is_login ? next() : next('/login')
 }
 
@@ -40,7 +41,7 @@ const isLoggedOut = (to, from, next) => {
     return store.state.is_login ? next('/') : next()
 }
 
-const permissionsValidations= (to, from, next) => {
+const permissionsValidations = (to, from, next) => {
     var permissions = store.state.permissions
     var perm = _.includes(permissions, to.name)
     console.log(perm)
@@ -51,7 +52,7 @@ const routes = [
     { path: '/', name: 'Default', component: Default, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/example', name: 'ExampleIndex', component: ExampleIndex, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/login', name: 'Login', component: Login, beforeEnter: multiguard([isLoggedOut]) },
-    { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn,permissionsValidations]) },
+    { path: '/category', name: 'Category', component: Category, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/company', name: 'Company', component: Company, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/presentation', name: 'Presentation', component: Presentation, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/product', name: 'Product', component: Product, beforeEnter: multiguard([isLoggedIn]) },
@@ -65,6 +66,8 @@ const routes = [
     { path: '/assign_product/:id', name: 'AssignProduct', component: AssignProduct, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school_create_balance/:id', name: 'CreateBalance', component: CreateBalance, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/calendar', name: 'CalendarySchool', component: CalendarySchool, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/user', name: 'Person', component: Person, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/rol', name: 'Rol', component: Rol, beforeEnter: multiguard([isLoggedIn]) },
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
