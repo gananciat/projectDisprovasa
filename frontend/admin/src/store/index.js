@@ -18,11 +18,11 @@ const state = {
     client_id: 2,
     menu: [],
     permissions: [],
-    //base_url: 'http://www.project.com/',
-    //client_secret: 'PTLbBi0kYKKW56LgJsZyg3Ij3irduIZjzDspshTp'
+    base_url: 'http://www.project.com/',
+    client_secret: 'Yt1HDJc46ZP2YOmiHxn8hlBPzGHBrGjfI4Upawc6'
 
-    base_url: 'http://sistematio.test/',
-    client_secret: 'lJjlZeoMlZ0XFGFufXfFQuq5hyTCEbvHwHXeR9Nt',
+    //base_url: 'http://sistematio.test/',
+    //client_secret: 'Yt1HDJc46ZP2YOmiHxn8hlBPzGHBrGjfI4Upawc6',
 
     //base_url: 'http://sistemapro.test:8000/',
     //client_secret: 'R3spjosUN8Gp0V0yvimjq2dXkObasaMoA5zYaaRp',
@@ -83,8 +83,8 @@ const actions = {
 
     setUser({ commit }, user) {
         var school = user.current_school
-        if(school){
-            window.location.href = state.base_url+'escuela'
+        if (school) {
+            window.location.href = state.base_url + 'escuela'
         }
         commit('setUser', user)
     },

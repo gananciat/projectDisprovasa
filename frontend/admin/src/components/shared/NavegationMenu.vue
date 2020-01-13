@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="../../assets/logo.png" class="img-circle elevation-2" alt="User Image">
+          <img :src="getImage" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
@@ -111,7 +111,7 @@ export default {
         icon: "user",
         text: "Acceso",
         children: [
-          { icon: "circle-o", text: "Usuarios", path: "/" },
+          { icon: "circle-o", text: "Usuarios", path: "/user" },
         ]
       },
     ]
@@ -132,12 +132,21 @@ export default {
   computed: {
     userName(){
       let self = this
-      return self.$store.state.usuario.email
+      var user = self.$store.state.usuario
+      if(!_.isEmpty(user)){
+        return self.$store.state.usuario.people.name_one+' '+self.$store.state.usuario.people.last_name_one
+      }
+      return ''
     },
 
     getMenu(){
       let self = this
       return self.$store.state.menu
+    },
+
+    getImage(){
+      let self = this
+      return self.$store.state.base_url+'img/user_empty.jpg'
     }
   }
 };
