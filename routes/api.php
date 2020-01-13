@@ -45,6 +45,7 @@ Route::resource('schools', 'Sistema\SchoolController', ['except' => ['create', '
 Route::resource('school_presidents', 'Sistema\SchoolPresidentController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit', 'store', 'update', 'destroy']]);
 Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
+Route::get('reservations_money/{code}/{type_order}', 'Sistema\ReservationController@money');
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
@@ -62,4 +63,5 @@ Route::resource('notifications', 'Reports\NotificationsController', ['except' =>
 
 //New Route Gráficas Escuela y Admin
 Route::get('graph_school_order', 'Dashboard\School\GraphController@school_order');
+Route::get('information_disbursement_school/{id}', 'Dashboard\School\InformationController@disbursement_school');
 

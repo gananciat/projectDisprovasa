@@ -18,6 +18,7 @@ import CalendarySchoolService from '../services/CalendarySchoolService'
 
 /* IMPORT DASHBOARD */
 import GraphService from '../services/GraphService'
+import InformationSchoolService from '../services/InformationSchoolService'
 
 // Axios Configuration
 let baseUrl = 'http://sistematio.test/' //base url desarrollo
@@ -84,4 +85,5 @@ export default {
 
     /* EXPORT DASHBOARD */
     graphService: new GraphService(Axios, baseUrl),
+    informationschoolService: new InformationSchoolService(Axios, baseUrl),
 }

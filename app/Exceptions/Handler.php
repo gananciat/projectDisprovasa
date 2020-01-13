@@ -132,7 +132,10 @@ class Handler extends ExceptionHandler
                     break; 
                 case 1054:
                     $message = "No se encuentra la columna en la tabla";
-                    break;                
+                    break;
+                case 1241:
+                    $message = "El operando debe contener 1 columna (s)";
+                    break;                    
                 default:
                     $message = "BD";
                     break;                                       

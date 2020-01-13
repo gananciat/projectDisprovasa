@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApiController;
+use App\Models\Balance;
 use App\Models\DetailOrder;
 use App\Models\Month;
 use App\Models\OrderStatus;
@@ -167,11 +168,23 @@ class OrderController extends ApiController
                         $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
 
+                    $balance = Balance::where([
+                        ['code',$insert_orden->code],
+                        ['schools_id',$insert_orden->schools_id],
+                        ['type_balance',$insert_orden->type_order],
+                        ['current',true]
+                    ])->first();
+
+                    $insert_orden->total += $insert_detalle_orden->subtotal;
+                    $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
+
+                    if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
+                        return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$request->code, 422);
+
                     $insert_quantify->save();
                     $product->save();
-
-                    $insert_orden->total = $insert_orden->total + $insert_detalle_orden->subtotal;
                     $insert_orden->save();
+                    $balance->save();
                 }
 
             DB::commit();
@@ -285,6 +298,16 @@ class OrderController extends ApiController
         try {
 
             DB::beginTransaction();
+
+                $balance = Balance::where([
+                    ['code',$order->code],
+                    ['schools_id',$order->schools_id],
+                    ['type_order',$order->type_order],
+                    ['current',true]
+                ])->first();
+
+                $balance->subtraction_temporary -= $order->total;
+                $balance->save();
 
                 $detalle_orden = DetailOrder::where([
                     ['orders_id','=',$order->id],

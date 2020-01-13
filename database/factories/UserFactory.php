@@ -3,6 +3,7 @@
 use App\User;
 use App\Seller;
 use App\Category;
+use App\Models\Balance;
 use App\Models\CalendarSchool;
 use App\Models\DetailOrder;
 use App\Models\Year;
@@ -112,11 +113,24 @@ $factory->define(Order::class, function (Faker $faker) {
 });
 
 $factory->define(DetailOrder::class, function (Faker $faker) {
-    $order = Order::all()->random();
-    $product = Product::where('propierty',$order->type_order)->get()->random();
-    $price = Price::where('products_id',$product->id)->where('current',true)->first();
-    $cantidad = $faker->numberBetween(1,25);
-    $date_actual = Carbon::now();
+
+    do {
+        $principal = 0;
+        $resta = 1;
+        $order = Order::all()->random();
+        $balance = Balance::where('schools_id',$order->schools_id)->where('type_balance',$order->type_order)->where('code',$order->code)->where('current',true)->first();
+        if(!is_null($balance))
+        {
+            $product = Product::where('propierty',$order->type_order)->get()->random();
+            $price = Price::where('products_id',$product->id)->where('current',true)->first();
+            $cantidad = $faker->numberBetween(1,25);
+            $date_actual = Carbon::now();
+            $total = $cantidad * $price->price;
+            $principal = $balance->balance;
+            $balance->subtraction_temporary += $total;
+            $resta = $balance->subtraction_temporary;
+        }
+    }while(($principal - $resta) < 0);
 
     $insert_quantify = Quantify::where('products_id',$product->id)->where('year',date('Y'))->first();
     if(is_null($insert_quantify)) {
@@ -142,11 +156,16 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
     }
 
-    $order->total += $cantidad * $price->price;
+    if($balance->balance == $balance->subtraction_temporary){
+        $balance->current == false;
+    }
+    
+    $order->total += $total;
 
     $insert_quantify->save();
     $product->save();
     $order->save();
+    $balance->save();
 
     return [
         'quantity' => $cantidad,

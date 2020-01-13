@@ -3,8 +3,11 @@
 import Vue from 'vue'
 
 //Gráficas
+import Highcharts from 'highcharts'
 import HighchartsVue from 'highcharts-vue'
 Vue.use(HighchartsVue)
+import exportingInit from 'highcharts/modules/exporting'
+exportingInit(Highcharts)
 
 //Tooltipe
 import VTooltip from 'v-tooltip'

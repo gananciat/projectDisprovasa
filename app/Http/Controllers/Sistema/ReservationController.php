@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Reservation;
+use App\Models\PersonSchool;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApiController;
+use App\Models\Balance;
 
 class ReservationController extends ApiController
 {
@@ -37,18 +40,22 @@ class ReservationController extends ApiController
      */
     public function store(Request $request)
     {
-        $numero_actual = Reservation::where('year',date('Y'))->get()->last();
-        if(is_null($numero_actual))
-            $numero_actual = 0;
-        else
-            $numero_actual = $numero_actual->correlative;
-
-        $insert = new Reservation();
-        $insert->correlative = $numero_actual + 1; 
-        $insert->year = date('Y'); 
-        $insert->save();
-
-        return $this->showOne($insert,201);
+        if(Auth::user()->current_school == true){
+            $numero_actual = Reservation::where('year',date('Y'))->get()->last();
+            if(is_null($numero_actual))
+                $numero_actual = 0;
+            else
+                $numero_actual = $numero_actual->correlative;
+    
+            $insert = new Reservation();
+            $insert->correlative = $numero_actual + 1; 
+            $insert->year = date('Y'); 
+            $insert->save();
+    
+            return $this->showOne($insert,201);
+        } else {
+            return $this->errorResponse('Error al obtener el número de pedido', 409);
+        }        
     }
 
     /**
@@ -57,9 +64,14 @@ class ReservationController extends ApiController
      * @param  \App\Models\Reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function show(Reservation $reservation)
+    public function show($reservation)
     {
-        //
+        $balance = Balance::with('disbursement')->where('code',$reservation)->where('current',true)->get();
+
+        if(!is_null($balance))
+            return $this->showAll($balance);
+        else
+            return $this->errorResponse('El código '.$reservation.', no tiene asignado monto para el desembolso.',422);
     }
 
     /**
@@ -94,5 +106,28 @@ class ReservationController extends ApiController
     public function destroy(Reservation $reservation)
     {
         //
+    }
+
+    public function money($code, $type_order)
+    {
+
+        switch ($type_order) {
+            case 'alimentacion':
+                $propierty = Balance::ALIMENTACION;
+                break;
+            case 'gratuidad':
+                $propierty = Balance::GRATUIDAD;
+                break;
+            case 'utiles':
+                $propierty = Balance::UTILES;
+                break;
+        }
+
+        $balance = Balance::with('disbursement')->where('code',$code)->where('type_balance',$propierty)->where('current',true)->get();
+
+        if(!is_null($balance))
+            return $this->showAll($balance);
+        else
+            return $this->errorResponse('El código '.$reservation.', no tiene asignado monto para el desembolso.',422);
     }
 }

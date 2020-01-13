@@ -117,6 +117,7 @@ export default {
     return {
       loading: false,
       items: [],
+      fecha_actual: '',
       schools_id: null,
       anio: moment(new Date()).format("YYYY"),
       form: {
@@ -127,6 +128,9 @@ export default {
   },
   created() {
     let self = this;
+    var hoy = new Date()
+    self.fecha_actual = hoy.getDate()+"/"+(hoy.getMonth()+1)+"/"+hoy.getFullYear()
+    
     self.schools_id = self.$store.state.school.schools_id
     self.getAll(self.schools_id)
   },
@@ -260,18 +264,18 @@ export default {
     },
 
     puede_eliminar(fecha){
-        if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') <= moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        if(moment(fecha).format('YYYY-MM-DD') <= moment(new Date()).format('YYYY-MM-DD'))
             return false
         else
             return true
     },
 
     color(fecha){
-        if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-yellow';
-        else if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') > moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-green'
-        else
+        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-red'
     }
 

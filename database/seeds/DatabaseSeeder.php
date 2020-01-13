@@ -1,37 +1,37 @@
 <?php
 
-use App\Imports\AlimentacionImport;
-use App\Imports\CategoriaImport;
-use App\Imports\DepartamentoImport;
-use App\Imports\EscuelaImport;
-use App\Imports\GratuidadImport;
-use App\Imports\MarcaImport;
-use App\Imports\MenuImport;
-use App\Imports\MunicipioImport;
-use App\Imports\UtilImport;
-use App\Models\CalendarSchool;
-use App\Models\Company;
-use App\Models\DetailOrder;
-use App\Models\Month;
-use App\Models\Municipality;
-use App\Models\Order;
-use App\Models\OrderStatus;
-use App\Models\Person;
-use App\Models\ProgressOrder;
-use App\Models\Reservation;
+use App\User;
 use App\Models\Rol;
 use App\Models\Year;
-use App\User;
-use Illuminate\Database\Seeder;
+use App\Models\Month;
+use App\Models\Order;
+use App\Models\Person;
+use App\Models\School;
+use App\Models\Balance;
+use App\Models\Company;
+use App\Imports\MenuImport;
+use App\Imports\UtilImport;
+use App\Models\DetailOrder;
+use App\Models\OrderStatus;
+use App\Models\Reservation;
 use Illuminate\Support\Str;
+use App\Imports\MarcaImport;
+use App\Models\Municipality;
+use App\Models\ProgressOrder;
+use App\Imports\EscuelaImport;
+use App\Models\CalendarSchool;
+use Illuminate\Database\Seeder;
+use App\Imports\CategoriaImport;
+use App\Imports\GratuidadImport;
+use App\Imports\MunicipioImport;
+use App\Imports\AlimentacionImport;
+use App\Imports\DepartamentoImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        //$this->call([UsersTableSeeder::class]);
-
         for ($i=18; $i < 50; $i++) { 
             $new = new Year();
             $new->year = '20'.$i;
@@ -266,6 +266,113 @@ class DatabaseSeeder extends Seeder
 
         Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');  
 
+        $schools = School::all();
+
+        foreach ($schools as $key => $value) 
+        {
+            $fecha_p = date('Y-m-d');
+            $fecha_f = date('Y-m-d', strtotime('+55 day',strtotime($fecha_p)));
+            if(!is_null($value->code_high_school)){
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(15000,30000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_high_school;
+                $insert_balace->type_balance = Balance::ALIMENTACION;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(15000,30000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_high_school;
+                $insert_balace->type_balance = Balance::GRATUIDAD;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(15000,30000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_high_school;
+                $insert_balace->type_balance = Balance::UTILES;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+            }
+
+            if(!is_null($value->code_primary)){
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(50000,250000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_primary;
+                $insert_balace->type_balance = Balance::ALIMENTACION;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(50000,250000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_primary;
+                $insert_balace->type_balance = Balance::GRATUIDAD;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(50000,250000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_primary;
+                $insert_balace->type_balance = Balance::UTILES;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+            }
+        }
+
         $insert_order = new OrderStatus();
         $insert_order->status = 'pedido';
         $insert_order->save();  
@@ -291,8 +398,8 @@ class DatabaseSeeder extends Seeder
 
         //Generar compras aleatorias
         factory(CalendarSchool::class, 30)->create();
-        factory(Order::class, 150)->create();
-        factory(DetailOrder::class, 100)->create();
+        factory(Order::class, 50)->create();
+        factory(DetailOrder::class, 250)->create();
 
         $detail_order = DetailOrder::all();
 

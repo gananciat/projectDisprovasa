@@ -14,7 +14,7 @@ class GraphController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     public function school_order()
@@ -60,14 +60,14 @@ class GraphController extends ApiController
                                                                                                                                         ]);
                                                                                                                         },                                                                                                                                                                                                                   
                                                                 ])
-                                                    ->where('id', PersonSchool::where('people_id', Auth::user()->people_id)->where('current', true)->frist()->id)
+                                                    ->where('id', PersonSchool::where('people_id', Auth::user()->people_id)->where('current', true)->first()->schools_id)
                                                     ->get(); 
 
             return $this->showAll($school_order);
         }
         else
         {
-            $school_order = School::select('id','name')
+            $school_order = School::select('id','name','logo')
                                                     ->withCount([
                                                                     'orders as order_complete_a' => function(Builder $query) {
                                                                                                                             $query->where([

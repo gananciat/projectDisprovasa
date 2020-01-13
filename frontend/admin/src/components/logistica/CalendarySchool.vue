@@ -265,18 +265,18 @@ export default {
     },
 
     puede_eliminar(fecha){
-        if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') <= moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        if(moment(fecha).format('YYYY-MM-DD') <= moment(new Date()).format('YYYY-MM-DD'))
             return false
         else
             return true
     },
 
     color(fecha){
-        if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-yellow';
-        else if(moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY') > moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY'))
+        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-green'
-        else
+        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
             return 'bg-red'
     }
 

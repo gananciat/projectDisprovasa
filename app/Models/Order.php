@@ -31,6 +31,13 @@ class Order extends Model
         $this->attributes['description'] = mb_strtoupper($value);
     }
 
+    public function addSelect($column)
+    {
+        $column = is_array($column) ? $column : func_get_args();
+        $this->columns = array_merge((array) $this->columns, $column);
+        return $this;
+    }
+
     public function school()
     {
         return $this->belongsTO(School::class,'schools_id');

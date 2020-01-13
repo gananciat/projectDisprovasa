@@ -22,7 +22,7 @@ class CreateDisbursementTable extends Migration
         DB::insert('insert into disbursement (name) values (?)', ['QUINTO DESEMBOLSO']);
         DB::insert('insert into disbursement (name) values (?)', ['SEXTO DESEMBOLSO']);
         DB::insert('insert into disbursement (name) values (?)', ['SEPTIMO DESEMBOLSO']);
-        DB::insert('insert into disbursement (name) values (?)', ['OCTAVI DESEMBOLSO']);
+        DB::insert('insert into disbursement (name) values (?)', ['OCTAVO DESEMBOLSO']);
     }
 
     public function down()

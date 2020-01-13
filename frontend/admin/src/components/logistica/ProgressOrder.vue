@@ -34,7 +34,7 @@
                 <div class="col-md-4 col-sm-12 col-4">
                     <template v-for="(item,index) in items_alimentacion">
                         <router-link v-b-tooltip :title="'gestionar orden #'+item.order" v-bind:key="index" :to="'/assign_product/'+item.id" >
-                            <div v-bind:key="'1.'+index" class="info-box bg-success">
+                            <div v-bind:key="'1.'+index" :class="color_a(item.date)">
                                 <span class="info-box-icon"><i class="fa fa-apple"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-number">{{ item.school.name }}</span>
@@ -60,7 +60,7 @@
                 <div class="col-md-4 col-sm-12 col-4">
                     <template v-for="(item,index) in items_gratuidad">
                         <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
-                            <div v-bind:key="'1.'+index" class="info-box bg-primary">
+                            <div v-bind:key="'1.'+index" :class="color_g(item.date)">
                                 <span class="info-box-icon"><i class="fa fa-file"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-number">{{ item.school.name }}</span>
@@ -86,7 +86,7 @@
                 <div class="col-md-4 col-sm-12 col-4">
                     <template v-for="(item,index) in items_utiles">
                         <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
-                            <div v-bind:key="'1.'+index" class="info-box bg-info">
+                            <div v-bind:key="'1.'+index" :class="color_u(item.date)">
                                 <span class="info-box-icon"><i class="fa fa-book"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-number">{{ item.school.name }}</span>
@@ -182,6 +182,33 @@ export default {
         })
         .catch(r => {});
     },
+
+    color_a(fecha){
+        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-warning';
+        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-success'
+        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-danger'
+    },
+
+    color_g(fecha){
+        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-warning';
+        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-primary'
+        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-danger'
+    },
+
+    color_u(fecha){
+        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-warning';
+        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-info'
+        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-danger'
+    }
   },
 
   mounted(){
