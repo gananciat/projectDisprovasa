@@ -60,7 +60,7 @@ class Person extends Model
         return $this->belongsTo(School::class);
     }
 
-    public function phons()
+    public function phones()
     {
         return $this->hasMany(PhonePerson::class);
     }
