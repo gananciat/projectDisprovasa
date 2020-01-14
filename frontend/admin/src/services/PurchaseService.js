@@ -27,6 +27,11 @@ class purchaseService {
         return self.axios.put(`${self.baseUrl}/${data.id}`, data);
     }
 
+    updateDetails(data) {
+        let self = this;
+        return self.axios.put(`${self.baseUrl}_update_detail`, data);
+    }
+
     destroy(data) {
         let self = this;
         return self.axios.delete(`${self.baseUrl}/${data.id}`);

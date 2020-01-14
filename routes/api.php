@@ -49,11 +49,13 @@ Route::get('reservations_money/{code}/{type_order}', 'Sistema\ReservationControl
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
+Route::name('purchases_update_detail')->put('purchases_update_detail', 'Sistema\PurchaseController@updateDetails');
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['create', 'edit', 'update']]);
 Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'store', 'destroy']]);
 Route::resource('rols', 'Sistema\RolController', ['except' => ['create', 'edit']]);
 Route::resource('rols.menus', 'Sistema\RolRolMenuController', ['except' => ['create', 'edit']]);
 Route::resource('persons', 'Sistema\PersonController', ['except' => ['create', 'edit']]);
+Route::resource('quantifies', 'Sistema\QuantifyController', ['except' => ['create', 'edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

@@ -398,8 +398,8 @@ class DatabaseSeeder extends Seeder
 
         //Generar compras aleatorias
         factory(CalendarSchool::class, 30)->create();
-        factory(Order::class, 50)->create();
-        factory(DetailOrder::class, 250)->create();
+        factory(Order::class, 150)->create();
+        factory(DetailOrder::class, 1000)->create();
 
         $detail_order = DetailOrder::all();
 

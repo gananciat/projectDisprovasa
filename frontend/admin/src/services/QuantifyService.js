@@ -4,7 +4,7 @@ class QuantifyService {
 
   constructor(axios, baseUrl) {
       this.axios = axios
-      this.baseUrl = `${baseUrl}providers`
+      this.baseUrl = `${baseUrl}quantifies`
   }
 
   getAll() {

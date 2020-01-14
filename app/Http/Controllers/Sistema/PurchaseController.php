@@ -137,4 +137,17 @@ class PurchaseController extends ApiController
     {
 
     }
+
+    public function updateDetails(Request $request)
+    {
+        DB::beginTransaction();
+            foreach ($request->items as $item ) {
+                $detail = PurcharseDetail::find($item['id']);
+                $detail->decrease = $item['decrease'];
+                $detail->save();
+            }
+        DB::commit();
+
+        return $this->showQuery($request->items);
+    }
 }

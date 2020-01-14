@@ -25,7 +25,7 @@ const state = {
     client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
 
     //base_url: 'http://sistemapro.test:8000/',
-    //client_secret: 'R3spjosUN8Gp0V0yvimjq2dXkObasaMoA5zYaaRp',
+    //client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
 }
 
 const mutations = {
