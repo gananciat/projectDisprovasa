@@ -32,6 +32,11 @@ trait ApiResponser
     return $this->successResponse(['data' => $instance, 'code' => $code], $code);
   }
 
+  protected function showQuery($data, $code = 200)
+  {
+    return response()->json(['data'=>$data],$code);
+  }
+
   protected function generarPassword($longitud)
   {
     $password = '';

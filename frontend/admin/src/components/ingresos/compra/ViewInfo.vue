@@ -63,7 +63,8 @@
                     <tr>
                       <th>Producto</th>
                       <th>Cantidad</th>
-                      <th>Precio</th>
+                      <th width="15%">Merma</th>
+                      <th>Precio compra</th>
                       <th>Subtotal</th>
                     </tr>
                     </thead>
@@ -71,6 +72,14 @@
                     <tr v-for="(item) in purchase.details" :key="item.id">
                       <td>{{item.product.name}}</td>
                       <td>{{item.quantity}}</td>
+                      <td>
+                        <input class="form-control input-sm" v-model="item.decrease" 
+                        :name="item.product.name"
+                        :data-vv-as="'merma '+item.product.name | lowercase "
+                        v-validate="'required|integer|min_value:0|max_value:'+item.quantity"
+                        :class="{'input':true,'has-errors': errors.has(item.product.name)}">
+                        <FormError :attribute_name="item.product.name" :errors_form="errors"> </FormError>
+                      </td>
                       <td>{{item.purcharse_price}}</td>
                       <td>{{item.purcharse_price * item.quantity | currency('Q ')}}</td>
                     </tr>
@@ -82,6 +91,10 @@
                         ANULADA
                     </h1>
                 <div class="col-md-12">
+                  <div class="col-8 pull-left">
+                        <p class="lead">Actualizar merma de productos defectuosos</p>
+                        <button type="button" class="btn btn-primary" @click="beforeUpdate"> <i class="fa fa-refresh"></i> actualizar</button>
+                    </div>
                     <div class="col-4 pull-right">
                         <p class="lead">Compra del {{purchase.date | moment('DD/MM/YYYY')}}</p>
 
@@ -114,8 +127,12 @@
 </template>
 
 <script>
+import FormError from '../../shared/FormError'
 export default {
   name: 'view_info_compra',
+  components: {
+    FormError
+  },
   data() {
     return {
       loading: false,
@@ -146,6 +163,34 @@ export default {
           self.purchase = r.data.data
         })
         .catch(r => {});
+    },
+
+    update(){
+        let self = this
+        var data = {
+          items: self.purchase.details
+        }
+        self.$store.state.services.purchaseService
+        .updateDetails(data)
+        .then(r => {
+          self.loading = false
+          if(r.response){
+            this.$toastr.error(r.response.data.error, 'error')
+            return
+          }
+          this.$toastr.success('compra actualizada con exito', 'exito')
+          self.$router.push('/purchase')
+        })
+        .catch(r => {});
+    },
+
+    beforeUpdate(){
+      let self = this
+      self.$validator.validateAll().then((result) => {
+          if (result) {
+              self.update()
+           }
+      });
     },
 
     getPhones(phones){

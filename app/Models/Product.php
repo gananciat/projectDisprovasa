@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\DetailOrder;
 use App\Models\Presentation;
 use App\Models\Price;
+use App\Models\PurcharseDetail;
 use App\Models\Quantify;
 use App\Models\Sentence;
 use Carbon\Carbon;
@@ -57,5 +58,10 @@ class Product extends Model
     {
         $year = Carbon::now()->year;
         return $this->hasOne(Quantify::class,'products_id')->where('year',$year);
+    }
+
+    public function purchase_detail()
+    {
+        return $this->hasMany(PurcharseDetail::class);
     }
 }

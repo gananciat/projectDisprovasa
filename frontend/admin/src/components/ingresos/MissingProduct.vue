@@ -7,7 +7,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Categorías de productos</h1> 
+            <h1 class="m-0 text-dark">Productos faltantes</h1> 
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -22,8 +22,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">Lista de categorías 
-                    <b-button variant="success" @click="open" size="sm"><i class="fa fa-plus"></i> nuevo</b-button></h3>
+                  <h3 class="card-title">Lista de productos faltantes </h3>
                 </div>
               </div>
               <div class="card-body">
@@ -49,7 +48,7 @@
                           </b-input-group>
                       </b-col>
                     </b-row>
-                    <b-table responsive hover small flex
+                    <b-table responsive hover flex
                         bordered
                        :fields="fields" 
                        :items="items"
@@ -58,21 +57,24 @@
                        :per-page="perPage"
                        @filtered="onFiltered">
                       <!-- A virtual column -->
-                      <template v-slot:cell(name)="data">
-                        {{ data.item.name }}
+                      
+                      <template v-slot:cell(product_name)="data">
+                        <span>
+                          <a @click="showDetails(data.item)" href="javascript:void(0);" class="text-info pull-left"> <i :class="data.detailsShowing ? 'fa fa-arrow-down' : 'fa fa-arrow-right'"></i></a>
+                        </span>&nbsp;
+                        {{ data.item.product.name }}
                       </template>
-                      <template v-slot:cell(description)="data">
-                        {{data.item.description}}
+                      <template v-slot:cell(subtraction)="data">
+                        {{data.item.subtraction}}
                       </template>
-                      <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-b-tooltip title="editar">
-                              <i class="fa fa-pencil">
-                              </i>
-                          </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
-                              <i class="fa fa-trash">
-                              </i>
-                          </button>
+                      <template v-slot:cell(year)="data">
+                        {{data.item.year}}
+                      </template>
+
+                      <template slot="row-details"  slot-scope="data">
+                          <el-tabs type="border-card">
+                            {{ data.item.product.name }}
+                          </el-tabs>
                       </template>
 
                     </b-table>
@@ -128,9 +130,9 @@ export default {
       loading: false,
       items: [],
       fields: [
-        { key: 'product', label: 'Producto', sortable: true },
-        { key: 'faltante', label: 'Faltante', sortable: true },
-        { key: 'option', label: 'Opciones', sortable: true },
+        { key: 'product_name', label: 'Producto', sortable: true },
+        { key: 'subtraction', label: 'Faltante', sortable: true },
+        { key: 'year', label: 'Año', sortable: true },
       ],
       filter: null,
       currentPage: 1,
@@ -156,14 +158,25 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.categoryService
+      self.$store.state.services.quantifyService
         .getAll()
         .then(r => {
-          self.loading = false; 
-          self.items = r.data.data;
+          self.loading = false;
+          r.data.data = r.data.data.map(obj=>({ ...obj, _showDetails: false}))
+          self.items = r.data.data
           self.totalRows = self.items.length
         })
         .catch(r => {});
+    },
+
+    showDetails(data){
+      let self = this
+      if(data._showDetails){
+        data._showDetails = false
+        return
+      }
+      self.items.map(a=>a._showDetails=false)
+      data._showDetails = true
     },
   },
 
