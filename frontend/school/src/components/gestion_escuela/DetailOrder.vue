@@ -52,9 +52,9 @@
                                     <dt>{{ titleCase(items.disbursement) }}</dt>
                                     <dt>Monto Aprobado</dt>
                                     <dd>{{ items.balance | currency('Q',',',2,'.','front',true) }}</dd>
-                                    <dt>Disponible Total</dt>
-                                    <dd>{{ items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>Monto Total Pedido</dt>
+                                    <dd>{{ items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Disponible Total</dt>
                                     <dd>{{ items.balance - items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
                                     <hr>
                                     <dt>Monto del Pedido # {{ items.order }}</dt>
@@ -220,7 +220,7 @@
                                             <tr v-bind:key="index">
                                                 <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">{{ index+1 }}</td>
                                                 <td style="vertical-align:middle; font-size: 18px; text-align: center; font-weight: bold;">
-                                                    <div class="form-group" v-if="item.progress.purchased_amount != item.quantity">
+                                                    <div class="form-group">
                                                         <el-input-number v-model="item.quantity" size="mini" 
                                                         :precision="0" :step="1" :min="item.progress.purchased_amount == 0 ? Number(item.progress.purchased_amount+1) : Number(item.progress.purchased_amount)" :max="10000"
                                                         data-vv-name="edit.quantity"
@@ -229,8 +229,7 @@
                                                         data-vv-scope="edit"
                                                         :class="{'input':true,'has-errors': errors.has('edit.quantity')}"></el-input-number> <br>
                                                         <FormError :attribute_name="'edit.quantity'" :errors_form="errors"> </FormError>
-                                                    </div>   
-                                                    <div v-if="item.progress.purchased_amount == item.quantity">{{ Number(item.quantity) }}</div>           
+                                                    </div>             
                                                 </td>
                                                 <td style="vertical-align:middle;">{{ item.product.name+' / '+ item.product.presentation.name }}</td>
                                                 <td style="vertical-align:middle;">

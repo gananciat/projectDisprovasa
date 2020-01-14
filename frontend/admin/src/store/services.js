@@ -41,8 +41,8 @@ import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
-    //let baseUrl = 'http://sistematio.test/' //base url desarrollo
+    //let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
     //let baseUrl = 'http://sistemapro.test:8000/'
 

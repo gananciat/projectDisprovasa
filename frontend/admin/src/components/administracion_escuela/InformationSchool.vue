@@ -425,7 +425,7 @@
                                 <td style="vertical-align:middle;" class="text-center">
                                   <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="viewModalPhone(item.person.id)"><i class="fa fa-phone-square"></i></button> 
                                   <hr>
-                                  <template v-for="(item_phone, index_phone) in item.person.phons">
+                                  <template v-for="(item_phone, index_phone) in item.person.phones">
                                     <b-button v-bind:key="index_phone" class="btn btn-sm" style="font-size: 10px;"  :variant="color(item_phone.company.name)">
                                       {{ item_phone.company.name }}
                                       <b-badge variant="light">{{ item_phone.number }}<span class="sr-only"></span></b-badge>
