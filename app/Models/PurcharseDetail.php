@@ -11,9 +11,9 @@ class PurcharseDetail extends Model
     protected $table = 'purcharse_details';
     protected $fillable = ['product_id','purcharse_id','quantity','purcharse_price','decrease'];
 
-    public function purcharse()
+    public function purchase()
     {
-        return $this->belongsTo(Purcharse::class);
+        return $this->belongsTo(Purcharse::class,'purcharse_id');
     }
 
     public function product()

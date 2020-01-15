@@ -72,13 +72,16 @@
                     <tr v-for="(item) in purchase.details" :key="item.id">
                       <td>{{item.product.name}}</td>
                       <td>{{item.quantity}}</td>
-                      <td>
+                      <td v-if="!purchase.cancel">
                         <input class="form-control input-sm" v-model="item.decrease" 
                         :name="item.product.name"
                         :data-vv-as="'merma '+item.product.name | lowercase "
                         v-validate="'required|integer|min_value:0|max_value:'+item.quantity"
                         :class="{'input':true,'has-errors': errors.has(item.product.name)}">
                         <FormError :attribute_name="item.product.name" :errors_form="errors"> </FormError>
+                      </td>
+                      <td v-else>
+                        {{item.decrease}}
                       </td>
                       <td>{{item.purcharse_price}}</td>
                       <td>{{item.purcharse_price * item.quantity | currency('Q ')}}</td>
