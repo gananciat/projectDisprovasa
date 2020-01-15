@@ -1,31 +1,32 @@
 <?php
 
-use App\User;
-use App\Models\Rol;
-use App\Models\Year;
-use App\Models\Month;
-use App\Models\Order;
-use App\Models\Person;
-use App\Models\School;
-use App\Models\Balance;
-use App\Models\Company;
-use App\Imports\MenuImport;
-use App\Imports\UtilImport;
-use App\Models\DetailOrder;
-use App\Models\OrderStatus;
-use App\Models\Reservation;
-use Illuminate\Support\Str;
-use App\Imports\MarcaImport;
-use App\Models\Municipality;
-use App\Models\ProgressOrder;
-use App\Imports\EscuelaImport;
-use App\Models\CalendarSchool;
-use Illuminate\Database\Seeder;
-use App\Imports\CategoriaImport;
-use App\Imports\GratuidadImport;
-use App\Imports\MunicipioImport;
 use App\Imports\AlimentacionImport;
+use App\Imports\CategoriaImport;
 use App\Imports\DepartamentoImport;
+use App\Imports\EscuelaImport;
+use App\Imports\GratuidadImport;
+use App\Imports\MarcaImport;
+use App\Imports\MenuImport;
+use App\Imports\MunicipioImport;
+use App\Imports\UtilImport;
+use App\Models\Balance;
+use App\Models\CalendarSchool;
+use App\Models\Company;
+use App\Models\DetailOrder;
+use App\Models\Month;
+use App\Models\Municipality;
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\Person;
+use App\Models\ProgressOrder;
+use App\Models\Purcharse;
+use App\Models\Reservation;
+use App\Models\Rol;
+use App\Models\School;
+use App\Models\Year;
+use App\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -398,8 +399,9 @@ class DatabaseSeeder extends Seeder
 
         //Generar compras aleatorias
         factory(CalendarSchool::class, 30)->create();
-        factory(Order::class, 150)->create();
-        factory(DetailOrder::class, 1000)->create();
+        factory(Order::class, 50)->create();
+        factory(DetailOrder::class, 100)->create();
+        factory(Provider::class, 10)->create();
 
         $detail_order = DetailOrder::all();
 
@@ -411,6 +413,30 @@ class DatabaseSeeder extends Seeder
             $insert->products_id = $value->products_id;
             $insert->original_quantity = $value->quantity;
             $insert->save();
+        }
+
+        for($i=0; $i<50; $i++){
+            $provider = Provider::all()->random();
+            $data = new Purcharse;
+
+            $data->date = '2020-01-'.$+i;
+            $data->no_prof = 'A-0000'.$i+1;
+            $data->provider_id = $provider->id;
+            $data->total = 0;
+            $data->save();
+
+            for($i=0; $i<5; $i++){
+                $detail = new PurcharseDetail;
+                $detail->$purcharse_id = $data->id;
+                $detail->$product_id = $product->id;
+                $detail->$quantity = rand(5,100);
+                $detail->$purcharse_price = rand(0.50, 50.40);
+                $sub = $detail->quantity*$detail->purcharse_price;
+
+                $data->total = += $sub;
+            }
+
+            $data->save();
         }
     }
 }

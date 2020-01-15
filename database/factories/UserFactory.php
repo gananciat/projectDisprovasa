@@ -1,24 +1,26 @@
 <?php
 
-use App\User;
-use App\Seller;
 use App\Category;
 use App\Models\Balance;
 use App\Models\CalendarSchool;
 use App\Models\DetailOrder;
-use App\Models\Year;
-use App\Transaction;
 use App\Models\Month;
+use App\Models\Municipality;
 use App\Models\Order;
-use App\Models\School;
-use App\Models\Reservation;
-use Illuminate\Support\Str;
 use App\Models\PersonSchool;
 use App\Models\Price;
 use App\Models\Product;
+use App\Models\Provider;
 use App\Models\Quantify;
+use App\Models\Reservation;
+use App\Models\School;
+use App\Models\Year;
+use App\Seller;
+use App\Transaction;
+use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /*$factory->define(User::class, function (Faker $faker) {
     static $password;
@@ -62,6 +64,16 @@ $factory->define(Transaction::class, function (Faker $faker) {
         'product_id' => $vendedor->products->random()
     ];
 });*/
+
+$factory->define(Provider::class, function (Faker $faker) {
+    $municipality = Municipality()::all()->random();
+    return [
+        'nit' => rand(1000000, 99999999),
+        'name' =>'proveedor '.numberBetween(1, 50),
+        'direction'=>'calle '.numberBetween(1,25),
+        'municipalities_id' => $municipality->id
+    ];
+});
 
 $factory->define(CalendarSchool::class, function (Faker $faker) {
     $date_actual = Carbon::now();
