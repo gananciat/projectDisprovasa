@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 trait ApiResponser
 {
-  private function successResponse($data, $code)
+  protected function successResponse($data, $code = 200)
   {
     return response()->json($data, $code);
   }
@@ -30,6 +30,11 @@ trait ApiResponser
   protected function showOne(Model $instance, $code = 200)
   {
     return $this->successResponse(['data' => $instance, 'code' => $code], $code);
+  }
+
+  protected function showQuery($data, $code = 200)
+  {
+    return response()->json(['data'=>$data],$code);
   }
 
   protected function generarPassword($longitud)

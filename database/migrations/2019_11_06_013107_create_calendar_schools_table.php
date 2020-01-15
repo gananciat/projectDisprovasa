@@ -12,6 +12,7 @@ class CreateCalendarSchoolsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title',50);
             $table->date('date');
+            $table->boolean('business')->default(0);
             $table->unsignedBigInteger('schools_id');
             $table->foreign('schools_id')->references('id')->on('schools');
             $table->unsignedBigInteger('people_id');

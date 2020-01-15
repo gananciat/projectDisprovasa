@@ -20,7 +20,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <dl class="dl-horizontal" v-if="Object.keys(items).length !== 0">
                                     <dt>Menú</dt>
                                     <dd>{{ items.title }}</dd>
@@ -38,7 +38,7 @@
                                     <dd>{{ items.created_at | moment('dddd DD MMMM YYYY h:mm:ss a') }}</dd>
                                 </dl>                                
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div style="text-align: center; font-weight: bold; padding: 2rem; margin: 2rem;" v-if="Object.keys(items).length !== 0">
                                     <h1>Progreso del pedido</h1>
                                     <h2>{{ ((items.detail_complete * 100)/items.detail_total).toFixed(2) }} %</h2>
@@ -47,6 +47,22 @@
                                     <el-progress type="circle" show-text v-if="items.detail_complete == items.detail_total" :percentage="(items.detail_complete * 100)/items.detail_total" status="success"></el-progress>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-sm-12 text-right">
+                                <dl class="dl-horizontal" v-if="Object.keys(items).length !== 0">
+                                    <dt>{{ titleCase(items.disbursement) }}</dt>
+                                    <dt>Monto Aprobado</dt>
+                                    <dd>{{ items.balance | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Monto Total Pedido</dt>
+                                    <dd>{{ items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Disponible Total</dt>
+                                    <dd>{{ items.balance - items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <hr>
+                                    <dt>Monto del Pedido # {{ items.order }}</dt>
+                                    <dd>{{ items.total | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Disponible hasta este pedido</dt>
+                                    <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
+                                </dl>                                
+                            </div>                            
                         </div>
                     </div>
                 </div>
@@ -144,7 +160,14 @@
                 <div class="col-md-12 col-sm-12 text-right">
                     <p><label style="font-size:32px;">Pedido #</label> <label style="font-size:48px;">{{ items.order }}</label></p>
                 </div>  
-                <hr>         
+                <hr>   
+                <div class="col-md-12 col-sm-12 text-right"> 
+                    <div class="form-group">
+                        <label>Monto disponible</label>
+                        <br>
+                        <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+                    </div>
+                </div>                        
                 <div class="col-md-12 col-sm-12">
                     <div class="position-relative p-5 bg-green">
                         <div class="ribbon-wrapper ribbon-xl">
@@ -197,7 +220,7 @@
                                             <tr v-bind:key="index">
                                                 <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">{{ index+1 }}</td>
                                                 <td style="vertical-align:middle; font-size: 18px; text-align: center; font-weight: bold;">
-                                                    <div class="form-group" v-if="item.progress.purchased_amount != item.quantity">
+                                                    <div class="form-group">
                                                         <el-input-number v-model="item.quantity" size="mini" 
                                                         :precision="0" :step="1" :min="item.progress.purchased_amount == 0 ? Number(item.progress.purchased_amount+1) : Number(item.progress.purchased_amount)" :max="10000"
                                                         data-vv-name="edit.quantity"
@@ -206,12 +229,14 @@
                                                         data-vv-scope="edit"
                                                         :class="{'input':true,'has-errors': errors.has('edit.quantity')}"></el-input-number> <br>
                                                         <FormError :attribute_name="'edit.quantity'" :errors_form="errors"> </FormError>
-                                                    </div>   
-                                                    <div v-if="item.progress.purchased_amount == item.quantity">{{ Number(item.quantity) }}</div>           
+                                                    </div>             
                                                 </td>
                                                 <td style="vertical-align:middle;">{{ item.product.name+' / '+ item.product.presentation.name }}</td>
                                                 <td style="vertical-align:middle;">
-                                                    <div class="form-group">
+                                                    <p v-if="item.progress.purchased_amount == item.quantity">
+                                                        {{ item.observation }}
+                                                    </p>
+                                                    <div class="form-group" v-if="item.progress.purchased_amount != item.quantity">
                                                         <textarea class="form-control" 
                                                         rows="3" 
                                                         placeholder="observación del producto"
@@ -268,7 +293,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "newschool",
+  name: "detailorder",
   components: {
       FormError
   },
@@ -279,6 +304,8 @@ export default {
       items: {},
       products: [],
       total_insert: 0,
+      disponibility: 0,
+      temporary: 0,
       information_product: {
         category: '',
         marca: '',
@@ -328,6 +355,8 @@ export default {
         .get(id)
         .then(r => {
             self.items = r.data.data[0];
+            self.disponibility = self.items.balance - self.items.subtraction_temporary
+            self.temporary = self.disponibility + self.items.total
             self.getProduct(r.data.data[0].type_order)
             self.loading = false;           
         })
@@ -354,68 +383,94 @@ export default {
     create(){
       let self = this
 
-        self.$validator.validateAll('insert').then((result) => {
-            if (result) {
-                self.pasarMayusculas()
-                let data = self.form
-                data.products_id = self.form.products_id.id
+        if((self.temporary - self.total_insert)  > 0)
+        {
+            self.$validator.validateAll('insert').then((result) => {
+                if (result) {
+                    self.pasarMayusculas()
+                    let data = self.form
 
-                self.$swal({
-                    title: "Verificar",
-                    text: "¿ESTA SEGURO QUE DESEA AGREGAR EL PRODUCTO AL PEDIDO # "+ self.items.order + "?",
-                    type: "info",
-                    showCancelButton: true
-                }).then((result) => {
-                    self.loading = true
-                    if (result.value) {
-                        self.$store.state.services.detailorderService
-                        .create(data)
-                        .then(r => {
-                            self.loading = false
-                            if( self.interceptar_error(r) == 0) return
-                            self.$toastr.success('registro agregado con exito', 'exito') 
-                            self.getAll(self.form.orders_id)
-                            self.clearData()
-                        }).catch(r => {});                     
-                    }
-                });                
-            }
-        });
+                    self.$swal({
+                        title: "Verificar",
+                        text: "¿ESTA SEGURO QUE DESEA AGREGAR EL PRODUCTO AL PEDIDO # "+ self.items.order + "?",
+                        type: "info",
+                        showCancelButton: true
+                    }).then((result) => {
+                        if (result.value) {
+                            self.loading = true
+                            data.products_id = self.form.products_id.id
+                            self.$store.state.services.detailorderService
+                            .create(data)
+                            .then(r => {
+                                self.loading = false
+                                if( self.interceptar_error(r) == 0) return
+                                self.$toastr.success('registro agregado con exito', 'exito') 
+                                self.getAll(self.form.orders_id)
+                                self.clearData()
+                            }).catch(r => {});                     
+                        }
+                    });                
+                }
+            });
+        }
+        else
+        {
+            self.loading = false
+            self.$swal({
+                title: "Error",
+                text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ (self.form.quantity * self.form.sale_price).toFixed(2),
+                type: "error",
+                showCancelButton: false
+            })  
+        }
     },    
 
     //funcion para actualizar registro
     update(item){
       let self = this
      
-        self.$validator.validateAll('edit').then((result) => {
-            if (result) {
-                let data = {}
-                data.id = item.id
-                data.quantity = item.quantity
-                data.observation = item.observation
+        if((self.temporary - self.total_insert)  > 0)
+        {
+            self.$validator.validateAll('edit').then((result) => {
+                if (result) {
+                    let data = {}
+                    data.id = item.id
+                    data.quantity = item.quantity
+                    data.observation = item.observation
 
-                self.$swal({
-                    title: "Verificar",
-                    text: "¿ESTA SEGURO QUE DESEA MODIFICAR EL PRODUCTO DEL PEDIDO # "+ self.items.order + "?",
-                    type: "info",
-                    showCancelButton: true
-                }).then((result) => {
-                    self.loading = true
-                    if (result.value) {
-                        self.$store.state.services.detailorderService
-                            .update(data)
-                            .then(r => {
-                                self.loading = false
-                                if( self.interceptar_error(r) == 0) return
-                                self.$toastr.success('registro actualizado con exito', 'exito') 
-                                self.getAll(self.form.orders_id)
-                                self.clearData()
-                            })
-                            .catch(r => {});                    
-                    }
-                });                
-            }
-        });
+                    self.$swal({
+                        title: "Verificar",
+                        text: "¿ESTA SEGURO QUE DESEA MODIFICAR EL PRODUCTO DEL PEDIDO # "+ self.items.order + "?",
+                        type: "info",
+                        showCancelButton: true
+                    }).then((result) => {
+                        if (result.value) {
+                            self.loading = true
+                            self.$store.state.services.detailorderService
+                                .update(data)
+                                .then(r => {
+                                    self.loading = false
+                                    if( self.interceptar_error(r) == 0) return
+                                    self.$toastr.success('registro actualizado con exito', 'exito') 
+                                    self.getAll(self.form.orders_id)
+                                    self.clearData()
+                                })
+                                .catch(r => {});                    
+                        }
+                    });                
+                }
+            });
+        }
+        else
+        {
+            self.loading = false
+            self.$swal({
+                title: "Error",
+                text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ (item.quantity * item.sale_price).toFixed(2),
+                type: "error",
+                showCancelButton: false
+            })  
+        }        
     },
 
     //funcion para eliminar registro
@@ -429,10 +484,10 @@ export default {
         showCancelButton: true
       }).then((result) => {
           if (result.value) {
-              self.loading = true
               self.$store.state.services.detailorderService
                 .destroy(data)
                 .then(r => {
+                    self.loading = true
                     self.loading = false
                     if( self.interceptar_error(r) == 0) return
                     self.$toastr.success('registro eliminado con exito', 'exito') 
@@ -530,6 +585,17 @@ export default {
             self.loading = false
         }
     },
+
+    titleCase(str) {
+        var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                // You do not need to check if i is larger than splitStr length, as your for does that for you
+                // Assign it back to the array
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
+            }
+            // Directly return the joined string
+        return splitStr.join(' '); 
+    }    
   },
   computed: {
     total(){
@@ -542,7 +608,7 @@ export default {
         }
         self.total_insert = total
         return total
-    }
+    },
   },
   mounted(){
     $("body").resize()

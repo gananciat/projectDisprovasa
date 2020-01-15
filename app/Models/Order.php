@@ -17,7 +17,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $fillable = ['order','title','description','date','total','schools_id',
-                           'people_id','months_id','years_id','complete','type_order'];
+                           'people_id','months_id','years_id','complete','type_order','code'];
 
     public function setOrderAttribute($value) {
         $this->attributes['order'] = mb_strtoupper($value);
@@ -29,6 +29,13 @@ class Order extends Model
 
     public function setDescriptionAttribute($value) {
         $this->attributes['description'] = mb_strtoupper($value);
+    }
+
+    public function addSelect($column)
+    {
+        $column = is_array($column) ? $column : func_get_args();
+        $this->columns = array_merge((array) $this->columns, $column);
+        return $this;
     }
 
     public function school()

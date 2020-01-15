@@ -27,6 +27,11 @@ import ProviderService from '../services/ProviderService'
 import PurchaseService from '../services/PurchaseService'
 import BalanceService from '../services/BalanceService'
 import DisbursementService from '../services/DisbursementService'
+import ProgressOrderService from '../services/ProgressOrderService'
+import QuantifyService from '../services/QuantifyService'
+import ReportService from '../services/ReportService'
+import RolService from '../services/RolService'
+import PersonService from '../services/PersonService'
 
 
 /* IMPORT SCHOOL */
@@ -36,8 +41,8 @@ import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
-//let baseUrl = 'http://sistematio.test/' //base url desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
 //let baseUrl = 'http://sistemapro.test:8000/'
 
@@ -107,12 +112,17 @@ export default {
     providerService: new ProviderService(Axios, baseUrl),
     balanceService: new BalanceService(Axios, baseUrl),
     disbursementService: new DisbursementService(Axios, baseUrl),
+    progressorderService: new ProgressOrderService(Axios, baseUrl),
+    reportService: new ReportService(Axios, baseUrl),
+    rolService: new RolService(Axios, baseUrl),
+    personService: new PersonService(Axios, baseUrl),
+    quantifyService: new QuantifyService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
-   
+
 
 }

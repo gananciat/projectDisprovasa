@@ -14,7 +14,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="../../assets/logo.png" class="img-circle elevation-2" alt="User Image">
+          <img :src="getImage" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
@@ -42,23 +42,23 @@
           </li>
           <template>
             
-          <li class="nav-item" v-for="item in items" :key="item.text">
-            <a href="#/" class="nav-link" v-if="item.children.length === 0">
+          <li class="nav-item" v-for="item in getMenu" :key="item.text">
+            <a href="#/" class="nav-link" v-if="item.childrens.length === 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
               </p>
             </a>
-            <a href="#" class="nav-link" v-if="item.children.length > 0">
+            <a href="#" class="nav-link" v-if="item.childrens.length > 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}
                 <i class="right fa fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" v-for="child in item.children" :key="child.text">
+            <ul class="nav nav-treeview" v-for="child in item.childrens" :key="child.text">
               <li class="nav-item">
-                <a :href="'#'+child.path" class="nav-link">
+                <a :href="'#/'+child.path" class="nav-link">
                   <i :class="'fa fa-'+child.icon+' nav-icon'"></i>
                   <p>{{child.text}}</p>
                 </a>
@@ -95,24 +95,23 @@ export default {
         text: "Ingresos",
         children: [
           { icon: "circle-o", text: "Proveedores", path: "/provider" },
+          { icon: "circle-o", text: "Productos faltantes", path: "/missing_product" },
           { icon: "circle-o", text: "Compras", path: "/purchase" }
         ]
       },
-     /* {
-        icon: "cog",
-        text: "Pedidos",
+      {
+        icon: "truck",
+        text: "Logistica",
         children: [
-          { icon: "circle-o", text: "Pedido realizados", path: "/school/management/order" },
-          { icon: "circle-o", text: "Pedido de alimentación", path: "/school/1/management/order/new/alimentacion/A" },
-          { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/1/management/order/new/gratuidad/G" },
-          { icon: "circle-o", text: "Pedido de utiles", path: "/school/1/management/order/new/utiles/U" },
+          { icon: "circle-o", text: "Gestionar Pedido", path: "/progressorder" },
+          { icon: "circle-o", text: "Calendario", path: "/school/calendar" }
         ]
-      },    */  
+      },
       {
         icon: "user",
         text: "Acceso",
         children: [
-          { icon: "circle-o", text: "Usuarios", path: "/" },
+          { icon: "circle-o", text: "Usuarios", path: "/user" },
         ]
       },
     ]
@@ -133,7 +132,21 @@ export default {
   computed: {
     userName(){
       let self = this
-      return self.$store.state.usuario.email
+      var user = self.$store.state.usuario
+      if(!_.isEmpty(user)){
+        return self.$store.state.usuario.people.name_one+' '+self.$store.state.usuario.people.last_name_one
+      }
+      return ''
+    },
+
+    getMenu(){
+      let self = this
+      return self.$store.state.menu
+    },
+
+    getImage(){
+      let self = this
+      return self.$store.state.base_url+'img/user_empty.jpg'
     }
   }
 };

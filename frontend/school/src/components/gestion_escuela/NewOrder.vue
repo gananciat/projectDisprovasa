@@ -28,7 +28,7 @@
                           <li class="nav-item">
                             <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
                           </li>
-                          <li class="nav-item">
+                          <li class="nav-item" v-if="amount_available">
                             <a class="nav-link" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
                           </li>
                         </ul>
@@ -38,7 +38,7 @@
   <div class="tab-content" id="custom-tabs-one-tabContent">
     <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
       <div class="row">
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-2 col-sm-12">
           <div class="form-group">
             <label>Fecha para la entrega del pedido</label>
             <div class="block">
@@ -61,6 +61,32 @@
             <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
           </div>
         </div>
+        <div class="col-md-2 col-sm-12">            
+          <div class="form-group">
+            <label>Código</label>
+            <multiselect v-model="form.code"
+                @input="balance"
+                v-validate="'required'" 
+                data-vv-name="menu.code"
+                data-vv-as="código"
+                :options="codes" placeholder="seleccione un código"  
+                :searchable="true"
+                :allow-empty="false"
+                :show-labels="false"
+                data-vv-scope="menu"
+                label="name" track-by="id">
+                <span slot="noResult">No se encontro ningún registro</span>
+                </multiselect>
+                <FormError :attribute_name="'menu.code'" :errors_form="errors"> </FormError>
+          </div>
+        </div> 
+        <div class="col-md-8 col-sm-12 text-right"> 
+          <div class="form-group">
+            <label>Monto disponible</label>
+            <br>
+            <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+          </div>
+        </div>       
         <div class="col-md-12 col-sm-12">
           <div class="form-group">
             <label>Menú</label>
@@ -144,13 +170,13 @@
             <div class="col-md-4 col-sm-12 text-right">
               <div class="form-group">
                 <label>Precio Unitario</label>
-                <h1>{{ information_product.price | currency('Q',',',2,'.','front',true) }}</h1>
+                <h1>{{ information_product.price | currency('Q ',',',2,'.','front',true) }}</h1>
               </div>
             </div>     
             <div class="col-md-4 col-sm-12 text-right">
               <div class="form-group">
                 <label>Sub Total</label>
-                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q',',',2,'.','front',true) }}</h1>
+                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q ',',',2,'.','front',true) }}</h1>
               </div>
             </div>   
             <div class="col-md-12 col-sm-12">
@@ -179,7 +205,14 @@
             <div class="col-md-12 col-sm-12 text-right">
               <p><label style="font-size:32px;">Pedido #</label> <label style="font-size:48px;">{{ no_reservation }}</label></p>
             </div>  
-            <hr>         
+            <hr>  
+            <div class="col-md-12 col-sm-12 text-right"> 
+              <div class="form-group">
+                <label>Monto disponible</label>
+                <br>
+                <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+              </div>
+            </div>                    
             <div class="col-md-12 col-sm-12">
               <div class="position-relative p-5 bg-green">
                 <div class="ribbon-wrapper ribbon-xl">
@@ -190,7 +223,7 @@
                 <p>En esta sección mostraremos el <br>
                 monto total del pedido.</p>
                 <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
-                  <label>{{ total | currency('Q',',',2,'.','front',true) }}</label>
+                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>
                 </div>             
               </div>       
             </div>
@@ -215,8 +248,8 @@
                   <tr v-bind:key="index" style="font-size: 14px;">
                       <td class="text-center" v-text="item.quantity"></td>
                       <td v-text="item.producto"></td>
-                      <td class="text-right">{{ item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
-                      <td class="text-right">{{ item.sub_total | currency('Q',',',2,'.','front',true) }}</td>
+                      <td class="text-right">{{ item.sale_price | currency('Q ',',',2,'.','front',true) }}</td>
+                      <td class="text-right">{{ item.sub_total | currency('Q ',',',2,'.','front',true) }}</td>
                       <td class="text-center"> 
                           <button class="btn btn-danger btn-sm" @click="quitarProductDetail(index)">
                             Quitar
@@ -227,7 +260,7 @@
               </tbody> 
               <tfoot style="font-size: 18px;">
                 <td class="text-right" colspan="3"><b>Total</b></td>
-                <td class="text-right"><b>{{ total | currency('Q',',',2,'.','front',true) }}</b></td>
+                <td class="text-right"><b>{{ total | currency('Q ',',',2,'.','front',true) }}</b></td>
               </tfoot>           
             </table>
           </div>
@@ -236,7 +269,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" v-if="!loading_detail" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" v-if="!loading_detail && amount_available" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                       </div>
@@ -268,6 +301,7 @@ export default {
       loading_detail: false,
       no_reservation: '',
       calendario: [],
+      codes: [],
       title: '',
       items: {},
       products: [],
@@ -275,6 +309,8 @@ export default {
       quantity: '',
       observation: '',
       total: 0,
+      amount_available: false,
+      disponibility: 0,
       information_product: {
         category: '',
         marca: '',
@@ -283,6 +319,7 @@ export default {
       },
       form: {
         id: null,
+        code: null,
         order: '',
         title: '',
         description: '',
@@ -303,6 +340,7 @@ export default {
   created() {
     let self = this;
     self.form.schools_id = self.$store.state.school.schools_id
+    self.getCodes()
     self.getCalendario()
   },
 
@@ -327,6 +365,14 @@ export default {
         }
       
       return error
+    },
+
+    getCodes() {
+      let self = this
+      self.codes = []
+      var school = self.$store.state.school
+      school.school.code_high_school == null ? '' : self.codes.push({id: school.school.code_high_school, name: school.school.code_high_school})
+      school.school.code_primary == null ? '' : self.codes.push({id: school.school.code_primary, name: school.school.code_primary})    
     },
 
     getCalendario(){
@@ -407,6 +453,7 @@ export default {
         self.no_reservation = ''
         self.form.id = null
         self.form.order = null
+        self.form.code = null
         self.form.title = null
         self.form.description = null
         self.form.date = d.setDate(d.getDate() - 2)
@@ -431,18 +478,19 @@ export default {
     //funcion para guardar registro
     create(){
       let self = this
-      let data = self.form
-      data.order = self.no_reservation
-      data.type_order = self.title
 
       self.$swal({
         title: "Verificar",
-        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ data.order + "?",
+        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
         type: "info",
         showCancelButton: true
       }).then((result) => {
-          self.loading = true
           if (result.value) {
+            self.loading = true
+            let data = self.form
+            data.order = self.no_reservation
+            data.code = self.form.code.id
+            data.type_order = self.title            
             self.$store.state.services.orderService
               .create(data)
               .then(r => {
@@ -481,51 +529,66 @@ export default {
     addProductDetail(){
       let self = this
       let encontro = false
-
       self.loading_detail = true
-      self.$validator.validateAll("detail").then((result) => {
-          if (result) {
-            self.form.detail_order.forEach(function(item) {
-              if(item.products_id == self.product_id.id){
-                self.loading_detail = false
-                encontro = true
-                self.$swal({
-                  title: "Advertencia",
-                  text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
-                  type: "warning",
-                  showCancelButton: true
-                }).then((result) => {
-                    if (result.value) {
 
-                      self.total = self.information_product.sub_total + self.total;
-                      item.quantity = item.quantity + self.quantity
-                      item.sub_total = self.information_product.sub_total + item.sub_total
+      if(self.disponibility > self.information_product.sub_total)
+      {
+        self.$validator.validateAll("detail").then((result) => {
+            if (result) {
+              self.form.detail_order.forEach(function(item) {
+                if(item.products_id == self.product_id.id){
+                  self.loading_detail = false
+                  encontro = true
+                  self.$swal({
+                    title: "Advertencia",
+                    text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
+                    type: "warning",
+                    showCancelButton: true
+                  }).then((result) => {
+                      if (result.value) {
 
-                      self.limpiarInputDetail()
-                      return                      
-                    }
-                });
-              }
-            })
+                        self.total = self.information_product.sub_total + self.total;
+                        item.quantity = item.quantity + self.quantity
+                        item.sub_total = self.information_product.sub_total + item.sub_total
+                        self.disponibility = self.disponibility - self.information_product.sub_total
 
-            if(self.form.detail_order.length == 0 || encontro == false ){
-              self.total = self.information_product.sub_total + self.total;
-              self.form.detail_order.push({ quantity:self.quantity,
-                                            sale_price:self.product_id.price,
-                                            sub_total:self.information_product.sub_total,                                            
-                                            observation:self.observation,
-                                            products_id:self.product_id.id, 
-                                            producto:self.product_id.name})
-              self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)    
-            
-              self.limpiarInputDetail()
-              self.loading_detail = false                
-            }   
-          } else {
-            self.$toastr.warning('los datos ingresados no son correctos.', 'advertencia')
-            self.loading_detail = false
-          }
-      });
+                        self.limpiarInputDetail()
+                        return                      
+                      }
+                  });
+                }
+              })
+
+              if(self.form.detail_order.length == 0 || encontro == false ){
+                self.total = self.information_product.sub_total + self.total;
+                self.form.detail_order.push({ quantity:self.quantity,
+                                              sale_price:self.product_id.price,
+                                              sub_total:self.information_product.sub_total,                                            
+                                              observation:self.observation,
+                                              products_id:self.product_id.id, 
+                                              producto:self.product_id.name})
+                self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)  
+                self.disponibility = self.disponibility - self.information_product.sub_total  
+              
+                self.limpiarInputDetail()
+                self.loading_detail = false                
+              }   
+            } else {
+              self.$toastr.warning('los datos ingresados no son correctos.', 'advertencia')
+              self.loading_detail = false
+            }
+        });
+      }
+      else
+      {
+        self.loading_detail = false
+        self.$swal({
+          title: "Error",
+          text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ self.information_product.sub_total.toFixed(2),
+          type: "error",
+          showCancelButton: false
+        })        
+      }
     },
 
     //Limpiar información detalle del pedido (inputs)
@@ -544,17 +607,32 @@ export default {
     quitarProductDetail(index) {
       let self = this
       self.total = self.total - self.form.detail_order[index].sub_total
+      self.disponibility = self.disponibility - self.form.detail_order[index].sub_total
       self.form.detail_order.splice(index, 1);
     },    
 
     //Mostrar información del producto seleccionado
     information(data){
       let self = this
-      console.log(data.price)
       self.information_product.price = data.price
       self.information_product.category = data.category
       self.information_product.marca = data.marca
     },
+
+    balance(){
+      let self = this
+      self.loading = true
+      self.$store.state.services.reservationService
+        .getMoney(self.form.code.id, self.title)
+        .then(r => {
+          self.loading = false
+          if( self.interceptar_error(r) == 0) return
+          self.disponibility = r.data.data[0].balance - r.data.data[0].subtraction_temporary
+          self.disponibility = self.disponibility - self.total
+          self.amount_available = true
+        })
+        .catch(r => {});
+    }
   },
   computed: {
     llamar_informacion(){

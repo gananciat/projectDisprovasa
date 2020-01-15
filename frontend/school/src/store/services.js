@@ -16,6 +16,10 @@ import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
 
+/* IMPORT DASHBOARD */
+import GraphService from '../services/GraphService'
+import InformationSchoolService from '../services/InformationSchoolService'
+
 // Axios Configuration
 let baseUrl = 'http://sistematio.test/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
@@ -78,5 +82,8 @@ export default {
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
-    
+
+    /* EXPORT DASHBOARD */
+    graphService: new GraphService(Axios, baseUrl),
+    informationschoolService: new InformationSchoolService(Axios, baseUrl),
 }

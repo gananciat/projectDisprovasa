@@ -7,6 +7,11 @@ class CalendarySchoolService {
         this.baseUrl = `${baseUrl}calendar_school`
     }
 
+    getAll() {
+        let self = this;
+        return self.axios.get(`${self.baseUrl}`);
+    }
+
     get(id) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${id}`);

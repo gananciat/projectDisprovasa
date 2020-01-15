@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\Price;
 use App\Models\Category;
-use App\Models\Quantify;
-use App\Models\Sentence;
 use App\Models\DetailOrder;
 use App\Models\Presentation;
+use App\Models\Price;
+use App\Models\PurcharseDetail;
+use App\Models\Quantify;
+use App\Models\Sentence;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -17,7 +19,7 @@ class Product extends Model
     const UTILES = 'UTILES';
 
     protected $table = 'products';
-    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty','stock'];
+    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty','stock','stock_temporary'];
     
     public function setNameAttribute($value) {
         $this->attributes['name'] = mb_strtoupper($value);
@@ -54,6 +56,12 @@ class Product extends Model
 
     public function quantify()
     {
-        return $this->hasOne(Quantify::class,'products_id');
+        $year = Carbon::now()->year;
+        return $this->hasOne(Quantify::class,'products_id')->where('year',$year);
+    }
+
+    public function purchase_detail()
+    {
+        return $this->hasMany(PurcharseDetail::class);
     }
 }

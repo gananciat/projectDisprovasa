@@ -12,6 +12,7 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->string('order')->unique();
             $table->string('title');
+            $table->string('code',30);
             $table->string('description',1000)->nullable();
             $table->string('type_order');
             $table->date('date');

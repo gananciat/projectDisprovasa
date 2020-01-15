@@ -234,7 +234,7 @@
                             </div>
                             <div class="card">
                               <div class="text-center">
-                                <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : 'src/assets/logo_empty.png'">
+                                <img class="product-image" style="max-height: 300px;" :src="logo !== ''?logo : $store.state.base_url+'img/logo_empty.png'">
                               </div>
                             </div>
                           </div>
@@ -425,7 +425,7 @@
                                 <td style="vertical-align:middle;" class="text-center">
                                   <button type="button" class="btn btn-success btn-sm" v-b-tooltip title="agregar teléfono" @click="viewModalPhone(item.person.id)"><i class="fa fa-phone-square"></i></button> 
                                   <hr>
-                                  <template v-for="(item_phone, index_phone) in item.person.phons">
+                                  <template v-for="(item_phone, index_phone) in item.person.phones">
                                     <b-button v-bind:key="index_phone" class="btn btn-sm" style="font-size: 10px;"  :variant="color(item_phone.company.name)">
                                       {{ item_phone.company.name }}
                                       <b-badge variant="light">{{ item_phone.number }}<span class="sr-only"></span></b-badge>
@@ -709,11 +709,11 @@ export default {
       self.loading = true
       let data = self.form
       data.logo = self.logo
-      data.municipalities_id = self.form.municipalities_id.id
        
       self.$store.state.services.schoolService
         .update(data)
         .then(r => {
+          data.municipalities_id = self.form.municipalities_id.id
           self.loading = false
           if( self.interceptar_error(r) == 0) return
           self.$toastr.success('registro actualizado con exito', 'exito')  

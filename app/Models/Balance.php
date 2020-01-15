@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Balance extends Model
 {
+    const ALIMENTACION = 'ALIMENTACION';
+    const GRATUIDAD = 'GRATUIDAD';
+    const UTILES = 'UTILES';
+
     protected $table = 'balances';
     protected $fillable = ['balance','start_date','end_date','schools_id',
                           'people_id','year','subtraction','subtraction_temporary','code','type_balance','current','disbursement_id'];

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApiController;
+use App\Models\Balance;
 use App\Models\DetailOrder;
 use App\Models\Month;
 use App\Models\OrderStatus;
@@ -83,6 +84,7 @@ class OrderController extends ApiController
             'detail_order.sale_price.*' => 'required|numeric',
             'detail_order.observation.*' => 'nullable|max:125',
             'detail_order.products_id.*' => 'required|integer|exists:products,id',
+            'code' => 'required',
         ];
         
         $this->validate($request, $rules, $messages);
@@ -117,6 +119,7 @@ class OrderController extends ApiController
                 $insert_orden->people_id = Auth::user()->people_id;                
                 $insert_orden->months_id = $mes->id;             
                 $insert_orden->years_id = $anio->id;
+                $insert_orden->code = $request->code;
                 $insert_orden->save();
 
                 for ($i=0; $i < count($request->detail_order); $i++) { 
@@ -138,26 +141,50 @@ class OrderController extends ApiController
                     $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                     $insert_progreso_orden->save();
 
-                    $buscar_stock = Product::find($insert_detalle_orden->products_id);
-                    $stock = !is_null($buscar_stock) ? $buscar_stock->stock : 0;
+                    $product = Product::find($insert_detalle_orden->products_id);
                     
                     $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
 
                     if(is_null($insert_quantify)) {
                         $insert_quantify = new Quantify();
-                        $insert_quantify->sumary_schools = $insert_detalle_orden->quantity;
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools;
+                        $insert_quantify->year = $anio->year;
+                        $insert_quantify->products_id = $product->products_id;
+                
+                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+        
+                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
+                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                        }
+                
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
+                
                     } else {
-                        $insert_quantify->sumary_schools = $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - ($insert_quantify->sumary_purchase + $stock);
+                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                        
+                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
+                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                        }
+                
+                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
 
-                    $insert_quantify->year = $anio->year;
-                    $insert_quantify->products_id = $insert_detalle_orden->products_id;
-                    $insert_quantify->save();
+                    $balance = Balance::where([
+                        ['code',$insert_orden->code],
+                        ['schools_id',$insert_orden->schools_id],
+                        ['type_balance',$insert_orden->type_order],
+                        ['current',true]
+                    ])->first();
 
-                    $insert_orden->total = $insert_orden->total + $insert_detalle_orden->subtotal;
+                    $insert_orden->total += $insert_detalle_orden->subtotal;
+                    $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
+
+                    if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
+                        return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$request->code, 422);
+
+                    $insert_quantify->save();
+                    $product->save();
                     $insert_orden->save();
+                    $balance->save();
                 }
 
             DB::commit();
@@ -272,6 +299,16 @@ class OrderController extends ApiController
 
             DB::beginTransaction();
 
+                $balance = Balance::where([
+                    ['code',$order->code],
+                    ['schools_id',$order->schools_id],
+                    ['type_order',$order->type_order],
+                    ['current',true]
+                ])->first();
+
+                $balance->subtraction_temporary -= $order->total;
+                $balance->save();
+
                 $detalle_orden = DetailOrder::where([
                     ['orders_id','=',$order->id],
                     ['complete','=',true]
@@ -284,8 +321,8 @@ class OrderController extends ApiController
                         ProgressOrder::where('detail_orders_id',$value->id)->delete();
 
                         $buscar = Quantify::where('products_id',$value->products_id)->where('year',date('Y'))->first();
-                        $buscar->sumary_schools = $buscar->sumary_schools - $value->quantity;
-                        $buscar->subtraction = $value->quantity + $buscar->sumary_purchase;
+                        $buscar->sumary_purchase += $value->quantity;
+                        $buscar->subtraction = $buscar->sumary_schools - $buscar->sumary_purchase;
                         $buscar->save();
 
                         $value->forceDelete();

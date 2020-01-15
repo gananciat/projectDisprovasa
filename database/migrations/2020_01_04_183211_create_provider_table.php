@@ -11,7 +11,7 @@ class CreateProviderTable extends Migration
         Schema::create('provider', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nit')->unique();
-            $table->string('name',250)->unique();
+            $table->string('name',200);
             $table->string('direction'); 
             $table->string('email')->nullable();
             $table->unsignedBigInteger('municipalities_id');

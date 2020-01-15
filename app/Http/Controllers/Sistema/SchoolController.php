@@ -227,8 +227,8 @@ class SchoolController extends ApiController
                                     $query->where('current', true);
                                 },
                                 'people.person:id,cui,name_one,name_two,last_name_one,last_name_two,email,municipalities_id,direction',
-                                'people.person.phons:id,number,companies_id,people_id',
-                                'people.person.phons.company:id,name',
+                                'people.person.phones:id,number,companies_id,people_id',
+                                'people.person.phones.company:id,name',
                                 'people.person.municipality:id,name,departaments_id',
                                 'people.person.municipality.departament:id,name',
                                 'people.person.user:id,verified,people_id,rols_id,current_school',

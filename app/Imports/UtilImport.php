@@ -33,6 +33,7 @@ class UtilImport implements ToCollection
                         $insert->name = mb_strtoupper($value[0]).', '.mb_strtoupper($value[2]);
                         $insert->propierty = Product::UTILES;
                         $insert->categories_id = $category->id;
+                        $insert->stock = random_int(1,100);
                         $insert->presentations_id = $insert_presentacion->id;
                         $insert->save();
     

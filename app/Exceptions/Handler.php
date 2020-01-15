@@ -132,13 +132,16 @@ class Handler extends ExceptionHandler
                     break; 
                 case 1054:
                     $message = "No se encuentra la columna en la tabla";
-                    break;                
+                    break;
+                case 1241:
+                    $message = "El operando debe contener 1 columna (s)";
+                    break;                    
                 default:
                     $message = "BD";
                     break;                                       
             }
 
-            return $this->errorResponse($message, 422);
+            return $this->errorResponse($exception, 422);
         }
 
         if ($exception instanceof TokenMismatchException)
@@ -167,7 +170,7 @@ class Handler extends ExceptionHandler
             return redirect()->guest('login');
         }
 
-        return $this->errorResponse('No autenticado', 422);
+        return $this->errorResponse('No autenticado', 401);
     }
 
     protected function isFrontend($request)
