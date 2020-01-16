@@ -66,11 +66,11 @@ $factory->define(Transaction::class, function (Faker $faker) {
 });*/
 
 $factory->define(Provider::class, function (Faker $faker) {
-    $municipality = Municipality()::all()->random();
+    $municipality = Municipality::all()->random();
     return [
         'nit' => rand(1000000, 99999999),
-        'name' =>'proveedor '.numberBetween(1, 50),
-        'direction'=>'calle '.numberBetween(1,25),
+        'name' =>'proveedor '.$faker->numberBetween(1, 50),
+        'direction'=>'calle '.$faker->numberBetween(1,25),
         'municipalities_id' => $municipality->id
     ];
 });

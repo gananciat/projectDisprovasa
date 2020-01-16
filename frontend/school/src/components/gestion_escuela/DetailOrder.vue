@@ -13,6 +13,39 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
+            <!-- Modal para nuevo registro -->
+            <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
+                <form>
+                    <div class="form-group">
+                        <label>Fecha para la entrega del pedido</label>
+                        <div class="block">
+                            <el-date-picker
+                                v-model="form.date"
+                                type="date"
+                                data-vv-name="date"
+                                data-vv-as="fecha"
+                                v-validate="'required|date_format:yyyy-MM-dd'"
+                                :class="{'input':true,'has-errors': errors.has('menu.date')}"                
+                                placeholder="Seleccionar una fecha"
+                                format="dd/MM/yyyy"
+                                :align="'center'"
+                                @change="gh"
+                                :picker-options="pickerOptions"
+                                data-vv-scope="menu"
+                                value-format="yyyy-MM-dd">
+                            </el-date-picker>
+                        </div>
+                        <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button type="button" class="btn btn-danger btn-sm" @click="cerrarRepeat"><i class="fa fa-undo"></i> Cancelar</button>
+                            <button type="button" class="btn btn-primary btn-sm" @click="creatRepeat"><i class="fa fa-save"></i> Guardar</button>
+                        </div>
+                    </div>
+                </form>
+            </b-modal>
+
             <div class="col-md-12 col-sm-12">
                 <div class="card border-info">
                     <div class="card-header">
