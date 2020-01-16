@@ -17,6 +17,11 @@ class productService {
         return self.axios.get(`${self.baseUrl}/${$id}/prices`);
     }
 
+    getPurchases($id) {
+        let self = this;
+        return self.axios.get(`${self.baseUrl}/${$id}/purchases`);
+    }
+
     get(propierty) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${propierty}/edit`);

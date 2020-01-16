@@ -72,9 +72,63 @@
                       </template>
 
                       <template slot="row-details"  slot-scope="data">
-                          <el-tabs type="border-card">
-                            {{ data.item.product.name }}
-                          </el-tabs>
+                            <div v-if="providers.length > 0" class="row" v-loading="loading_table">
+                              <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4" v-if="last_purchase !== null">
+                                  <div class="card">
+                                    <div class="card-header">
+                                      <h3 class="card-title">Ultima compra</h3>
+                                    </div>
+                                    <div class="card-body p-0">
+                                      <div class="form-group">
+                                        <div class="col-sm-12 invoice-col">
+                                          <address>
+                                            <strong>{{last_purchase.purchase.provider.name}}.</strong><br>
+                                            <strong>NIT: </strong> {{last_purchase.purchase.provider.nit}}<br>
+                                            <strong>Precio: </strong> {{last_purchase.purcharse_price | currency('Q ')}}<br>
+                                            <strong>Cantidad: </strong> {{last_purchase.quantity}}<br>
+                                            <strong>Merma: </strong> {{last_purchase.decrease}}<br>
+                                          </address>
+                                        </div>
+                                        <!-- /.col -->
+                                      </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                  </div>
+                              </div>
+                              <div class="col-md-8 col-sm-8 col-lg-8 col-xs-12">
+                                <div class="card" style="font-size: 14px;">
+                                  <!-- /.card-header -->
+                                  <div class="card-body">
+                                    <h3 class="card-title">Precios promedio por proveedor</h3>
+
+                                    <table class="table table-condensed">
+                                      <thead>
+                                        <tr>
+                                          <th>Proveedor</th>
+                                          <th>Precio promedio</th>
+                                          <th>Cantidad comprada</th>
+                                          <th>Merma</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr v-for="(item,i) in providers" :key="item.provider">
+                                          <td>{{item.provider}}</td>
+                                          <td>{{item.average | currency('Q ')}}</td>
+                                          <td>{{item.quantity}}</td>
+                                          <td>{{item.decrease}}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <!-- /.card-body -->
+                                </div>
+                              </div>
+                            </div>
+                            <div v-else>
+                              <div class="text-center">
+                                <label> sin historial</label>
+                              </div>
+                            </div>
                       </template>
 
                     </b-table>
@@ -128,7 +182,10 @@ export default {
   data() {
     return {
       loading: false,
+      loading_table: false,
       items: [],
+      providers: [],
+      last_purchase: null,
       fields: [
         { key: 'product_name', label: 'Producto', sortable: true },
         { key: 'subtraction', label: 'Faltante', sortable: true },
@@ -161,12 +218,80 @@ export default {
       self.$store.state.services.quantifyService
         .getAll()
         .then(r => {
-          self.loading = false;
+          self.loading = false
           r.data.data = r.data.data.map(obj=>({ ...obj, _showDetails: false}))
           self.items = r.data.data
           self.totalRows = self.items.length
         })
         .catch(r => {});
+    },
+
+    //obtener detalle de compras
+    getPurchases($id) {
+      let self = this;
+      self.loading_table = true;
+
+      self.$store.state.services.productService
+        .getPurchases($id)
+        .then(r => {
+          self.loading_table = false
+          self.last_purchase = null
+          r.data.data = r.data.data.filter(x=>!x.purchase.cancel)
+          if(r.data.data.length > 0){
+            self.last_purchase = r.data.data[0]
+          }
+          self.mapDataProduct(r.data.data)
+        })
+        .catch(r => {});
+    },
+
+    //mapear data información
+    mapDataProduct(data){
+      let self = this
+      var providers = _(data)
+          .groupBy('purchase.provider_id')
+          .map(function(items, provider_id) {
+           var purchase = items.find(x=>x.purchase.provider_id === parseInt(provider_id))
+          return {
+              provider: purchase.purchase.provider.name,
+              average: self.getAverage(items),
+              quantity: self.getQuantity(items),
+              decrease: self.getDecrease(items)
+          };
+      }).value();
+
+      self.providers = _.sortBy(providers, o => o.average)
+
+      /*providers.sort(function(a, b) {
+          return parseFloat(a.average) - parseFloat(b.average);
+      });*/
+
+
+    },
+
+    //obtener promedio
+    getAverage(items){
+      var total = items.reduce((a,b)=>{
+          return a + parseFloat(b.purcharse_price)
+      },0)
+
+      return total / items.length
+    },
+
+    //obtener cantidad
+    getQuantity(items){
+      var total = items.reduce((a,b)=>{
+          return a + b.quantity
+      },0)
+      return total
+    },
+
+    //obtener merma
+    getDecrease(items){
+      var total = items.reduce((a,b)=>{
+          return a + b.decrease
+      },0)
+      return total
     },
 
     showDetails(data){
@@ -177,6 +302,7 @@ export default {
       }
       self.items.map(a=>a._showDetails=false)
       data._showDetails = true
+      self.getPurchases(data.products_id)
     },
   },
 
