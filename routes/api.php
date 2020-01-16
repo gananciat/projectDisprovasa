@@ -72,6 +72,7 @@ Route::get('graph_school_order', 'Dashboard\School\GraphController@school_order'
 Route::get('information_disbursement_school/{id}', 'Dashboard\School\InformationController@disbursement_school');
 
 Route::get('dashboard_graph_purchases', 'Dashboard\sistema\GraphController@purchasesLastGraph');
+Route::get('dashboard_graph_orders', 'Dashboard\sistema\GraphController@ordersLastGraph');
 
 
 

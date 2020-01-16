@@ -30,7 +30,7 @@
               <div class="card-body">
                 <div class="d-flex">
                   <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">30</span>
+                    <span class="text-bold text-lg">{{ getTotal(data) }}</span>
                     <span>compras en total</span>
                   </p>
                 </div>
@@ -73,6 +73,7 @@
 
 <script>
 import moment from 'moment'
+import graps from './dashboard/graps'
 export default {
   name: 'Default',
   data() {
@@ -109,7 +110,10 @@ export default {
       var data = []
       var series = []
       self.data.forEach(item => {
-        data.push(parseFloat(item.sum))
+        data.push({
+          y: parseFloat(item.sum),
+          name: moment().month(item.month-1).format("MMM")+' '+item.year
+        })
       })
       series.push({
           name: 'COMPRAS',
@@ -126,40 +130,18 @@ export default {
       })
       return labels
     },
+
+    getTotal(data){
+      var total = data.reduce((a,b)=>{
+              return a + b.total
+          },0)
+      return total
+    }
     
   },
    computed: {
         chartOptions() { 
-            return {
-                    chart: {  type: this.modo, height: (9 / 16 * 100) + '%'},
-                    title: {  text: this.title  },
-                    series: this.getSeries(),
-                    xAxis: {
-                        categories: this.getLabels()
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'COMPRAS '
-                        }
-                    },
-                    plotOptions: {
-                        line: {
-                            dataLabels: {
-                                enabled: true
-                            },
-                            enableMouseTracking: false
-                        },
-                    pie: {
-                      dataLabels: {
-                        formatter: function() {
-                          var sliceIndex = this.point.index;
-                          var sliceName = this.series.chart.axes[0].categories[sliceIndex];
-                          return sliceName
-                        }
-                      }
-                    }
-                    },
-              }
+          return graps.getData(this.getSeries(), this.getLabels(),this.modo)
         },
     },
 }
