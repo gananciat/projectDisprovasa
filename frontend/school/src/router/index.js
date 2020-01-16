@@ -36,6 +36,7 @@ const routes = [
     { path: '/school/:id/management/order/new/alimentacion/:type_order', name: 'NewOrderA', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/:id/management/order/new/gratuidad/:type_order', name: 'NewOrderG', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/:id/management/order/new/utiles/:type_order', name: 'NewOrderU', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/:id/management/order/new/valijas/:type_order', name: 'NewOrderV', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/management/order/detail/:id', name: 'DetailOrder', component: DetailOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/management/calendar', name: 'CalendarySchool', component: CalendarySchool, beforeEnter: multiguard([isLoggedIn]) },
 ]

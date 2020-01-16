@@ -16,7 +16,9 @@
             <div class="col-md-12 col-sm-12">
                 <div class="card border-info">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="fa fa-list-ol"></i> Pedido # {{ items.order }}</h3>
+                        <h3 class="card-title">
+                            <i class="fa fa-list-ol"></i> Pedido # {{ items.order }}                               
+                        </h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -61,13 +63,20 @@
                                     <dd>{{ items.total | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>Disponible hasta este pedido</dt>
                                     <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>
+                                        <br><br>
+                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items.id)">
+                                            <i class="fa fa-history">
+                                            </i>
+                                        </button>                                         
+                                    </dt>
                                 </dl>                                
                             </div>                            
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-sm-12">
+            <div class="col-md-12 col-sm-12" v-if="!items.complete">
                 <div class="card text-center border-primary">
                     <div class="card-header bg-primary text-white">
                         <div>Formulario para agregar pedido al detalle</div>
@@ -220,7 +229,10 @@
                                             <tr v-bind:key="index">
                                                 <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">{{ index+1 }}</td>
                                                 <td style="vertical-align:middle; font-size: 18px; text-align: center; font-weight: bold;">
-                                                    <div class="form-group">
+                                                    <p v-if="item.complete">
+                                                        {{ item.quantity }}
+                                                    </p>                                                    
+                                                    <div class="form-group" v-if="!item.complete">
                                                         <el-input-number v-model="item.quantity" size="mini" 
                                                         :precision="0" :step="1" :min="item.progress.purchased_amount == 0 ? Number(item.progress.purchased_amount+1) : Number(item.progress.purchased_amount)" :max="10000"
                                                         data-vv-name="edit.quantity"
@@ -229,14 +241,14 @@
                                                         data-vv-scope="edit"
                                                         :class="{'input':true,'has-errors': errors.has('edit.quantity')}"></el-input-number> <br>
                                                         <FormError :attribute_name="'edit.quantity'" :errors_form="errors"> </FormError>
-                                                    </div>             
+                                                    </div>                                                                
                                                 </td>
                                                 <td style="vertical-align:middle;">{{ item.product.name+' / '+ item.product.presentation.name }}</td>
                                                 <td style="vertical-align:middle;">
-                                                    <p v-if="item.progress.purchased_amount == item.quantity">
+                                                    <p v-if="item.complete">
                                                         {{ item.observation }}
                                                     </p>
-                                                    <div class="form-group" v-if="item.progress.purchased_amount != item.quantity">
+                                                    <div class="form-group" v-if="!item.complete">
                                                         <textarea class="form-control" 
                                                         rows="3" 
                                                         placeholder="observación del producto"
@@ -264,7 +276,7 @@
                                                 <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
                                                 <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.subtotal = item.quantity * item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
                                                 <td style="vertical-align:middle; text-align: center;">
-                                                    <button type="button" v-if="item.progress.purchased_amount != item.quantity" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
+                                                    <button type="button" v-if="!item.complete" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
                                                     <button type="button" v-if="item.progress.purchased_amount == 0" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(item)"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>                       
@@ -595,6 +607,20 @@ export default {
             }
             // Directly return the joined string
         return splitStr.join(' '); 
+    },
+    
+    //repetir pedido, comprar si tiene dinero suficiente para realizar el pedido de nuevo
+    repeatOrder(id){
+      let self = this;
+      self.loading = true;
+
+      self.$store.state.services.repeatorderService
+        .get(id)
+        .then(r => {
+          self.loading = false; 
+          if( self.interceptar_error(r) == 0) return
+        })
+        .catch(r => {});
     }    
   },
   computed: {

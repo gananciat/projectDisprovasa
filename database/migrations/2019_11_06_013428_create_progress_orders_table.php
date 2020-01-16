@@ -12,6 +12,7 @@ class CreateProgressOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->decimal('purchased_amount',10,2); //5
             $table->decimal('original_quantity',10,2); //10
+            $table->boolean('check')->default(0);
             $table->unsignedBigInteger('order_statuses_id');
             $table->foreign('order_statuses_id')->references('id')->on('order_statuses');
             $table->unsignedBigInteger('detail_orders_id');

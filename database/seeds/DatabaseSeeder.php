@@ -287,7 +287,7 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' ALIMENTACION'.PHP_EOL;
 
                 $insert_balace = new Balance();
                 $insert_balace->balance = random_int(15000,30000);
@@ -303,7 +303,7 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' GRATUIDAD'.PHP_EOL;
 
                 $insert_balace = new Balance();
                 $insert_balace->balance = random_int(15000,30000);
@@ -319,7 +319,23 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' UTILES'.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(5000,10000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_high_school;
+                $insert_balace->type_balance = Balance::VALIJA_DIDACTICA;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PREPA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' VALIJA_DIDACTICA'.PHP_EOL;
             }
 
             if(!is_null($value->code_primary)){
@@ -337,7 +353,7 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' ALIMENTACION'.PHP_EOL;
 
                 $insert_balace = new Balance();
                 $insert_balace->balance = random_int(50000,250000);
@@ -353,7 +369,7 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' GRATUIDAD'.PHP_EOL;
 
                 $insert_balace = new Balance();
                 $insert_balace->balance = random_int(50000,250000);
@@ -369,7 +385,23 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->current = true;
                 $insert_balace->disbursement_id = 1;
                 $insert_balace->save();
-                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.PHP_EOL;
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' UTILES'.PHP_EOL;
+
+                $insert_balace = new Balance();
+                $insert_balace->balance = random_int(10000,20000);
+                $insert_balace->start_date = $fecha_p;
+                $insert_balace->end_date = $fecha_f;
+                $insert_balace->schools_id = $value->id;
+                $insert_balace->people_id = 1;
+                $insert_balace->year = date('Y');
+                $insert_balace->subtraction = 0;
+                $insert_balace->subtraction_temporary = 0;
+                $insert_balace->code = $value->code_primary;
+                $insert_balace->type_balance = Balance::VALIJA_DIDACTICA;
+                $insert_balace->current = true;
+                $insert_balace->disbursement_id = 1;
+                $insert_balace->save();
+                echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' VALIJA_DIDACTICA'.PHP_EOL;
             }
         }
 

@@ -106,6 +106,8 @@ class OrderController extends ApiController
                         break;
                     case 'utiles':
                         $propierty = Order::UTILES;
+                    case 'valija didactica':
+                        $propierty = Order::VALIJA_DIDACTICA;
                         break;
                 }
 
@@ -177,6 +179,9 @@ class OrderController extends ApiController
 
                     $insert_orden->total += $insert_detalle_orden->subtotal;
                     $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
+
+                    if($balance->balance == $balance->subtraction_temporary)
+                        $balance->current = true;
 
                     if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$request->code, 422);

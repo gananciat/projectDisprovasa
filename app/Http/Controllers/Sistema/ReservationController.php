@@ -68,7 +68,7 @@ class ReservationController extends ApiController
     {
         $balance = Balance::with('disbursement')->where('code',$reservation)->where('current',true)->get();
 
-        if(!is_null($balance))
+        if(count($balance) > 0)
             return $this->showAll($balance);
         else
             return $this->errorResponse('El código '.$reservation.', no tiene asignado monto para el desembolso.',422);
@@ -110,7 +110,6 @@ class ReservationController extends ApiController
 
     public function money($code, $type_order)
     {
-
         switch ($type_order) {
             case 'alimentacion':
                 $propierty = Balance::ALIMENTACION;
@@ -121,13 +120,15 @@ class ReservationController extends ApiController
             case 'utiles':
                 $propierty = Balance::UTILES;
                 break;
+            case 'valija didactica':
+                $propierty = Balance::VALIJA_DIDACTICA;
         }
 
         $balance = Balance::with('disbursement')->where('code',$code)->where('type_balance',$propierty)->where('current',true)->get();
 
-        if(!is_null($balance))
+        if(count($balance) > 0)
             return $this->showAll($balance);
         else
-            return $this->errorResponse('El código '.$reservation.', no tiene asignado monto para el desembolso.',422);
+            return $this->errorResponse('El código '.$code.', no tiene asignado monto para el desembolso.',422);
     }
 }

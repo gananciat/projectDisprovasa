@@ -38,7 +38,7 @@ class UtilImport implements ToCollection
                         $insert->save();
     
                         if($value[3] != ''){
-                            $value[3] = 0;
+                            $value[3] = rand(1, 100)/10;
                         }
                         
                         $insert_price = new Price();

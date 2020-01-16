@@ -130,6 +130,9 @@ class DetailOrderController extends ApiController
                 $order->total += $insert_detalle_orden->subtotal;
                 $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
 
+                if($balance->balance == $balance->subtraction_temporary)
+                    $balance->current = true;
+
                 if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
                     return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
@@ -254,6 +257,9 @@ class DetailOrderController extends ApiController
                     $balance->subtraction_temporary -= $detail_order->subtotal;
                     $order->total = $order->total - $detail_order->subtotal;
 
+                    if($balance->balance != $balance->subtraction_temporary)
+                        $balance->current = false;
+
                     $detail_order->quantity = $request->quantity;
                     $detail_order->subtotal = $detail_order->quantity*$detail_order->sale_price;
                     $detail_order->observation = $request->observation;
@@ -262,6 +268,9 @@ class DetailOrderController extends ApiController
                     //Asignamos el nuevo subtotal al total
                     $balance->subtraction_temporary += $detail_order->subtotal;
                     $order->total = $order->total + $detail_order->subtotal;
+
+                    if($balance->balance == $balance->subtraction_temporary)
+                        $balance->current = true;
 
                     if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
@@ -349,6 +358,10 @@ class DetailOrderController extends ApiController
                     $buscar->sumary_purchase += $detail_order->quantity;
                     $buscar->subtraction = $buscar->sumary_schools - $buscar->sumary_purchase;
                     $buscar->save();
+
+                    if($balance->balance != $balance->subtraction_temporary)
+                        $balance->current = false;
+
                     $balance->save();
                     $detail_order->delete();
                 } else {

@@ -56,6 +56,7 @@ Route::resource('rols', 'Sistema\RolController', ['except' => ['create', 'edit']
 Route::resource('rols.menus', 'Sistema\RolRolMenuController', ['except' => ['create', 'edit']]);
 Route::resource('persons', 'Sistema\PersonController', ['except' => ['create', 'edit']]);
 Route::resource('quantifies', 'Sistema\QuantifyController', ['except' => ['create', 'edit']]);
+Route::resource('repeat_order', 'Sistema\RepeatOrderController', ['except' => ['index', 'create', 'edit', 'update', 'destroy']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

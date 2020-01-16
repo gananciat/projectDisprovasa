@@ -64,6 +64,7 @@ export default {
           { icon: "circle-o", text: "Pedido de alimentación", path: "/school/0/management/order/new/alimentacion/A" },
           { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/0/management/order/new/gratuidad/G" },
           { icon: "circle-o", text: "Pedido de utiles", path: "/school/0/management/order/new/utiles/U" },
+          { icon: "circle-o", text: "Pedido de valijas", path: "/school/0/management/order/new/valijas/V" },
         ]
       }, 
       {

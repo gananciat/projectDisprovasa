@@ -96,6 +96,7 @@
                     <router-link to="/school/0/management/order/new/alimentacion/A" class="btn btn-success">ALIMENTACION</router-link>
                     <router-link to="/school/0/management/order/new/gratuidad/G" class="btn btn-info">GRATUIDAD</router-link>
                     <router-link to="/school/0/management/order/new/utiles/U" class="btn btn-primary">UTILES</router-link>
+                    <router-link to="/school/0/management/order/new/valijas/V" class="btn btn-warning">VALIJAS DIDACTICA</router-link>
                   </b-button-group>                  
                 </div>
               </div>
@@ -130,6 +131,14 @@
 
                           <template v-slot:row-details="data">
                             <div class="row">
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Código </b> {{ data.item.code }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
                               <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
                                 <b>Progreso del pedido</b>
                                 <b-progress :max="data.item.detail_total" style="font-weight: bold; font-size: 14px;" show-progress height="20px" class="w-100 mb-2">
@@ -158,11 +167,15 @@
                               <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
-                              </button>                                
+                              </button>                                                          
                               <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
-                              </button>
+                              </button>   
+                              <button type="button" class="btn btn-info btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(data.item.id)">
+                                  <i class="fa fa-history">
+                                  </i>
+                              </button>  
                           </template>
 
                         </b-table>
@@ -371,6 +384,96 @@
                         </div>
                       </template>                 
                   </el-tab-pane>
+                  <el-tab-pane label="VALIJAS DIDACTICA">
+                    <h1>Pedidos de valijas didactica</h1>
+                    &nbsp;
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+
+                          <template v-slot:row-details="data">
+                            <div class="row">
+                              <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
+                                <b>Progreso del pedido</b>
+                                <b-progress :max="data.item.detail_total" style="font-weight: bold; font-size: 14px;" show-progress height="20px" class="w-100 mb-2">
+                                  <b-progress-bar :value="data.item.detail_complete" :label="`${((data.item.detail_complete / data.item.detail_total) * 100).toFixed(2)}%`"></b-progress-bar>
+                                </b-progress>
+                              </div>
+                            </div>
+                          </template>
+
+                          <template v-slot:cell(order)="data">
+                            <div class="col-sm-12 text-center">
+                              <b-button size="md" @click="data.toggleDetails" class="mr-2">
+                                {{ data.item.order }}
+                              </b-button>
+                            </div>
+                          </template> 
+
+                          <template v-slot:cell(date)="data">
+                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                          </template>                  
+                          <template v-slot:cell(created_at)="data">
+                            {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
+                          </template>                 
+                          <template v-slot:cell(option)="data">    
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
+                                  <i class="fa fa-pencil">
+                                  </i>
+                              </button>                                
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
+                                  <i class="fa fa-trash">
+                                  </i>
+                              </button>
+                          </template>
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template>                 
+                  </el-tab-pane>
                 </el-tabs>
               </div>
             </div>
@@ -487,7 +590,12 @@ export default {
         case '2':
           self.getAll('UTILES')
           self.modalidad = 'UTILES'
-          break;          
+          break;  
+
+        case '3':
+          self.getAll('VALIJA DIDACTICA')
+          self.modalidad = 'VALIJA DIDACTICA'
+          break;         
       }      
     },
 
@@ -628,7 +736,21 @@ export default {
     close(){
         let self= this
         self.edit_form = false
-    }    
+    },
+    
+    //repetir pedido, comprar si tiene dinero suficiente para realizar el pedido de nuevo
+    repeatOrder(id){
+      let self = this;
+      self.loading = true;
+
+      self.$store.state.services.repeatorderService
+        .get(id)
+        .then(r => {
+          self.loading = false; 
+          if( self.interceptar_error(r) == 0) return
+        })
+        .catch(r => {});
+    }
   },
   mounted(){
     $("body").resize()

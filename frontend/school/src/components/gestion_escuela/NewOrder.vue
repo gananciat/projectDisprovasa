@@ -26,19 +26,19 @@
                       <div class="card-header p-0 pt-1">
                         <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                           <li class="nav-item">
-                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
+                            <a :class="'nav-link '+nav_info" @click="inforTab" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
                           </li>
                           <li class="nav-item" v-if="amount_available">
-                            <a class="nav-link" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
+                            <a :class="'nav-link '+nav_ord" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
                           </li>
                         </ul>
                       </div>
                       <div class="card-body">
 <form> 
   <div class="tab-content" id="custom-tabs-one-tabContent">
-    <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+    <div :class="'tab-pane fade '+tab_info" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
       <div class="row">
-        <div class="col-md-2 col-sm-12">
+        <div class="col-md-4 col-sm-12">
           <div class="form-group">
             <label>Fecha para la entrega del pedido</label>
             <div class="block">
@@ -61,7 +61,7 @@
             <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
           </div>
         </div>
-        <div class="col-md-2 col-sm-12">            
+        <div class="col-lg-4 col-md-4 col-sm-12">            
           <div class="form-group">
             <label>Código</label>
             <multiselect v-model="form.code"
@@ -80,13 +80,17 @@
                 <FormError :attribute_name="'menu.code'" :errors_form="errors"> </FormError>
           </div>
         </div> 
-        <div class="col-md-8 col-sm-12 text-right"> 
+        <div class="col-md-4 col-sm-12 text-right"> 
           <div class="form-group">
             <label>Monto disponible</label>
             <br>
-            <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+            <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>  
+            <br>
+            <small>{{ disbursement }}</small>          
           </div>
-        </div>       
+        </div>   
+      </div>    
+      <div class="row">
         <div class="col-md-12 col-sm-12">
           <div class="form-group">
             <label>Menú</label>
@@ -119,7 +123,7 @@
       </div>
     </div>
 
-    <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+    <div :class="'tab-pane fade '+tab_ord" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab" v-if="amount_available">
       <div class="row" v-loading="loading_detail">
         <div class="col-md-8 col-sm-12">
           <div class="row">          
@@ -210,7 +214,9 @@
               <div class="form-group">
                 <label>Monto disponible</label>
                 <br>
-                <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+                <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>  
+                <br>
+                <small>{{ disbursement }}</small>            
               </div>
             </div>                    
             <div class="col-md-12 col-sm-12">
@@ -223,7 +229,7 @@
                 <p>En esta sección mostraremos el <br>
                 monto total del pedido.</p>
                 <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
-                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>
+                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>  
                 </div>             
               </div>       
             </div>
@@ -299,6 +305,10 @@ export default {
     return {
       loading: false,
       loading_detail: false,
+      nav_info: 'active',
+      tab_info: 'show active',
+      nav_ord: '',
+      tab_ord: '',
       no_reservation: '',
       calendario: [],
       codes: [],
@@ -311,6 +321,7 @@ export default {
       total: 0,
       amount_available: false,
       disponibility: 0,
+      disbursement: '',
       information_product: {
         category: '',
         marca: '',
@@ -420,10 +431,22 @@ export default {
             self.loading = false
             self.interceptar_error(r) == 0 ? '' : self.$toastr.success('número de reservación creado', 'exito') 
             self.no_reservation = r.data.data.correlative+'-'+r.data.data.year
+            self.nav_ord = 'active';
+            self.nav_ord = 'show active';
+            self.nav_info = '';
+            self.tab_info = '';            
           })
           .catch(r => {});
       }
 
+    },
+
+    inforTab(){
+      let self = this
+      self.nav_info = 'active';
+      self.tab_info = 'show active';
+      self.nav_ord = '';
+      self.tab_ord = '';
     },
 
     //funcion, validar si se guarda o actualiza
@@ -622,6 +645,8 @@ export default {
     balance(){
       let self = this
       self.loading = true
+      self.amount_available = false
+      self.disponibility = 0
       self.$store.state.services.reservationService
         .getMoney(self.form.code.id, self.title)
         .then(r => {
@@ -629,7 +654,10 @@ export default {
           if( self.interceptar_error(r) == 0) return
           self.disponibility = r.data.data[0].balance - r.data.data[0].subtraction_temporary
           self.disponibility = self.disponibility - self.total
+          self.disbursement = r.data.data[0].disbursement.name
           self.amount_available = true
+          self.form.detail_order = []
+          self.total = 0          
         })
         .catch(r => {});
     }
@@ -640,11 +668,19 @@ export default {
       let renombrar = '';
       let message = ''
       var d = new Date()
+      self.nav_info = 'active';
+      self.tab_info = 'show active';
+      self.nav_ord = '';
+      self.tab_ord = '';
       self.form.title = null
       self.form.description = null
       self.form.date = null
+      self.form.code = null
       self.form.detail_order = []
       self.total = 0
+      self.amount_available = false
+      self.disponibility = 0
+      self.disbursement = ''
       switch (self.$route.params.type_order) {
         case 'A':
           renombrar = 'alimentacion'
@@ -660,7 +696,12 @@ export default {
           renombrar = 'utiles'
           message = 'utiles'
           self.getProduct(renombrar)           
-          break;                        
+          break;  
+        case 'V':
+          renombrar = 'valija didactica'
+          message = 'valijas didactica'
+          self.getProduct('utiles')           
+          break;                      
         default:
           self.$router.push('/school/management/order') 
           break;

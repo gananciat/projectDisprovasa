@@ -58,6 +58,18 @@ class GraphController extends ApiController
                                                                                                                                             ['complete', false],
                                                                                                                                             ['type_order', Order::UTILES]
                                                                                                                                         ]);
+                                                                                                                        },         
+                                                                    'orders as order_complete_v' => function(Builder $query) {
+                                                                                                                            $query->where([
+                                                                                                                                            ['complete', true],
+                                                                                                                                            ['type_order', Order::VALIJA_DIDACTICA]
+                                                                                                                                        ]);
+                                                                                                                        },
+                                                                    'orders as order_incomplete_v' => function(Builder $query) {
+                                                                                                                            $query->where([
+                                                                                                                                            ['complete', false],
+                                                                                                                                            ['type_order', Order::VALIJA_DIDACTICA]
+                                                                                                                                        ]);
                                                                                                                         },                                                                                                                                                                                                                   
                                                                 ])
                                                     ->where('id', PersonSchool::where('people_id', Auth::user()->people_id)->where('current', true)->first()->schools_id)
@@ -103,6 +115,18 @@ class GraphController extends ApiController
                                                                                                                             $query->where([
                                                                                                                                             ['complete', false],
                                                                                                                                             ['type_order', Order::UTILES]
+                                                                                                                                        ]);
+                                                                                                                        },         
+                                                                    'orders as order_complete_v' => function(Builder $query) {
+                                                                                                                            $query->where([
+                                                                                                                                            ['complete', true],
+                                                                                                                                            ['type_order', Order::VALIJA_DIDACTICA]
+                                                                                                                                        ]);
+                                                                                                                        },
+                                                                    'orders as order_incomplete_v' => function(Builder $query) {
+                                                                                                                            $query->where([
+                                                                                                                                            ['complete', false],
+                                                                                                                                            ['type_order', Order::VALIJA_DIDACTICA]
                                                                                                                                         ]);
                                                                                                                         },                                                                                                                                                                                                                   
                                                                 ])

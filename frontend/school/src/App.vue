@@ -22,6 +22,7 @@
       @a="alimentacion"
       @g="gratuidad"
       @u="utiles"
+      @v="valijas"
     ></fab>
 
     <!-- Main Footer -->
@@ -71,6 +72,12 @@ export default {
               icon: 'school',
               tooltip: 'Utiles',
               color: '#007bff'
+          },
+          {
+              name: 'v',
+              icon: 'book',
+              tooltip: 'Valija',
+              color: '#ffc107'
           }
       ]
     }
@@ -84,6 +91,9 @@ export default {
     },    
     utiles(){
       this.$router.push('/school/0/management/order/new/utiles/U') 
+    },    
+    valijas(){
+      this.$router.push('/school/0/management/order/new/valijas/V') 
     }
   },
     computed: {

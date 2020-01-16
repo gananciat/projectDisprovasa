@@ -15,6 +15,7 @@ class CreateProductsTable extends Migration
             $table->decimal('stock_temporary',10,2)->default(0);
             $table->string('propierty');
             $table->boolean('camouflage')->default(0);
+            $table->boolean('persevering')->default(0);
             $table->unsignedBigInteger('categories_id');
             $table->foreign('categories_id')->references('id')->on('categories');
             $table->unsignedBigInteger('presentations_id');

@@ -107,7 +107,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'years_id' => $year->id,
         'months_id' => $month->id,
         'complete' => false,
-        'type_order' => $faker->randomElement([Order::ALIMENTACION, Order::GRATUIDAD, Order::UTILES]),
+        'type_order' => $faker->randomElement([Order::ALIMENTACION, Order::GRATUIDAD, Order::UTILES, Order::VALIJA_DIDACTICA]),
         'code' => $faker->randomElement([$school->code_high_school,$school->code_primary])
     ];
 });
@@ -121,9 +121,13 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         $balance = Balance::where('schools_id',$order->schools_id)->where('type_balance',$order->type_order)->where('code',$order->code)->where('current',true)->first();
         if(!is_null($balance))
         {
-            $product = Product::where('propierty',$order->type_order)->get()->random();
+            $pro = $order->type_order;
+            if($order->type_order == Order::VALIJA_DIDACTICA)
+                $pro = Order::UTILES;
+
+            $product = Product::where('propierty',$pro)->get()->random();
             $price = Price::where('products_id',$product->id)->where('current',true)->first();
-            $cantidad = $faker->numberBetween(1,25);
+            $cantidad = $faker->numberBetween(1,100);
             $date_actual = Carbon::now();
             $total = $cantidad * $price->price;
             $principal = $balance->balance;
