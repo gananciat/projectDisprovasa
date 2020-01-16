@@ -10,6 +10,7 @@ use App\Models\School;
 use App\Models\Balance;
 use App\Models\Company;
 use App\Models\Provider;
+use App\Models\Quantify;
 use App\Models\Purcharse;
 use App\Imports\MenuImport;
 use App\Imports\UtilImport;
@@ -449,28 +450,31 @@ class DatabaseSeeder extends Seeder
             $insert->save();
         }
 
-        /*for($i=1; $i<51; $i++){
+        for($i=1; $i<51; $i++){
             $provider = Provider::all()->random();
             $data = new Purcharse;
 
-            $data->date = '2020-01-'.rand(1,29);
+            $data->date = '2020-01-'.rand(1,12);
             $data->no_prof = 'A-0000'.$i;
             $data->provider_id = $provider->id;
             $data->total = 0;
             $data->save();
 
-            for($i=0; $i<5; $i++){
-                $detail = new PurcharseDetail();
-                $detail->$purcharse_id = $data->id;
-                $detail->$product_id = $product->id;
-                $detail->$quantity = rand(5,100);
-                $detail->$purcharse_price = rand(0.50, 50.40);
+            for($j=0; $j<10; $j++){
+                $detail = new PurcharseDetail;
+                $quantify = Quantify::where('subtraction','>',0)->get()->random();
+                $detail->purcharse_id = $data->id;
+                $detail->product_id = $quantify->id;
+                $detail->quantity = rand(5,100);
+                $detail->decrease = rand(5,$detail->quantity);
+                $detail->purcharse_price = rand(0.50, 100.40);
                 $sub = $detail->quantity*$detail->purcharse_price;
+                $detail->save();
 
                 $data->total += $sub;
             }
 
             $data->save();
-        }*/
+        }
     }
 }

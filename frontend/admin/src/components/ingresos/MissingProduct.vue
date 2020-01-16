@@ -72,7 +72,8 @@
                       </template>
 
                       <template slot="row-details"  slot-scope="data">
-                            <div v-if="providers.length > 0" class="row" v-loading="loading_table">
+                        <div v-loading="loading_table">
+                            <div v-if="providers.length > 0" class="row">
                               <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4" v-if="last_purchase !== null">
                                   <div class="card">
                                     <div class="card-header">
@@ -125,10 +126,11 @@
                               </div>
                             </div>
                             <div v-else>
-                              <div class="text-center">
-                                <label> sin historial</label>
+                              <div class="text-center alert alert-info">
+                                <label> no se encontro historial de compras de producto {{data.item.product.name | lowercase  }} </label>
                               </div>
                             </div>
+                        </div>
                       </template>
 
                     </b-table>
