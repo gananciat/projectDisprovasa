@@ -43,7 +43,7 @@ class GraphController extends ApiController
 
     	$init->modify('-12 months')->firstOfMonth();
 
-        $purchases = DB::table('orders')
+        $orders = DB::table('orders')
 		    ->select(
 		        DB::raw('YEAR(date) as year'),
 		        DB::raw('MONTH(date) as month'),
@@ -56,6 +56,6 @@ class GraphController extends ApiController
 		    ->groupBy('year', 'month','type_order')
 		    ->get();
 
-		return $this->showQuery($purchases);
+		return $this->showQuery($orders);
     }
 }
