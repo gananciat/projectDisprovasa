@@ -126,39 +126,25 @@ class RepeatOrderController extends ApiController
                     $insert_progreso_orden->products_id = $insert_detalle_orden->products_id;
                     $insert_progreso_orden->save();
 
-                    $product = Product::find($insert_detalle_orden->products_id);
-                    
-                    $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
-
-                    if(is_null($insert_quantify)) {
-                        $insert_quantify = new Quantify();
-                        $insert_quantify->year = $anio->year;
-                        $insert_quantify->products_id = $product->products_id;
-                
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-        
-                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
-                        }
-                
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-                
-                    } else {
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-                        
-                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
-                        }
-                
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-                    }
-
                     $balance = Balance::where([
                         ['code',$insert_orden->code],
                         ['schools_id',$insert_orden->schools_id],
                         ['type_balance',$insert_orden->type_order],
                         ['current',true]
                     ])->first();
+
+                    $product = Product::find($insert_detalle_orden->products_id);
+                    
+                    $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
+
+                    for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
+                        if($product->stock_temporary > 0){
+                            $product->stock_temporary -= 1;
+                        }else{
+                            $insert_quantify->subtraction += 1;
+                        }
+                    }
+                    $insert_quantify->sumary_schools +=  $insert_detalle_orden->quantity;
 
                     $insert_orden->total += $insert_detalle_orden->subtotal;
                     $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
@@ -169,6 +155,7 @@ class RepeatOrderController extends ApiController
                     if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
+                    $insert_orden->balances_id = $balance->id;
                     $insert_quantify->save();
                     $product->save();
                     $insert_orden->save();
@@ -196,11 +183,11 @@ class RepeatOrderController extends ApiController
 
         if(!is_null($balance))
         {
-            if(($balance->subtraction_temporary + $repeat_order->total) + 10000000000 > $balance->balance)
+            if(($balance->subtraction_temporary + $repeat_order->total) > $balance->balance)
                 return $this->errorResponse('El código '.$repeat_order->code.', no tiene suficiente crédito para realizar el pedido.',422);
 
 
-            return $this->showAll($balance);
+            return $this->showOne($balance);
         }
         else
         {

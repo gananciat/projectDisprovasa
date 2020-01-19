@@ -149,34 +149,23 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
     }while(($principal - $resta) < 0);
 
     $insert_quantify = Quantify::where('products_id',$product->id)->where('year',date('Y'))->first();
-    if(is_null($insert_quantify)) {
-        $insert_quantify = new Quantify();
-        $insert_quantify->year = $date_actual->format('Y');
-        $insert_quantify->products_id = $product->products_id;
-        
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
+
+
+    for ($i=0; $i < $cantidad; $i++) { 
+        if($product->stock_temporary > 0){
+            $product->stock_temporary -= 1;
+        }else{
+            $insert_quantify->subtraction += 1;
         }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-
-    } else {
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
-        }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
     }
-
+    $insert_quantify->sumary_schools +=  $cantidad;
+    
     if($balance->balance == $balance->subtraction_temporary){
-        $balance->current == false;
+        $balance->current == true;
     }
     
     $order->total += $total;
+    $order->balances_id = $balance->id;
 
     $insert_quantify->save();
     $product->save();

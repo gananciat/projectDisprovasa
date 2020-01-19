@@ -34,6 +34,7 @@ class GratuidadImport implements ToCollection
                         $insert->propierty = Product::GRATUIDAD;
                         $insert->categories_id = $category->id;
                         $insert->stock = random_int(1,100);
+                        $insert->stock_temporary = $insert->stock;
                         $insert->presentations_id = $insert_presentacion->id;
                         $insert->save();
     

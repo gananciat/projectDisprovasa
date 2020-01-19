@@ -171,11 +171,7 @@
                               <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
-                              </button>   
-                              <button type="button" class="btn btn-info btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(data.item.id)">
-                                  <i class="fa fa-history">
-                                  </i>
-                              </button>  
+                              </button>
                           </template>
 
                         </b-table>

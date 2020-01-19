@@ -20,7 +20,7 @@ const state = {
     client_id: 2,
 
     base_url: 'http://sistematio.test/',
-    client_secret: 'XqmnR9q8p7riokejOepGXQ3w3WII9hnMibQZfZXv'
+    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
 
     //base_url: 'http://sistemapro.test:8000/',
     //client_secret: 'M6hb75GefIsUa0LOQzTYIHPyKKJnsgpNbgyKoeIo'

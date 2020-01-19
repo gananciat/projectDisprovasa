@@ -401,20 +401,35 @@ export default {
 
     bloquear_fechas(){
       let self = this
-      self.calendario.forEach(function (item) {
-        if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
-        {
+      if(moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY')) 
+      {
           self.$swal({
             title: "ERROR",
-            text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+            text: "LA FECHA QUE SELECCIONO TIENE QUE SER DISTINTA DE HOY",
             type: "error",
             showCancelButton: false
           }).then((result) => {
               self.form.date = ''
           }); 
-          return 
-        }
-      });    
+          return         
+      }
+      else
+      {
+        self.calendario.forEach(function (item) {
+          if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+          {
+            self.$swal({
+              title: "ERROR",
+              text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+              type: "error",
+              showCancelButton: false
+            }).then((result) => {
+                self.form.date = ''
+            }); 
+            return 
+          }
+        }); 
+      }   
     },
 
     //Generar correlativo de la orden
@@ -503,7 +518,7 @@ export default {
       let self = this
 
       self.$swal({
-        title: "Verificar",
+        title: "ADVERTENCIA",
         text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
         type: "info",
         showCancelButton: true
@@ -563,7 +578,7 @@ export default {
                   self.loading_detail = false
                   encontro = true
                   self.$swal({
-                    title: "Advertencia",
+                    title: "ADVERTENCIA",
                     text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
                     type: "warning",
                     showCancelButton: true
@@ -606,7 +621,7 @@ export default {
       {
         self.loading_detail = false
         self.$swal({
-          title: "Error",
+          title: "ERROR",
           text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ self.information_product.sub_total.toFixed(2),
           type: "error",
           showCancelButton: false
