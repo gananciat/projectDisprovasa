@@ -4,6 +4,8 @@ use App\Category;
 use App\Models\Balance;
 use App\Models\CalendarSchool;
 use App\Models\DetailOrder;
+use App\Models\DetailSuggestion;
+use App\Models\MenuSuggestion;
 use App\Models\Month;
 use App\Models\Municipality;
 use App\Models\Order;
@@ -180,5 +182,21 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         'complete' => false,
         'products_id' => $product->id,
         'orders_id' => $order->id
+    ];
+});
+
+$factory->define(MenuSuggestion::class, function (Faker $faker) {
+    return [
+        'title' => $faker->unique()->numerify('Menú #####'),
+        'description' => $faker->text(150),
+        'people_id' => 1,
+    ];
+});
+
+$factory->define(DetailSuggestion::class, function (Faker $faker) {
+    return [
+        'observation' => $faker->randomElement(['', $faker->text(100)]),
+        'products_id' => Product::where('propierty','ALIMENTACION')->get()->random()->id,
+        'menu_suggestions_id' => MenuSuggestion::all()->random()->id
     ];
 });

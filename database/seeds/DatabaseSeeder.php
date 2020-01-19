@@ -23,11 +23,13 @@ use App\Models\Municipality;
 use App\Models\ProgressOrder;
 use App\Imports\EscuelaImport;
 use App\Models\CalendarSchool;
+use App\Models\MenuSuggestion;
 use App\Models\PurcharseDetail;
 use Illuminate\Database\Seeder;
 use App\Imports\CategoriaImport;
 use App\Imports\GratuidadImport;
 use App\Imports\MunicipioImport;
+use App\Models\DetailSuggestion;
 use App\Imports\AlimentacionImport;
 use App\Imports\DepartamentoImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -476,5 +478,8 @@ class DatabaseSeeder extends Seeder
 
             $data->save();
         }
+
+        factory(MenuSuggestion::class, 25)->create();
+        factory(DetailSuggestion::class, 500)->create();
     }
 }
