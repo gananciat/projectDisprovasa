@@ -105,7 +105,7 @@
                                     </td>
                                     <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
                                         <button type="button" @click="update(index,item)" class="btn btn-success btn-sm" v-b-tooltip title="guardar"><i class="fa fa-save"></i></button>
-                                        <button type="button" @click="entregar(item)" class="btn btn-info btn-sm" v-b-tooltip title="guardar"><i class="fa fa-suitcase"></i></button>
+                                        <button type="button" @click="entregar(item)" class="btn btn-info btn-sm" v-b-tooltip title="subir al vehículo"><i class="fa fa-suitcase"></i></button>
                                     </td>
                                 </tr>
                             </template>

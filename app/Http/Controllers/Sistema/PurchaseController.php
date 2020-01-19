@@ -71,17 +71,16 @@ class PurchaseController extends ApiController
 
                 //Consultar Stock
                 $consultar = Product::find($detail['product_id']);
-                $stock = !is_null($consultar) ? $consultar->stock : 0;
+                $consultar->stock += $detail['quantity'];
+                $consultar->save();
 
                 if(!is_null($quantify)){
                     $quantify->sumary_purchase = $quantify->sumary_purchase + $detail['quantity'];
-                    $summary = $quantify->sumary_schools - ($quantify->sumary_purchase + 0);
+                    $summary = $quantify->sumary_schools - $consultar->stock;
                     $quantify->subtraction = $summary > 0 ? $summary : 0;
 
                     $quantify->save();
 
-                    $consultar->stock += $detail['quantity'];
-                    $consultar->save();
                 }
             }
 
@@ -113,10 +112,8 @@ class PurchaseController extends ApiController
                     $consultar->stock -= $detail->quantity;
                     $consultar->save();
 
-                    $stock = !is_null($consultar) ? $consultar->stock : 0;
-
                     $quantify->sumary_purchase = $quantify->sumary_purchase - $detail->quantity;
-                    $summary = $quantify->sumary_schools - ($quantify->sumary_purchase + $stock);
+                    $summary = $quantify->sumary_schools - $consultar->stock;
                     $quantify->subtraction = $summary > 0 ? $summary : 0;
                     $quantify->save();
                 }

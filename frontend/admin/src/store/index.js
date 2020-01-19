@@ -5,11 +5,13 @@ import moment from 'moment'
 import auth from '../auth'
 import Axios from 'axios'
 import router from '../router'
+import global from '../components/sharedjs/global'
 
 Vue.use(Vuex)
 
 const state = {
     services,
+    global,
     usuario: {},
     escuela: false,
     token: null,
@@ -18,14 +20,14 @@ const state = {
     client_id: 2,
     menu: [],
     permissions: [],
-    base_url: 'http://www.project.com/',
-    client_secret: '7O3I9I1ibusUxztV2Acfqdwx063pHwfffnMVrAMs'
+    //base_url: 'http://www.project.com/',
+    //client_secret: '7O3I9I1ibusUxztV2Acfqdwx063pHwfffnMVrAMs'
 
-    //base_url: 'http://sistematio.test/',
-    //client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
+    base_url: 'http://sistematio.test/',
+    client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
 
     //base_url: 'http://sistemapro.test:8000/',
-    //client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
+    //client_secret: 'psuLuEaRASnqe8rJAreH3xqrcTUQkAbBOUrqXl2z',
 }
 
 const mutations = {
