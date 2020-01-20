@@ -16,6 +16,7 @@ import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
 import RepeatOrderService from '../services/RepeatOrderService'
+import MenuSuggestionService from '../services/MenuSuggestionService'
 
 /* IMPORT DASHBOARD */
 import GraphService from '../services/GraphService'
@@ -88,4 +89,5 @@ export default {
     /* EXPORT DASHBOARD */
     graphService: new GraphService(Axios, baseUrl),
     informationschoolService: new InformationSchoolService(Axios, baseUrl),
+    menusuggestionService: new MenuSuggestionService(Axios, baseUrl),
 }

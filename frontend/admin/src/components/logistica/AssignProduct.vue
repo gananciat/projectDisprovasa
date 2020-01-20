@@ -248,7 +248,7 @@ export default {
         });
     },
 
-    entregar(data){
+    entregar(item){
         let self = this
         self.loading = true
         let data = {}

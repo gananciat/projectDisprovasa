@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Sistema;
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
 use App\Models\MenuSuggestion;
 use Illuminate\Http\Request;
 
-class MenuSuggestionController extends Controller
+class MenuSuggestionController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +21,14 @@ class MenuSuggestionController extends Controller
      */
     public function index()
     {
-        //
+        $menus = MenuSuggestion::with(['details.product.presentation',
+                                        'details.product.prices' => function ($query) {
+                                            $query->where('current', true);
+                                        }
+                                    ]
+                                    )->get();
+
+        return $this->showAll($menus);
     }
 
     /**
@@ -45,9 +58,18 @@ class MenuSuggestionController extends Controller
      * @param  \App\Models\MenuSuggestion  $menuSuggestion
      * @return \Illuminate\Http\Response
      */
-    public function show(MenuSuggestion $menuSuggestion)
+    public function show(MenuSuggestion $menu_suggestion)
     {
-        //
+        $menus = MenuSuggestion::with(['details.product.presentation',
+                                        'details.product.prices' => function ($query) {
+                                            $query->where('current', true);
+                                        }
+                                    ]
+                                    )
+                                ->where('id', $menu_suggestion->id)
+                                ->get();
+
+        return $this->showAll($menus);
     }
 
     /**

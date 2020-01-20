@@ -69,9 +69,10 @@ export default {
       }, 
       {
         icon: "cog",
-        text: "Calendario",
+        text: "Configuración",
         children: [
-          { icon: "circle-o", text: "Configuración", path: "/school/management/calendar" },
+          { icon: "circle-o", text: "Calendario", path: "/school/management/calendar" },
+          { icon: "circle-o", text: "Sugerencia de Menú", path: "/school/menu/suggestion" },
         ]
       },     
     ]
