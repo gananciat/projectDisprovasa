@@ -48,12 +48,11 @@ class GraphController extends ApiController
 		        DB::raw('YEAR(date) as year'),
 		        DB::raw('MONTH(date) as month'),
 		        DB::raw('SUM(total) as sum'),
-		        DB::raw('COUNT(id) as total'),
-		        DB::raw('type_order')
+		        DB::raw('COUNT(id) as total')
 		    )
 		    ->where('date','>=',$init)
 		    ->where('date','<=',$finish)
-		    ->groupBy('year', 'month','type_order')
+		    ->groupBy('year', 'month')
 		    ->get();
 
 		return $this->showQuery($orders);

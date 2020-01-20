@@ -221,8 +221,8 @@ export default {
 
       function forms(code){
         var items2 = []
-        for(var i=0; i<3; i++){
-          var type_balance = i == 0 ? 'ALIMENTACION' : i == 1 ? 'GRATUIDAD' : 'UTILES'
+        for(var i=0; i<4; i++){
+          var type_balance = i == 0 ? 'ALIMENTACION' : i == 1 ? 'GRATUIDAD' : i==2 ? 'UTILES' : 'VALIJA DIDACTICA'
           items2.push({
             type_balance: type_balance,
             balance : null,

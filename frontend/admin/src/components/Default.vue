@@ -65,7 +65,7 @@
             <div class="card">
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
-                  <h3 class="card-title">COMPRAS EN LOS ULTIMOS 12 MESES</h3>
+                  <h3 class="card-title">PEDIDOS EN LOS ULTIMOS 12 MESES</h3>
                   <a href="javascript:void(0);">Reportes</a>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default {
         .then(r => {
             self.loading = false
             self.original_orders = r.data.data
-            var groups = _(r.data.data)
+            /*var groups = _(r.data.data)
                 .groupBy('type_order')
                 .map(function(items, type_order) {
                 var grado_nivel = items.find(x=>x.type_order === type_order)
@@ -183,28 +183,30 @@ export default {
                 };
             }).value();
             self.orders = groups
-            self.getSeriesOrders()
+            self.getSeriesOrders()*/
         })
         .catch(r => {});
     },
 
-    getSeriesOrders(){
+   /* getSeriesOrders(){
       let self = this
       var labels = self.getLabelsOrders()
       var series = []
       for(var item of self.orders) {
         var data = []
         for(var label of labels){
-          var sum = item.data.find(x=>moment().month(x.month-1).format("MMM")+' '+x.year,label)
-          var l = moment().month(sum.month-1).format("MMM")+' '+sum.year
-          console.log(l)
+          var sum = item.data.find(x=>moment().month(x.month-1).format("MMM")+' '+x.year==label)
+          sum !== undefined ? data.push(parseFloat(sum.sum)) : data.push(0)
         }
         series.push({
           name: item.name,
           y: data
         })
       }
-    },
+      console.log(series)
+      console.log(labels)
+      console.log(self.orders)
+    },*/
 
     getLabelsOrders(){
       let self = this
@@ -220,27 +222,27 @@ export default {
 
     },
 
-    getSeries(){
+    getSeries(data_values,name){
       let self = this
       var data = []
       var series = []
-      self.data.forEach(item => {
+      data_values.forEach(item => {
         data.push({
           y: parseFloat(item.sum),
           name: moment().month(item.month-1).format("MMM")+' '+item.year
         })
       })
       series.push({
-          name: 'COMPRAS',
+          name: name,
           data: data
         })
       return series
     },
 
-    getLabels(){
+    getLabels(data_labels){
       let self = this
       var labels = []
-      self.data.forEach(item => {
+      data_labels.forEach(item => {
         labels.push(moment().month(item.month-1).format("MMM")+' '+item.year)
       })
       return labels
@@ -256,10 +258,14 @@ export default {
   },
    computed: {
         chartOptions() { 
-          return graps.getData(this.getSeries(), this.getLabels(),this.modo)
+          return graps.getData(this.getSeries(this.data,'COMPRAS'), this.getLabels(this.data),this.modo)
         },
 
         chartOptionsOrder() { 
+          return graps.getData(this.getSeries(this.original_orders,'PEDIDOS'), this.getLabels(this.original_orders), this.modo)
+        },
+
+        /*chartOptionsOrder() { 
             return {
                     title: {
                     text: 'Solar Employment Growth by Sector, 2010-2016'
@@ -320,7 +326,7 @@ export default {
                     }]
                 }
               }
-        },
+        },*/
     },
 }
 </script>
