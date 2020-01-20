@@ -23,11 +23,11 @@ const state = {
     //base_url: 'http://www.project.com/',
     //client_secret: '7O3I9I1ibusUxztV2Acfqdwx063pHwfffnMVrAMs'
 
-    //base_url: 'http://sistematio.test/',
-    //client_secret: 'FU2NmVz5usj9dhCzOLX6IBJFGdV4W3I7DsZESfoC',
+    base_url: 'http://sistematio.test/',
+    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 
-    base_url: 'http://sistemapro.test:8000/',
-    client_secret: 'psuLuEaRASnqe8rJAreH3xqrcTUQkAbBOUrqXl2z',
+    //base_url: 'http://sistemapro.test:8000/',
+    //client_secret: 'psuLuEaRASnqe8rJAreH3xqrcTUQkAbBOUrqXl2z',
 }
 
 const mutations = {

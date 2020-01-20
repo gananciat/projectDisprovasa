@@ -14,7 +14,7 @@ class DetailOrder extends Model
 
     protected $table = 'detail_orders';
     protected $fillable = ['quantity','sale_price','subtotal','observation',
-                           'complete','products_id','orders_id'];
+                           'complete','products_id','orders_id','deliver'];
     protected $dates = ['deleted_at'];
 
     public function setObservationAttribute($valor) {

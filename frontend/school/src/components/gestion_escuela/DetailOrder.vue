@@ -13,38 +13,48 @@
     <div class="content">
       <div class="container-fluid">
         <div class="row">
-            <!-- Modal para nuevo registro -->
-            <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
-                <form>
-                    <div class="form-group">
-                        <label>Fecha para la entrega del pedido</label>
-                        <div class="block">
-                            <el-date-picker
-                                v-model="form.date"
-                                type="date"
-                                data-vv-name="date"
-                                data-vv-as="fecha"
-                                v-validate="'required|date_format:yyyy-MM-dd'"
-                                :class="{'input':true,'has-errors': errors.has('menu.date')}"                
-                                placeholder="Seleccionar una fecha"
-                                format="dd/MM/yyyy"
-                                :align="'center'"
-                                @change="gh"
-                                :picker-options="pickerOptions"
-                                data-vv-scope="menu"
-                                value-format="yyyy-MM-dd">
-                            </el-date-picker>
-                        </div>
-                        <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
+            <div class="col-md-12 col-sm-12" v-if="viewFormRepeat">
+                <div class="card border-info">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fa fa-list-ol"></i> Formulario para repetir pedido.                              
+                        </h3>
                     </div>
-                    <div class="row">
-                        <div class="col-12 text-right">
-                            <button type="button" class="btn btn-danger btn-sm" @click="cerrarRepeat"><i class="fa fa-undo"></i> Cancelar</button>
-                            <button type="button" class="btn btn-primary btn-sm" @click="creatRepeat"><i class="fa fa-save"></i> Guardar</button>
-                        </div>
+                    <div class="card-body">
+<form>
+    <div class="row" style="padding: 2rem; margin: 2rem;">
+        <div class="col-md-4 col-sm-4">
+          <div class="form-group">
+            <label>Fecha para la entrega del pedido</label>
+            <div class="block">
+              <el-date-picker
+                v-model="form_repeat.date"
+                type="date"
+                data-vv-name="date"
+                data-vv-as="fecha"
+                v-validate="'required|date_format:yyyy-MM-dd'"
+                :class="{'input':true,'has-errors': errors.has('repeat.date')}"                
+                placeholder="Seleccionar una fecha"
+                format="dd/MM/yyyy"
+                :align="'center'"
+                @change="gh"
+                :picker-options="pickerOptionsRepeat"
+                data-vv-scope="repeat"
+                value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </div>
+            <FormError :attribute_name="'repeat.date'" :errors_form="errors"> </FormError>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 text-right">
+            <button type="button" class="btn btn-danger btn-sm" @click="cerrarRepeat"><i class="fa fa-undo"></i> Cancelar</button>
+            <button type="button" class="btn btn-primary btn-sm" @click="creatRepeat"><i class="fa fa-save"></i> Guardar</button>
+        </div>        
+    </div>
+</form>                           
                     </div>
-                </form>
-            </b-modal>
+                </div>
+            </div>
 
             <div class="col-md-12 col-sm-12">
                 <div class="card border-info">
@@ -98,7 +108,7 @@
                                     <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>
                                         <br><br>
-                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items.id)">
+                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="!items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
                                             <i class="fa fa-history">
                                             </i>
                                         </button>                                         
@@ -336,21 +346,26 @@
 </template>
 
 <script>
+import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
   name: "detailorder",
   components: {
-      FormError
+      FormError,
+      moment
   },
   data() {
     return {
       loading: false,
       loading_detail: false,
+      viewFormRepeat: false,
       items: {},
+      calendario: [],
       products: [],
       total_insert: 0,
       disponibility: 0,
       temporary: 0,
+      guard_total: 0,
       information_product: {
         category: '',
         marca: '',
@@ -363,7 +378,17 @@ export default {
         observation: '',
         sale_price: '',
         orders_id: null
-      }
+      },
+      form_repeat: {
+          date: '',
+          orders_id: ''
+      },
+      pickerOptionsRepeat: {
+        disabledDate(time) {
+          var d = new Date();
+          return d.setDate(d.getDate() - 1) > time.getTime();
+        },
+      },      
     };
   },
   created() {
@@ -401,7 +426,8 @@ export default {
         .then(r => {
             self.items = r.data.data[0];
             self.disponibility = self.items.balance - self.items.subtraction_temporary
-            self.temporary = self.disponibility + self.items.total
+            self.temporary = self.items.subtraction_temporary
+            self.guard_total = self.items.total
             self.getProduct(r.data.data[0].type_order)
             self.loading = false;           
         })
@@ -427,8 +453,10 @@ export default {
     //funcion para guardar registro
     create(){
       let self = this
-
-        if((self.temporary - self.total_insert)  > 0)
+      let sumar = parseFloat(self.guard_total) + parseFloat(self.disponibility)
+      let resta = parseFloat(sumar) - parseFloat(self.total_insert)
+      
+        if(resta  > 0)
         {
             self.$validator.validateAll('insert').then((result) => {
                 if (result) {
@@ -436,7 +464,7 @@ export default {
                     let data = self.form
 
                     self.$swal({
-                        title: "Verificar",
+                        title: "VERIFICAR",
                         text: "¿ESTA SEGURO QUE DESEA AGREGAR EL PRODUCTO AL PEDIDO # "+ self.items.order + "?",
                         type: "info",
                         showCancelButton: true
@@ -462,7 +490,7 @@ export default {
         {
             self.loading = false
             self.$swal({
-                title: "Error",
+                title: "ERROR",
                 text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ (self.form.quantity * self.form.sale_price).toFixed(2),
                 type: "error",
                 showCancelButton: false
@@ -473,8 +501,10 @@ export default {
     //funcion para actualizar registro
     update(item){
       let self = this
-     
-        if((self.temporary - self.total_insert)  > 0)
+      let sumar = parseFloat(self.guard_total) + parseFloat(self.disponibility)
+      let resta = parseFloat(sumar) - parseFloat(self.total_insert)
+ 
+        if(resta > 0)
         {
             self.$validator.validateAll('edit').then((result) => {
                 if (result) {
@@ -484,7 +514,7 @@ export default {
                     data.observation = item.observation
 
                     self.$swal({
-                        title: "Verificar",
+                        title: "VERIFICAR",
                         text: "¿ESTA SEGURO QUE DESEA MODIFICAR EL PRODUCTO DEL PEDIDO # "+ self.items.order + "?",
                         type: "info",
                         showCancelButton: true
@@ -510,7 +540,7 @@ export default {
         {
             self.loading = false
             self.$swal({
-                title: "Error",
+                title: "ERROR",
                 text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ (item.quantity * item.sale_price).toFixed(2),
                 type: "error",
                 showCancelButton: false
@@ -612,7 +642,7 @@ export default {
                 encontro = true
                 self.loading = false
                 self.$swal({
-                title: "Advertencia",
+                title: "ADVERTENCIA",
                 text: "EL PRODUCTO "+ data.name + ", YA FUE AGREGADO.",
                 type: "warning",
                 showCancelButton: false
@@ -643,18 +673,112 @@ export default {
     },
     
     //repetir pedido, comprar si tiene dinero suficiente para realizar el pedido de nuevo
-    repeatOrder(id){
+    repeatOrder(data){
       let self = this;
       self.loading = true;
+      self.getCalendario()
 
       self.$store.state.services.repeatorderService
-        .get(id)
+        .get(data.id)
         .then(r => {
           self.loading = false; 
           if( self.interceptar_error(r) == 0) return
+          self.$swal({
+            title: "VERIFICAR",
+            text: "¿ESTA SEGURO QUE QUIERE REPERTIR LA ORDEN #"+data.order+" ?",
+            type: "info",
+            showCancelButton: true
+          }).then((result) => {
+              if (result.value) {
+                self.viewFormRepeat = true
+                self.form_repeat.date = ''
+                self.form_repeat.orders_id = data.id
+              }
+          });           
         })
         .catch(r => {});
-    }    
+    },
+    
+    cerrarRepeat(){
+        let self = this
+        self.viewFormRepeat = false
+        self.form_repeat.date = ''
+        self.form_repeat.orders_id = null
+    },
+
+    creatRepeat(){
+      let self = this;
+
+        self.$validator.validateAll('repeat').then((result) => {
+            if (result) {
+                self.$swal({
+                    title: "VERIFICAR",
+                    text: "¿ESTA SEGURO QUE QUIERE GUARDAR LA INFORMACION?",
+                    type: "success",
+                    showCancelButton: true
+                }).then((result) => {
+                    self.loading = true;                 
+                    if (result.value) {
+                        let data = self.form_repeat
+                        self.$store.state.services.repeatorderService
+                            .create(data)
+                            .then(r => {
+                                self.loading = false;
+                                if( self.interceptar_error(r) == 0) return 
+                                self.$toastr.success('el pedido #'+self.items.order+' fue repetido, el nuevo pedido es el #'+r.data.data.order, 'exito')
+                                self.cerrarRepeat()          
+                            })
+                            .catch(r => {});
+                    }
+                }); 
+            }
+        })
+    },
+
+    getCalendario(){
+      let self = this
+      self.loading = true
+      self.$store.state.services.calendaryschoolService
+        .get(self.$store.state.school.schools_id)
+        .then(r => {
+          self.calendario = r.data.data
+          self.loading = false
+        })
+        .catch(r => {});   
+    },
+
+    gh(){
+      let self = this
+      if(moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form_repeat.date, 'YYYY-MM-DD').format('DD/MM/YYYY')) 
+      {
+          self.$swal({
+            title: "ERROR",
+            text: "LA FECHA QUE SELECCIONO TIENE QUE SER DISTINTA DE HOY",
+            type: "error",
+            showCancelButton: false
+          }).then((result) => {
+              self.form_repeat.date = ''
+          }); 
+          return         
+      }
+      else
+      {
+        self.calendario.forEach(function (item) {
+            if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form_repeat.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+            {
+            self.$swal({
+                title: "ERROR",
+                text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+                type: "error",
+                showCancelButton: false
+            }).then((result) => {
+                self.form_repeat.date = ''
+            }); 
+            return 
+            }
+        });
+      }    
+    },    
   },
   computed: {
     total(){

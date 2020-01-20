@@ -16,7 +16,12 @@ class ProgressOrderService {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${id}/edit`);
     }
-    
+
+    create(data) {
+        let self = this;
+        return self.axios.post(`${self.baseUrl}`, data);
+    }
+
     update(data) {
         let self = this;
         return self.axios.put(`${self.baseUrl}/${data.id}`, data);

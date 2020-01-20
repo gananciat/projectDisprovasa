@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateOauthClientsTable extends Migration
 {
@@ -24,6 +25,11 @@ class CreateOauthClientsTable extends Migration
             $table->boolean('revoked');
             $table->timestamps();
         });
+
+        DB::insert('insert into oauth_clients (id,user_id,name,secret,redirect,personal_access_client,password_client,revoked,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?)', 
+            [1,null,'Laravel Personal Access Client','yEtb2IYdC9Z3ro6pbITCrLmSCxSbDkO8ED8jVR0Z','http://localhost',1,0,0,Carbon::now(),Carbon::now()]);
+        DB::insert('insert into oauth_clients (id,user_id,name,secret,redirect,personal_access_client,password_client,revoked,created_at,updated_at) values (?,?,?,?,?,?,?,?,?,?)', 
+            [2,null,'Laravel Password Grant Client','t6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD','http://localhost',0,1,0,Carbon::now(),Carbon::now()]);
     }
 
     /**

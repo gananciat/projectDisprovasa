@@ -15,6 +15,7 @@ class CreateDetailOrdersTable extends Migration
             $table->decimal('subtotal',12,2);
             $table->string('observation',500);
             $table->boolean('complete')->default(0);
+            $table->boolean('deliver')->default(0);
             $table->unsignedBigInteger('products_id');
             $table->foreign('products_id')->references('id')->on('products');              
             $table->unsignedBigInteger('orders_id');

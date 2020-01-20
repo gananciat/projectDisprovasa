@@ -147,28 +147,14 @@ class OrderController extends ApiController
                     
                     $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
 
-                    if(is_null($insert_quantify)) {
-                        $insert_quantify = new Quantify();
-                        $insert_quantify->year = $anio->year;
-                        $insert_quantify->products_id = $product->products_id;
-                
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-        
-                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                    for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
+                        if($product->stock_temporary > 0){
+                            $product->stock_temporary -= 1;
+                        }else{
+                            $insert_quantify->subtraction += 1;
                         }
-                
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-                
-                    } else {
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-                        
-                        if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
-                        }
-                
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
+                    $insert_quantify->sumary_schools +=  $insert_detalle_orden->quantity;
 
                     $balance = Balance::where([
                         ['code',$insert_orden->code],
@@ -181,11 +167,12 @@ class OrderController extends ApiController
                     $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
 
                     if($balance->balance == $balance->subtraction_temporary)
-                        $balance->current = true;
+                        $balance->current = false;
 
                     if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$request->code, 422);
 
+                    $insert_orden->balances_id = $balance->id;
                     $insert_quantify->save();
                     $product->save();
                     $insert_orden->save();
@@ -307,9 +294,12 @@ class OrderController extends ApiController
                 $balance = Balance::where([
                     ['code',$order->code],
                     ['schools_id',$order->schools_id],
-                    ['type_order',$order->type_order],
+                    ['type_balance',$order->type_order],
                     ['current',true]
                 ])->first();
+
+                if($balance->balance != $balance->subtraction_temporary)
+                    $balance->current = true;                
 
                 $balance->subtraction_temporary -= $order->total;
                 $balance->save();
@@ -325,11 +315,21 @@ class OrderController extends ApiController
                     foreach ($detalle_orden as $key => $value) {
                         ProgressOrder::where('detail_orders_id',$value->id)->delete();
 
-                        $buscar = Quantify::where('products_id',$value->products_id)->where('year',date('Y'))->first();
-                        $buscar->sumary_purchase += $value->quantity;
-                        $buscar->subtraction = $buscar->sumary_schools - $buscar->sumary_purchase;
-                        $buscar->save();
+                        $product = Product::find($value->products_id);
+                        $insert_quantify = Quantify::where('products_id',$value->products_id)->where('year',date('Y'))->first();
+    
+                        for ($i=0; $i < $value->quantity; $i++) { 
+                            
+                            if($product->stock_temporary < $product->stock)
+                                $product->stock_temporary += 1;
+                            else
+                                $insert_quantify->subtraction -= 1;
+                        }
 
+                        $insert_quantify->sumary_schools -=  $value->quantity;
+
+                        $product->save();
+                        $insert_quantify->save();
                         $value->forceDelete();
                     }
 

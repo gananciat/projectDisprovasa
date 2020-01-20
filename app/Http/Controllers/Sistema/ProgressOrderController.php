@@ -48,7 +48,37 @@ class ProgressOrderController extends ApiController
      */
     public function store(Request $request)
     {
-        //
+        $messages = [
+            'detail_orders_id.exists'    => 'Debe de seleccionar la menos una producto de la lista del detalle de la orden.',
+        ];
+
+        $rules = [
+            'detail_orders_id' => 'required|integer|exists:detail_orders,id',
+        ];
+        
+        $this->validate($request, $rules, $messages);
+
+        try {
+            DB::beginTransaction();
+                $detail_order = DetailOrder::find($request->detail_orders_id);
+                $detail_order->complete = true;
+                $detail_order->deliver = true;
+                $detail_order->save();                
+
+                $order_complete = DetailOrder::where('orders_id',$detail_order->orders_id)->where('complete',false)->count();
+                if($order_complete == 0){
+                    $order = Order::find($detail_order->orders_id);
+                    $order->complete = true;
+                    $order->save();
+                }
+
+            DB::commit();
+
+            return $this->showOne($detail_order,201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->errorResponse($e->getMessage(),409);
+        }
     }
 
     /**
@@ -104,6 +134,12 @@ class ProgressOrderController extends ApiController
      */
     public function update(Request $request, ProgressOrder $progress_order)
     {
+        $rules = [
+            'purchased_amount' => 'required|numeric',
+        ];
+        
+        $this->validate($request, $rules);
+
         try {
             DB::beginTransaction();
                 $product = Product::find($progress_order->products_id);
@@ -138,6 +174,9 @@ class ProgressOrderController extends ApiController
 
                 $order_status = OrderStatus::where('status',$status)->first();
                 $progress_order->order_statuses_id = $order_status->id;
+
+                if($detail_order->complete == true)
+                    $detail_order->deliver = true;
 
                 $product->save();
                 $detail_order->save();                

@@ -4,6 +4,8 @@ use App\Category;
 use App\Models\Balance;
 use App\Models\CalendarSchool;
 use App\Models\DetailOrder;
+use App\Models\DetailSuggestion;
+use App\Models\MenuSuggestion;
 use App\Models\Month;
 use App\Models\Municipality;
 use App\Models\Order;
@@ -149,34 +151,23 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
     }while(($principal - $resta) < 0);
 
     $insert_quantify = Quantify::where('products_id',$product->id)->where('year',date('Y'))->first();
-    if(is_null($insert_quantify)) {
-        $insert_quantify = new Quantify();
-        $insert_quantify->year = $date_actual->format('Y');
-        $insert_quantify->products_id = $product->products_id;
-        
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
+
+
+    for ($i=0; $i < $cantidad; $i++) { 
+        if($product->stock_temporary > 0){
+            $product->stock_temporary -= 1;
+        }else{
+            $insert_quantify->subtraction += 1;
         }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-
-    } else {
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
-        }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
     }
-
+    $insert_quantify->sumary_schools +=  $cantidad;
+    
     if($balance->balance == $balance->subtraction_temporary){
-        $balance->current == false;
+        $balance->current == true;
     }
     
     $order->total += $total;
+    $order->balances_id = $balance->id;
 
     $insert_quantify->save();
     $product->save();
@@ -191,5 +182,21 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         'complete' => false,
         'products_id' => $product->id,
         'orders_id' => $order->id
+    ];
+});
+
+$factory->define(MenuSuggestion::class, function (Faker $faker) {
+    return [
+        'title' => $faker->unique()->numerify('Menú #####'),
+        'description' => $faker->text(150),
+        'people_id' => 1,
+    ];
+});
+
+$factory->define(DetailSuggestion::class, function (Faker $faker) {
+    return [
+        'observation' => $faker->randomElement(['', $faker->text(100)]),
+        'products_id' => Product::where('propierty','ALIMENTACION')->get()->random()->id,
+        'menu_suggestions_id' => MenuSuggestion::all()->random()->id
     ];
 });

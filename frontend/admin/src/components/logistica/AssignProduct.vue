@@ -105,6 +105,7 @@
                                     </td>
                                     <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
                                         <button type="button" @click="update(index,item)" class="btn btn-success btn-sm" v-b-tooltip title="guardar"><i class="fa fa-save"></i></button>
+                                        <button type="button" @click="entregar(item)" class="btn btn-info btn-sm" v-b-tooltip title="subir al vehículo"><i class="fa fa-suitcase"></i></button>
                                     </td>
                                 </tr>
                             </template>
@@ -232,14 +233,36 @@ export default {
                 self.$store.state.services.progressorderService
                     .update(data)
                     .then(r => {
-                    self.loading = false
-                    if( self.interceptar_error(r) == 0) return
-                    self.$toastr.success('registro actualizado con exito', 'exito')  
-                    if(r.data.data.complete){ self.getAll() }
+                        self.loading = false
+                        if( self.interceptar_error(r) == 0) return  
+                        if(r.data.data.complete){ 
+                            self.$toastr.success('producto listo para entregar', 'exito')  
+                            self.getAll() 
+                        }
+                        else{
+                            self.$toastr.success('registro actualizado con exito', 'exito')
+                        }
                     })
                     .catch(r => {});
             }
         });
+    },
+
+    entregar(data){
+        let self = this
+        self.loading = true
+        let data = {}
+        data.detail_orders_id = item.id
+        
+        self.$store.state.services.progressorderService
+            .create(data)
+            .then(r => {
+                self.loading = false
+                if( self.interceptar_error(r) == 0) return
+                self.$toastr.success('producto listo para entregar', 'exito')  
+                if(r.data.data.complete){ self.getAll() }
+            })
+            .catch(r => {});
     },
 
     getLogo(logo){
