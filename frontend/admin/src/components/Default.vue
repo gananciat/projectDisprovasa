@@ -17,8 +17,8 @@
 
     <!-- Main content -->
     <div class="content">
-      <div class="container-fluid">
-        <div class="row">
+      <div class="container-fluid" style="height:100px;">
+        <div class="row" >
           <div class="col-lg-6">
             <div class="card">
               <div class="card-header no-border">
@@ -72,8 +72,8 @@
               <div class="card-body">
                 <div class="d-flex">
                   <p class="d-flex flex-column">
-                    <span class="text-bold text-lg">{{  }}</span>
-                    <span>compras en total</span>
+                    <span class="text-bold text-lg">{{ getTotal(original_orders) }}</span>
+                    <span>pedidos en total</span>
                   </p>
                 </div>
                 <!-- /.d-flex -->
@@ -258,11 +258,11 @@ export default {
   },
    computed: {
         chartOptions() { 
-          return graps.getData(this.getSeries(this.data,'COMPRAS'), this.getLabels(this.data),this.modo)
+          return graps.getData(this.getSeries(this.data,'COMPRAS'), this.getLabels(this.data),this.modo,'COMPRAS')
         },
 
         chartOptionsOrder() { 
-          return graps.getData(this.getSeries(this.original_orders,'PEDIDOS'), this.getLabels(this.original_orders), this.modo)
+          return graps.getData(this.getSeries(this.original_orders,'PEDIDOS'), this.getLabels(this.original_orders), this.modo,'PEDIDOS')
         },
 
         /*chartOptionsOrder() { 

@@ -1,8 +1,8 @@
 
 export default {
-          getData(series,labels,modo){
+          getData(series,labels,modo,text){
             return {
-              chart: {  type: modo, height: (9 / 16 * 100) + '%'},
+              chart: {  type: modo},
               title: {  text: ''  },
               series: series,
               xAxis: {
@@ -10,7 +10,7 @@ export default {
               },
               yAxis: {
                   title: {
-                      text: 'COMPRAS '
+                      text: text
                   }
               },
 

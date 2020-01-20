@@ -74,6 +74,68 @@
                       <template slot="row-details"  slot-scope="data">
                         <div v-loading="loading_table">
                             <div v-if="providers.length > 0" class="row">
+                              
+                              <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">
+                                <div class="card" style="font-size: 14px;">
+                                  <!-- /.card-header -->
+                                  <div class="card-body">
+                                    <h3 class="card-title">Top 3 de compras, precios mas bajos en los ultimos 6 meses</h3>
+
+                                    <table class="table table-condensed">
+                                      <thead>
+                                        <tr>
+                                          <th>Fecha</th>
+                                          <th>Proveedor</th>
+                                          <th>Precio</th>
+                                          <th>Cantidad</th>
+                                          <th>Merma</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr v-for="(item,i) in provider_low_prices" :key="item.id">
+                                          <td>{{item.purchase.date | moment('DD/MM/YYYY')}}</td>
+                                          <td>{{item.purchase.provider.name}}</td>
+                                          <td>{{item.purcharse_price | currency('Q ')}}</td>
+                                          <td>{{item.quantity}}</td>
+                                          <td>{{item.decrease}}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <!-- /.card-body -->
+                                </div>
+                              </div>
+
+                              <div class="col-md-6 col-sm-6 col-lg-6 col-xs-12">
+                                <div class="card" style="font-size: 14px;">
+                                  <!-- /.card-header -->
+                                  <div class="card-body">
+                                    <h3 class="card-title">Top 3 de compras, precios mas altos en los ultimos 6 meses</h3>
+
+                                    <table class="table table-condensed">
+                                      <thead>
+                                        <tr>
+                                          <th>Fecha</th>
+                                          <th>Proveedor</th>
+                                          <th>Precio</th>
+                                          <th>Cantidad</th>
+                                          <th>Merma</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr v-for="(item,i) in provider_high_prices" :key="item.id">
+                                          <td>{{item.purchase.date | moment('DD/MM/YYYY')}}</td>
+                                          <td>{{item.purchase.provider.name}}</td>
+                                          <td>{{item.purcharse_price | currency('Q ')}}</td>
+                                          <td>{{item.quantity}}</td>
+                                          <td>{{item.decrease}}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <!-- /.card-body -->
+                                </div>
+                              </div>
                               <div class="col-md-4 col-sm-4 col-xs-12 col-lg-4" v-if="last_purchase !== null">
                                   <div class="card">
                                     <div class="card-header">
@@ -96,7 +158,7 @@
                                     <!-- /.card-body -->
                                   </div>
                               </div>
-                              <div class="col-md-8 col-sm-8 col-lg-8 col-xs-12">
+                               <div class="col-md-8 col-sm-8 col-lg-8 col-xs-12">
                                 <div class="card" style="font-size: 14px;">
                                   <!-- /.card-header -->
                                   <div class="card-body">
@@ -124,6 +186,8 @@
                                   <!-- /.card-body -->
                                 </div>
                               </div>
+
+                             
                             </div>
                             <div v-else>
                               <div class="text-center alert alert-info">
@@ -175,6 +239,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
   name: "missing_product",
@@ -187,6 +252,8 @@ export default {
       loading_table: false,
       items: [],
       providers: [],
+      provider_low_prices: [],
+      provider_high_prices: [],
       last_purchase: null,
       fields: [
         { key: 'product_name', label: 'Producto', sortable: true },
@@ -242,7 +309,9 @@ export default {
           if(r.data.data.length > 0){
             self.last_purchase = r.data.data[0]
           }
-          self.mapDataProduct(r.data.data)
+          self.providers = self.mapDataProduct(r.data.data)
+          self.provider_low_prices = self.getPrices(r.data.data)
+          self.provider_high_prices = self.getPrices(r.data.data,false)
         })
         .catch(r => {});
     },
@@ -262,13 +331,17 @@ export default {
           };
       }).value();
 
-      self.providers = _.sortBy(providers, o => o.average)
+      return _.sortBy(providers, o => o.average)
+    },
 
-      /*providers.sort(function(a, b) {
-          return parseFloat(a.average) - parseFloat(b.average);
-      });*/
-
-
+    //get top 3 low prices of last six month
+    getPrices(data,asc=true){
+      let self = this
+      var date = moment().subtract(6, 'months').format('YYYY/MM/DD')
+      var ordered_data = asc ? _.sortBy(data, o => parseFloat(o.purcharse_price)) : _.sortBy(data, o => parseFloat(o.purcharse_price)).reverse()
+      ordered_data = ordered_data.filter(x=>moment(x.purchase.date).format('YYYY/MM/DD') >= date)
+      ordered_data = ordered_data.slice(0,3)
+      return ordered_data
     },
 
     //obtener promedio
@@ -314,3 +387,7 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+
+</style>

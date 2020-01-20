@@ -102,6 +102,7 @@
                                                 <th>Faltante</th>
                                                 <th>Precio compra</th>
                                                 <th>Cantidad</th>
+                                                <th>Fecha vencimiento</th>
                                                 <th>Subtotal</th>
                                                 <th>Opción</th>
                                             </tr>
@@ -117,6 +118,15 @@
                                                     <el-input-number v-model="item.quantity" size="small" :min="1"></el-input-number>
                                                 </td>
                                                 <td>{{subTotal(item)| currency('Q ')}}</td>
+                                                <td>
+                                                  <input type="date" class="form-control" placeholder="ingrese fecha vencimiento"
+                                                      :name="item.product"
+                                                      v-model="item.expiry_date"
+                                                      :data-vv-as=" 'fecha vencimiento '+item.product "
+                                                      v-validate="'required'"
+                                                  :class="{'input':true,'has-errors': errors.has(item.product)}">
+                                                  <FormError :attribute_name="item.product" :errors_form="errors"> </FormError>
+                                                </td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger btn-sm" @click="removeDetail(item)"><i class="fa fa-minus"></i></button>
                                                 </td>
@@ -289,7 +299,8 @@ export default {
             product_id: self.product.id,
             subtraction: self.product.quantify.subtraction,
             purcharse_price: 0.1,
-            quantity: 1
+            quantity: 1,
+            expiry_date: null
         })
     },
 

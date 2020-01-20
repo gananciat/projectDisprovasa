@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sistema;
 use Carbon\Carbon;
 use App\Models\Quantify;
 use App\Models\Purcharse;
+use App\Models\ProductExpiration;
 use Illuminate\Http\Request;
 use App\Models\PurcharseDetail;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,7 @@ class PurchaseController extends ApiController
                     'purcharse_id'=>$purcharse->id,
                     'product_id'=>$detail['product_id'],
                     'quantity' => $detail['quantity'],
+                    'expiry_date' => $detail['expiry_date'],
                     'purcharse_price' => $detail['purcharse_price']
                 ]);
 
@@ -72,6 +74,21 @@ class PurchaseController extends ApiController
                 //Consultar Stock
                 $consultar = Product::find($detail['product_id']);
                 $consultar->stock += $detail['quantity'];
+                $consultar->stock_temporary += $detail['quantity'];
+
+                if(!$consultar->persevering){
+                    $expiry = ProductExpiration::where('products_id',$consultar->id)->where('date',$detail['expiry_date'])->first();
+
+                    if(is_null($expiry)){
+                        $expiry = new ProductExpiration;
+                    }
+
+                    $expiry->quantity += $detail['quantity'];
+                    $expiry->date = $detail['expiry_date'];
+                    $expiry->products_id = $consultar->id;
+                    $expiry->save();
+                }
+
                 $consultar->save();
 
                 if(!is_null($quantify)){
@@ -110,6 +127,14 @@ class PurchaseController extends ApiController
                     //Consultar Stock
                     $consultar = Product::find($detail->product_id);
                     $consultar->stock -= $detail->quantity;
+                    $consultar->stock_temporary -= $detail->quantity;
+
+                    if(!$consultar->persevering){
+                        $expiry = ProductExpiration::where('products_id',$consultar->id)->where('date',$detail->expiry_date)->first();
+                        $expiry->quantity -= $detail->quantity;
+                        $expiry->save();
+                    }
+
                     $consultar->save();
 
                     $quantify->sumary_purchase = $quantify->sumary_purchase - $detail->quantity;
