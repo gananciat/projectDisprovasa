@@ -19,13 +19,6 @@ class MenuSuggestion extends Model
         $this->attributes['description'] = mb_strtoupper($value);
     }
 
-    public function addSelect($column)
-    {
-        $column = is_array($column) ? $column : func_get_args();
-        $this->columns = array_merge((array) $this->columns, $column);
-        return $this;
-    }
-
     public function person()
     {
         return $this->belongsTo(Person::class,'people_id');
@@ -33,6 +26,6 @@ class MenuSuggestion extends Model
 
     public function details()
     {
-        return $this->hasMany(DetailSuggestion::class,'orders_id');
+        return $this->hasMany(DetailSuggestion::class,'menu_suggestions_id');
     }
 }

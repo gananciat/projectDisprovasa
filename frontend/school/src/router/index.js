@@ -12,6 +12,8 @@ import OrderSchool from '@/components/gestion_escuela/Order'
 import NewOrder from '@/components/gestion_escuela/NewOrder'
 import DetailOrder from '@/components/gestion_escuela/DetailOrder'
 import CalendarySchool from '@/components/gestion_escuela/CalendarySchool'
+import MenuSuggestion from '@/components/gestion_escuela/MenuSuggestion'
+import OrderSuggestion from '@/components/gestion_escuela/OrderSuggestion'
 
 Vue.use(Router)
 
@@ -39,6 +41,8 @@ const routes = [
     { path: '/school/:id/management/order/new/valijas/:type_order', name: 'NewOrderV', component: NewOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/management/order/detail/:id', name: 'DetailOrder', component: DetailOrder, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/management/calendar', name: 'CalendarySchool', component: CalendarySchool, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/menu/suggestion', name: 'MenuSuggestion', component: MenuSuggestion, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/school/management/order/new/suggestion/:id', name: 'OrderSuggestion', component: OrderSuggestion, beforeEnter: multiguard([isLoggedIn]) },
 ]
 
 export default new Router({

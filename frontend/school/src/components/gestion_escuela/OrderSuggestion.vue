@@ -17,7 +17,7 @@
             
             <div class="card">
               <div class="card-header border-0">
-                <h3 class="card-title">Aregar nuevo pedido de {{ llamar_informacion }}</h3>
+                <h3 class="card-title">Aregar nuevo pedido de {{ title }}</h3>
               </div>
               <div class="card-body">
                 <div class="row">
@@ -94,30 +94,13 @@
         <div class="col-md-12 col-sm-12">
           <div class="form-group">
             <label>Menú</label>
-            <input type="text" class="form-control" placeholder="titulo del menú"
-            name="title"
-            v-model="form.title"
-            data-vv-as="titulo del menú"
-            v-validate="'required|min:5|max:125'"
-            data-vv-scope="menu"
-            :class="{'input':true,'has-errors': errors.has('menu.title')}">
-            <FormError :attribute_name="'menu.title'" :errors_form="errors"> </FormError>
+            <h3> {{ form.title }} </h3>
           </div>
         </div>  
         <div class="col-md-12 col-sm-12">
           <div class="form-group">
             <label>Descripción</label>
-            <textarea class="form-control" 
-            cols="10" rows="3" 
-            placeholder="descripción del menú"
-            name="description"
-            v-model="form.description"
-            data-vv-as="descripción del menú"
-            v-validate="'required|min:5|max:1000'"
-            data-vv-scope="menu"
-            :class="{'input':true,'has-errors': errors.has('menu.description')}">
-            </textarea>
-            <FormError :attribute_name="'menu.description'" :errors_form="errors"> </FormError>
+            <p> {{ form.description }} </p>
           </div>
         </div>                
       </div>
@@ -334,7 +317,7 @@ export default {
         order: '',
         title: '',
         description: '',
-        date: new Date().setDate(new Date().getDate() - 2),
+        date: '',
         schools_id: '',
         detail_order: []
       },
@@ -349,10 +332,13 @@ export default {
     };
   },
   created() {
-    let self = this;
+    let self = this
+    let renombrar = '';
+    let message = ''
+    message = 'alimentación'
+    self.title = message
     self.form.schools_id = self.$store.state.school.schools_id
-    self.getCodes()
-    self.getCalendario()
+    self.getMenu()
   },
 
   methods: {
@@ -376,6 +362,24 @@ export default {
         }
       
       return error
+    },
+
+    getMenu(){
+      let self = this;
+      self.loading = true;
+        
+      self.$store.state.services.menusuggestionService
+        .get(self.$route.params.id)
+        .then(r => {
+            self.loading = false; 
+            self.items = r.data.data[0]
+            self.form.title = self.items.title
+            self.form.description = self.items.description
+            self.getCodes()
+            self.getCalendario()            
+            console.log(r.data.data)        
+        })
+        .catch(r => {});
     },
 
     getCodes() {
@@ -542,27 +546,6 @@ export default {
       });
     },
 
-    //Llamar todos los productos que pertenecen al tipo de orden seleccionada
-    getProduct(type){
-      let self = this
-      self.loading = true
-
-      self.$store.state.services.productService
-        .get(type)
-        .then(r => {
-          self.products = []
-          if(r.response){
-            self.$toastr.error(r.response.data.error, 'error')
-            return
-          }
-          r.data.data.forEach(function(item) {
-            self.products.push({id: item.id, name: item.name, category: item.category.name, marca: item.presentation.name, price: item.prices[0].price})
-          })
-          self.loading = false
-        })
-        .catch(r => {});      
-    },
-
     //Agregar número de teléfono de la persona
     addProductDetail(){
       let self = this
@@ -590,7 +573,6 @@ export default {
                         item.sub_total = self.information_product.sub_total + item.sub_total
                         self.disponibility = self.disponibility - self.information_product.sub_total
 
-                        self.limpiarInputDetail()
                         return                      
                       }
                   });
@@ -607,8 +589,7 @@ export default {
                                               producto:self.product_id.name})
                 self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)  
                 self.disponibility = self.disponibility - self.information_product.sub_total  
-              
-                self.limpiarInputDetail()
+
                 self.loading_detail = false                
               }   
             } else {
@@ -627,27 +608,7 @@ export default {
           showCancelButton: false
         })        
       }
-    },
-
-    //Limpiar información detalle del pedido (inputs)
-    limpiarInputDetail(){
-      let self = this
-      self.product_id = null,
-      self.quantity = 1,
-      self.observation = '',
-      self.information_product.category = ''
-      self.information_product.marca = ''
-      self.information_product.price = ''
-      self.information_product.sub_total = ''     
-    },
-
-    //Quitar número de teléfono de la escuela
-    quitarProductDetail(index) {
-      let self = this
-      self.total = self.total - self.form.detail_order[index].sub_total
-      self.disponibility = self.disponibility - self.form.detail_order[index].sub_total
-      self.form.detail_order.splice(index, 1);
-    },    
+    }, 
 
     //Mostrar información del producto seleccionado
     information(data){
@@ -663,7 +624,7 @@ export default {
       self.amount_available = false
       self.disponibility = 0
       self.$store.state.services.reservationService
-        .getMoney(self.form.code.id, self.title)
+        .getMoney(self.form.code.id, 'alimentacion')
         .then(r => {
           self.loading = false
           if( self.interceptar_error(r) == 0) return
@@ -675,54 +636,6 @@ export default {
           self.total = 0          
         })
         .catch(r => {});
-    }
-  },
-  computed: {
-    llamar_informacion(){
-      let self = this
-      let renombrar = '';
-      let message = ''
-      var d = new Date()
-      self.nav_info = 'active';
-      self.tab_info = 'show active';
-      self.nav_ord = '';
-      self.tab_ord = '';
-      self.form.title = null
-      self.form.description = null
-      self.form.date = null
-      self.form.code = null
-      self.form.detail_order = []
-      self.total = 0
-      self.amount_available = false
-      self.disponibility = 0
-      self.disbursement = ''
-      switch (self.$route.params.type_order) {
-        case 'A':
-          renombrar = 'alimentacion'
-          message = 'alimentación'
-          self.getProduct(renombrar)           
-          break;
-        case 'G':
-          renombrar = 'gratuidad'
-          message = 'gratuidad'
-          self.getProduct(renombrar)           
-          break;
-        case 'U':
-          renombrar = 'utiles'
-          message = 'utiles'
-          self.getProduct(renombrar)           
-          break;  
-        case 'V':
-          renombrar = 'valija didactica'
-          message = 'valijas didactica'
-          self.getProduct('utiles')           
-          break;                      
-        default:
-          self.$router.push('/school/management/order') 
-          break;
-      }
-      self.title = renombrar
-      return message    
     }
   },
   mounted(){
