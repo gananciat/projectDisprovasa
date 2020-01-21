@@ -59,6 +59,7 @@ Route::resource('persons', 'Sistema\PersonController', ['except' => ['create', '
 Route::resource('quantifies', 'Sistema\QuantifyController', ['except' => ['create', 'edit']]);
 Route::resource('repeat_order', 'Sistema\RepeatOrderController', ['except' => ['index', 'create', 'edit', 'update', 'destroy']]);
 Route::resource('menu_suggestion', 'Sistema\MenuSuggestionController', ['except' => ['create', 'edit']]);
+Route::resource('products_expirations', 'Sistema\ProductExpirationController', ['except' => ['create']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

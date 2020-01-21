@@ -1,4 +1,4 @@
-class productService {
+class ProductService {
     axios
     baseUrl
 
@@ -43,4 +43,4 @@ class productService {
     }
 }
 
-export default productService
+export default ProductService

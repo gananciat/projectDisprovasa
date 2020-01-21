@@ -12,7 +12,7 @@ import Presentation from '@/components/administracion/Presentation'
 import Product from '@/components/administracion/Product'
 import Provider from '@/components/ingresos/Provider'
 import Purchase from '@/components/ingresos/compra/Index'
-import MissingProduct from '@/components/ingresos/MissingProduct'
+import Inventory from '@/components/ingresos/inventario/Index'
 import PurchaseCreate from '@/components/ingresos/compra/Create'
 import PurchaseViewInfo from '@/components/ingresos/compra/ViewInfo'
 import Balance from '@/components/administracion_escuela/balance/Index'
@@ -59,7 +59,7 @@ const routes = [
     { path: '/product', name: 'Product', component: Product, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school', name: 'School', component: School, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/provider', name: 'Provider', component: Provider, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/missing_product', name: 'MissingProduct', component: MissingProduct, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/inventory', name: 'Inventory', component: Inventory, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase', name: 'Purcharse', component: Purchase, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase_create', name: 'PurchaseCreate', component: PurchaseCreate, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase_view_info/:id', name: 'PurchaseViewInfo', component: PurchaseViewInfo, beforeEnter: multiguard([isLoggedIn]) },
