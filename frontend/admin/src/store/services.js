@@ -33,6 +33,7 @@ import ReportService from '../services/ReportService'
 import RolService from '../services/RolService'
 import PersonService from '../services/PersonService'
 import DashboardService from '../services/DashboradService'
+import ProductExpirationService from '../services/ProductExpirationService'
 
 
 /* IMPORT SCHOOL */
@@ -119,6 +120,7 @@ export default {
     personService: new PersonService(Axios, baseUrl),
     quantifyService: new QuantifyService(Axios, baseUrl),
     dashboardService: new DashboardService(Axios, baseUrl),
+    productExpirationService: new ProductExpirationService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),
