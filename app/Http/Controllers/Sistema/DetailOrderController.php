@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Order;
+use App\Models\School;
 use App\Models\Balance;
 use App\Models\Product;
 use App\Models\Quantify;
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
+use App\Models\Disbursement;
 use Illuminate\Http\Request;
 use App\Models\ProgressOrder;
+use App\Models\ProductExpiration;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
-use App\Models\Disbursement;
-use App\Models\School;
 use Illuminate\Database\Eloquent\Builder;
 
 class DetailOrderController extends ApiController
@@ -104,6 +105,18 @@ class DetailOrderController extends ApiController
                 for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
                     if($product->stock_temporary > 0){
                         $product->stock_temporary -= 1;
+
+                        if(!$product->persevering)
+                        {
+                            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+                            $expiration->used += 1;
+            
+                            if($expiration->quantity == $expiration->used)
+                                $expiration->current = true;
+                
+                            $expiration->save();
+                        }
+
                     }else{
                         $insert_quantify->subtraction += 1;
                     }
@@ -247,7 +260,19 @@ class DetailOrderController extends ApiController
                     for ($i=0; $i < $detail_order->quantity; $i++) { 
                             
                         if($product->stock_temporary < $product->stock)
+                        {
                             $product->stock_temporary += 1;
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'desc')->first();
+                                $expiration->used -= 1;
+                
+                                if($expiration->used == 0)
+                                    $expiration->current = false;
+                    
+                                $expiration->save();
+                            }
+                        }
                         else
                             $insert_quantify->subtraction -= 1;
                     }
@@ -281,6 +306,17 @@ class DetailOrderController extends ApiController
                     for ($i=0; $i < $detail_order->quantity; $i++) { 
                         if($product->stock_temporary > 0){
                             $product->stock_temporary -= 1;
+
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+                                $expiration->used += 1;
+                
+                                if($expiration->quantity == $expiration->used)
+                                    $expiration->current = true;
+                    
+                                $expiration->save();
+                            }
                         }else{
                             $insert_quantify->subtraction += 1;
                         }

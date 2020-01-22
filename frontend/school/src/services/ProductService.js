@@ -22,6 +22,11 @@ class productService {
         return self.axios.get(`${self.baseUrl}/${propierty}/edit`);
     }
 
+    getCuadrar(product, price) {
+        let self = this;
+        return self.axios.get(`${self.baseUrl}/products/${product}/cuadrar/${price}`);
+    }
+
     create(data) {
         let self = this;
         return self.axios.post(`${self.baseUrl}`, data);
