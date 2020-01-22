@@ -32,6 +32,10 @@ use App\Imports\MunicipioImport;
 use App\Models\DetailSuggestion;
 use App\Imports\AlimentacionImport;
 use App\Imports\DepartamentoImport;
+use App\Imports\LicensePlateImport;
+use App\Imports\TypeLicenseImport;
+use App\Imports\VehicleBrandImport;
+use App\Imports\VehicleModelImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -127,6 +131,10 @@ class DatabaseSeeder extends Seeder
         Excel::import(new AlimentacionImport, 'database/seeds/Catalogos/Alimentacion.xlsx');
         Excel::import(new GratuidadImport, 'database/seeds/Catalogos/Gratuidad.xlsx');
         Excel::import(new UtilImport, 'database/seeds/Catalogos/Utiles.xlsx');
+        Excel::import(new TypeLicenseImport, 'database/seeds/Catalogos/Licencias.xlsx');
+        Excel::import(new LicensePlateImport, 'database/seeds/Catalogos/Placas.xlsx');
+        Excel::import(new VehicleBrandImport, 'database/seeds/Catalogos/MarcasVehiculos.xlsx');
+        Excel::import(new VehicleModelImport, 'database/seeds/Catalogos/ModelosVehiculos.xlsx');
 
         $insert_rol = new Rol();
         $insert_rol->name = 'administrador';

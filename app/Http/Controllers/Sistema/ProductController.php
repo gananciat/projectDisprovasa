@@ -13,7 +13,7 @@ class ProductController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -210,5 +210,32 @@ class ProductController extends ApiController
         $product->prices()->delete();
         $product->delete();
         return $this->showOne($product,201);
+    }
+
+    public function cuadrar($product, $price)
+    {
+        $array = array();
+        $products = Product::with(['category','presentation','prices' => function ($query){
+            $query->where('current', true);
+        }])
+        ->where('propierty',mb_strtoupper($product));
+
+        foreach ($products as $key => $value) {
+            for ($i=1; $i < 6; $i++) { 
+                if($value->prices[0]['price']*$i == $price)
+                {
+                    $data['cantidad'] = $i;
+                    $data['producto'] = $value->name;
+                    $data['marca'] = $value->presentation->name;
+                    $data['precio'] = $value->prices[0]['price'];                
+                    array_push($array, $data);
+                }
+            }
+        }
+
+        if(count($array) == 0)
+            return $this->errorResponse('El sistema no pudo encontrar un precio que le ayude a cuadrar.', 422);
+        else
+            return $this->successResponse($array);
     }
 }

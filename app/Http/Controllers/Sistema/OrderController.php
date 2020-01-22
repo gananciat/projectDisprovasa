@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Rol;
+use App\Models\Year;
+use App\Models\Month;
 use App\Models\Order;
+use App\Models\Balance;
+use App\Models\Product;
+use App\Models\Quantify;
+use App\Models\DetailOrder;
+use App\Models\OrderStatus;
+use App\Models\PersonSchool;
 use Illuminate\Http\Request;
+use App\Models\ProgressOrder;
+use App\Models\ProductExpiration;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApiController;
-use App\Models\Balance;
-use App\Models\DetailOrder;
-use App\Models\Month;
-use App\Models\OrderStatus;
-use App\Models\PersonSchool;
-use App\Models\Product;
-use App\Models\ProgressOrder;
-use App\Models\Quantify;
-use App\Models\Year;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends ApiController
 {
@@ -150,6 +151,18 @@ class OrderController extends ApiController
                     for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
                         if($product->stock_temporary > 0){
                             $product->stock_temporary -= 1;
+                            
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+                                $expiration->used += 1;
+                
+                                if($expiration->quantity == $expiration->used)
+                                    $expiration->current = true;
+                    
+                                $expiration->save();
+                            }
+
                         }else{
                             $insert_quantify->subtraction += 1;
                         }
@@ -321,7 +334,19 @@ class OrderController extends ApiController
                         for ($i=0; $i < $value->quantity; $i++) { 
                             
                             if($product->stock_temporary < $product->stock)
+                            {
                                 $product->stock_temporary += 1;
+                                if(!$product->persevering)
+                                {
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'desc')->first();
+                                    $expiration->used -= 1;
+                    
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
+                        
+                                    $expiration->save();
+                                }
+                            }
                             else
                                 $insert_quantify->subtraction -= 1;
                         }

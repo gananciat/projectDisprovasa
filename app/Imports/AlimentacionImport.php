@@ -45,7 +45,7 @@ class AlimentacionImport implements ToCollection
                         $insert_price->products_id = $insert->id;
                         $insert_price->save();
 
-                        if($insert->persevering)
+                        if(!$insert->persevering)
                         {
                             for ($i=0; $i < 5; $i++) {  
                                 $dias = random_int(50,365);                           
@@ -59,14 +59,14 @@ class AlimentacionImport implements ToCollection
                                 $insert_expirtation->products_id = $insert->id;
                                 $insert_expirtation->save();     
                                 
-                                if($insert_expirtation->date < date("Y-m-d",strtotime(date("d-m-Y")."+ 2 month")))
+                                if($insert_expirtation->date <= date("d-m-Y"))
                                 {
                                     $insert_expirtation->expiration = true;
                                     $insert_expirtation->return = $insert_expirtation->quantity;
                                 }
                                 else
                                 {
-                                    $insert->stock = $insert_expirtation->quantity;
+                                    $insert->stock += $insert_expirtation->quantity;
                                     $insert->stock_temporary = $insert->stock;
                                 }
 

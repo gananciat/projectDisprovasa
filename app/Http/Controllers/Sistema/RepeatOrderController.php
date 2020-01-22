@@ -13,6 +13,7 @@ use App\Models\OrderStatus;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\ProgressOrder;
+use App\Models\ProductExpiration;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -140,6 +141,17 @@ class RepeatOrderController extends ApiController
                     for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
                         if($product->stock_temporary > 0){
                             $product->stock_temporary -= 1;
+
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+                                $expiration->used += 1;
+                
+                                if($expiration->quantity == $expiration->used)
+                                    $expiration->current = true;
+                    
+                                $expiration->save();
+                            }
                         }else{
                             $insert_quantify->subtraction += 1;
                         }

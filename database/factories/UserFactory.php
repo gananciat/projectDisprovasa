@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\PersonSchool;
 use App\Models\Price;
 use App\Models\Product;
+use App\Models\ProductExpiration;
 use App\Models\Provider;
 use App\Models\Quantify;
 use App\Models\Reservation;
@@ -156,6 +157,18 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
     for ($i=0; $i < $cantidad; $i++) { 
         if($product->stock_temporary > 0){
             $product->stock_temporary -= 1;
+
+            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+            if(!is_null($expiration))
+            {
+                $expiration->used += 1;
+
+                if($expiration->quantity == $expiration->used)
+                    $expiration->current = true;
+    
+                $expiration->save();
+            }
+
         }else{
             $insert_quantify->subtraction += 1;
         }
