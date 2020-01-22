@@ -466,6 +466,7 @@ class DatabaseSeeder extends Seeder
                 $detail = new PurcharseDetail;
                 $quantify = Quantify::where('subtraction','>',0)->get()->random();
                 $detail->purcharse_id = $data->id;
+                $detail->expiry_date = '2020-01-'.rand(1,12);
                 $detail->product_id = $quantify->id;
                 $detail->quantity = rand(5,100);
                 $detail->decrease = rand(5,$detail->quantity);

@@ -15,7 +15,7 @@ class CreatePurcharseDetailsTable extends Migration
     {
         Schema::create('purcharse_details', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('expiry_date')->nulable();
+            $table->date('expiry_date');
             $table->unsignedBigInteger('purcharse_id');
             $table->unsignedBigInteger('product_id');
             $table->decimal('purcharse_price',11,2);
