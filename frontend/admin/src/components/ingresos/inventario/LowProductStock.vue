@@ -78,7 +78,10 @@ export default {
       items: [],
       fields: [
         { key: 'product_name', label: 'Producto', sortable: true },
+        { key: 'quantity', label: 'Cantidad', sortable: true },
         { key: 'date', label: 'Fecha expiración', sortable: true },
+        { key: 'used', label: 'Cantidad vendida', sortable: true },
+        { key: 'return', label: 'Cantidad devuelta', sortable: true },
         { key: 'status', label: 'Estado', sortable: true },
       ],
       filter: null,

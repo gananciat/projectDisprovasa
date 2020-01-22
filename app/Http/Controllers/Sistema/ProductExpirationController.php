@@ -11,20 +11,19 @@ class ProductExpirationController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     public function index()
     {
-        $date = Carbon::now()->subMonths(2)->format('Y-m-d');
-
+        //$date = Carbon::now()->subMonths(2)->format('Y-m-d');
+        $date = Carbon::now()->format('Y-m-d');
         $products = ProductExpiration::where('date','<=',$date)->with('product')->get();
-
         foreach ($products as $p) {
             $date_sum = Carbon::parse($p->date)->addMonths(2)->format('Y-m-d');
-            if($date_sum >= $p->date ){
+            if($date_sum <= $date ){
                 $p->expiration = true;
-
+                $p->return = $p->quantity - $p->used;
                 $p->save();
             }    
         }
@@ -47,3 +46,4 @@ class ProductExpirationController extends ApiController
         //
     }
 }
+    
