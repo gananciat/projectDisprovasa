@@ -36,6 +36,8 @@ use App\Imports\LicensePlateImport;
 use App\Imports\TypeLicenseImport;
 use App\Imports\VehicleBrandImport;
 use App\Imports\VehicleModelImport;
+use App\Models\Vehicle;
+use App\Models\VehicleModel;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -490,5 +492,6 @@ class DatabaseSeeder extends Seeder
 
         factory(MenuSuggestion::class, 25)->create();
         factory(DetailSuggestion::class, 500)->create();
+        factory(Vehicle::class, 500)->create();
     }
 }

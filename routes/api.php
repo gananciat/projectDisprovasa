@@ -61,6 +61,11 @@ Route::resource('quantifies', 'Sistema\QuantifyController', ['except' => ['creat
 Route::resource('repeat_order', 'Sistema\RepeatOrderController', ['except' => ['index', 'create', 'edit', 'update', 'destroy']]);
 Route::resource('menu_suggestion', 'Sistema\MenuSuggestionController', ['except' => ['create', 'edit']]);
 Route::resource('products_expirations', 'Sistema\ProductExpirationController', ['except' => ['create']]);
+Route::resource('license_plate', 'Sistema\LicensePlateController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('type_license', 'Sistema\TypeLicenseController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle_brand', 'Sistema\VehicleBrandController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle_model', 'Sistema\VehicleModelController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle', 'Sistema\VehicleController', ['except' => ['create','edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

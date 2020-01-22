@@ -13,6 +13,9 @@ class CreateVehiclesTable extends Migration
             $table->string('placa')->unique();
             $table->string('color');
             $table->smallInteger('anio');
+            $table->string('vin')->unique();
+            $table->string('chasis')->unique();
+            $table->smallInteger('motor');
             $table->unsignedBigInteger('license_plates_id');
             $table->foreign('license_plates_id')->references('id')->on('license_plates');
             $table->unsignedBigInteger('vehicle_models_id');

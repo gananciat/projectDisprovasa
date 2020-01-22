@@ -5,6 +5,7 @@ use App\Models\Balance;
 use App\Models\CalendarSchool;
 use App\Models\DetailOrder;
 use App\Models\DetailSuggestion;
+use App\Models\LicensePlate;
 use App\Models\MenuSuggestion;
 use App\Models\Month;
 use App\Models\Municipality;
@@ -17,6 +18,8 @@ use App\Models\Provider;
 use App\Models\Quantify;
 use App\Models\Reservation;
 use App\Models\School;
+use App\Models\Vehicle;
+use App\Models\VehicleModel;
 use App\Models\Year;
 use App\Seller;
 use App\Transaction;
@@ -211,5 +214,26 @@ $factory->define(DetailSuggestion::class, function (Faker $faker) {
         'observation' => $faker->randomElement(['', $faker->text(100)]),
         'products_id' => Product::where('propierty','ALIMENTACION')->get()->random()->id,
         'menu_suggestions_id' => MenuSuggestion::all()->random()->id
+    ];
+});
+
+$factory->define(Vehicle::class, function (Faker $faker) {
+    $vin = '';
+    $chasis = '';
+    for ($i=0; $i < 13; $i++) { 
+        $vin .= $faker->randomElement(['?','#']);
+    }
+    for ($i=0; $i < 13; $i++) { 
+        $chasis .= $faker->randomElement(['?','#']);
+    }
+    return [
+        'placa' => $faker->unique()->bothify('###???'),
+        'color' => $faker->randomElement(['rojo','azul','amarillo','gris','negro','verde','celeste','beish','blaco']),
+        'anio' => $faker->numberBetween(1990, date('Y')),
+        'vin' => $faker->unique()->bothify($vin),
+        'chasis' => $faker->unique()->bothify($chasis),
+        'motor' => $faker->randomElement(['1000','1200','1400','1600','1800','2000','2200','2400','2600']),
+        'license_plates_id' => LicensePlate::all()->random()->id,
+        'vehicle_models_id' => VehicleModel::all()->random()->id
     ];
 });
