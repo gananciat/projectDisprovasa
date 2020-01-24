@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     protected $table = 'vehicles';
-    protected $fillableee = ['placa','color','anio','license_plates_id','vehicle_models_id'];
+    protected $fillableee = ['placa','color','anio','vin','chasis','motor','license_plates_id','vehicle_models_id'];
 
     public function setPlacaAttribute($value) {
         $this->attributes['placa'] = mb_strtoupper($value);
@@ -17,6 +17,14 @@ class Vehicle extends Model
 
     public function setColorAttribute($value) {
         $this->attributes['color'] = mb_strtoupper($value);
+    }
+
+    public function setVinAttribute($value) {
+        $this->attributes['vin'] = mb_strtoupper($value);
+    }
+
+    public function setChasisAttribute($value) {
+        $this->attributes['chasis'] = mb_strtoupper($value);
     }
 
     public function plate()
