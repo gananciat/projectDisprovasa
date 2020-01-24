@@ -211,13 +211,10 @@ export default {
 
     dateRules (item) {
       if(item.start_date !== ''){
-        var theDate = moment(item.start_date)
-        var init_date = moment(theDate.toString()).format('YYYY-MM-DD')
-        var finish_date = moment().format('YYYY-MM-DD')
         return {
           required: true,
           date_format: 'yyyy-MM-dd',
-          after: init_date
+          after: item.start_date
         };
       }
       return {
