@@ -13,7 +13,7 @@ class ProductController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     /**
@@ -167,6 +167,7 @@ class ProductController extends ApiController
         try {
             DB::beginTransaction();
                 $data = $request->all();
+                $existe = null;
 
                 if($product->name != $request->name || $product->categories_id != $request->categories_id || $product->presentations_id != $request->presentations_id)
                 {
@@ -184,6 +185,7 @@ class ProductController extends ApiController
                 $product->categories_id = $request->categories_id;
                 $product->presentations_id = $request->presentations_id;
                 $product->camouflage = $request->camouflage;
+                $product->persevering = $request->persevering;
 
                 if (!$product->isDirty()) {
                     return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
