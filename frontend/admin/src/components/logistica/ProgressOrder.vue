@@ -19,19 +19,22 @@
         <b-jumbotron header="Pedidos existentes">
             <hr>
             <div class="row">
-                <div class="col-md-4 col-sm-12 col-4 text-center">
+                <div class="col-md-3 col-sm-12 col-3 text-center">
                     <button type="button" @click="getAlimentacion" class="btn btn-block btn-outline-success btn-lg">ALIMENTACION</button>
                 </div>
-                <div class="col-md-4 col-sm-12 col-4 text-center">
+                <div class="col-md-3 col-sm-12 col-3 text-center">
                     <button type="button" @click="getGratuidad" class="btn btn-block btn-outline-primary btn-lg">GRATUIDAD</button>
                 </div>
-                <div class="col-md-4 col-sm-12 col-4 text-center">
+                <div class="col-md-3 col-sm-12 col-3 text-center">
                     <button type="button" @click="getUtiles" class="btn btn-block btn-outline-info btn-lg">UTILES</button>
+                </div>
+                <div class="col-md-3 col-sm-12 col-3 text-center">
+                    <button type="button" @click="getValijas" class="btn btn-block btn-outline-warning btn-lg">VALIJAS DIDACTICAS</button>
                 </div>
             </div>
             <br>
             <div class="row">
-                <div class="col-md-4 col-sm-12 col-4">
+                <div class="col-md-3 col-sm-12 col-3">
                     <template v-for="(item,index) in items_alimentacion">
                         <router-link v-b-tooltip :title="'gestionar orden #'+item.order" v-bind:key="index" :to="'/assign_product/'+item.id" >
                             <div v-bind:key="'1.'+index" :class="color_a(item.date)">
@@ -57,7 +60,7 @@
                         No hay pedidos de alimentación.
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12 col-4">
+                <div class="col-md-3 col-sm-12 col-3">
                     <template v-for="(item,index) in items_gratuidad">
                         <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
                             <div v-bind:key="'1.'+index" :class="color_g(item.date)">
@@ -83,7 +86,7 @@
                         No hay pedidos de gratuidad.
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12 col-4">
+                <div class="col-md-3 col-sm-12 col-3">
                     <template v-for="(item,index) in items_utiles">
                         <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
                             <div v-bind:key="'1.'+index" :class="color_u(item.date)">
@@ -109,6 +112,32 @@
                         No hay pedidos de utiles.
                     </div>
                 </div>
+                <div class="col-md-3 col-sm-12 col-3">
+                    <template v-for="(item,index) in items_valijas">
+                        <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
+                            <div v-bind:key="'1.'+index" :class="color_v(item.date)">
+                                <span class="info-box-icon"><i class="fa fa-book"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-number">{{ item.school.name }}</span>
+                                    <span class="info-box-number">Código, {{ item.code }}</span>
+                                    <span class="info-box-text">Pedido #{{ item.order }}</span>
+                                    <span class="info-box-text">Menú, {{ item.title }}</span>
+                                    <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
+                                    <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
+                                    <div class="progress">
+                                        <div class="progress-bar" :style="'width:'+(item.detail_complete*100)/item.detail_total+'%'"></div>
+                                    </div>
+                                    <span class="progress-description text-center"> {{ (item.detail_complete*100)/item.detail_total }}%</span>
+                                </div>
+                            </div>
+                        </router-link>
+                    </template>
+                    <div v-if="items_valijas.length === 0 && view_v" class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="fa fa-book"></i> ¡Mensaje!</h5>
+                        No hay pedidos de valijas didactica.
+                    </div>
+                </div>
             </div>            
         </b-jumbotron>
       </div>
@@ -132,9 +161,11 @@ export default {
       view_a: false,
       view_g: false,
       view_u: false,
+      view_v: false,
       items_alimentacion: [],
       items_gratuidad: [],
       items_utiles: [],
+      items_valijas: [],
     };
   },
   created() {
@@ -184,30 +215,53 @@ export default {
         .catch(r => {});
     },
 
+    getValijas() {
+      let self = this;
+      self.loading = true;
+
+      self.$store.state.services.progressorderService
+        .getOrder('valija didactica')
+        .then(r => {
+          self.loading = false; 
+          self.items_valijas = r.data.data;
+          self.view_v = true
+        })
+        .catch(r => {});
+    },
+
     color_a(fecha){
-        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+        if(fecha == moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-warning';
-        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha > moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-success'
-        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha < moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-danger'
     },
 
     color_g(fecha){
-        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+        if(fecha == moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-warning';
-        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha > moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-primary'
-        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha < moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-danger'
     },
 
     color_u(fecha){
-        if(moment(fecha).format('YYYY-MM-DD') == moment(new Date()).format('YYYY-MM-DD'))
+        if(fecha == moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-warning';
-        else if(moment(fecha).format('YYYY-MM-DD') > moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha > moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-info'
-        else if(moment(fecha).format('YYYY-MM-DD') < moment(new Date()).format('YYYY-MM-DD'))
+        else if(fecha < moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-danger'
+    },
+
+    color_v(fecha){
+        if(fecha == moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-warning';
+        else if(fecha > moment(new Date()).format('YYYY-MM-DD'))
+            return 'info-box bg-default'
+        else if(fecha < moment(new Date()).format('YYYY-MM-DD'))
             return 'info-box bg-danger'
     }
   },

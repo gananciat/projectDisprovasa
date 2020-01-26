@@ -60,6 +60,7 @@ class ProgressOrderController extends ApiController
 
         try {
             DB::beginTransaction();
+
                 $detail_order = DetailOrder::find($request->detail_orders_id);
                 $detail_order->complete = true;
                 $detail_order->deliver = true;
@@ -71,6 +72,10 @@ class ProgressOrderController extends ApiController
                     $order->complete = true;
                     $order->save();
                 }
+
+                $progress_order = ProgressOrder::where('detail_orders_id',$detail_order->id)->first();
+                $progress_order->check = true;
+                $progress_order->save();
 
             DB::commit();
 
@@ -99,6 +104,7 @@ class ProgressOrderController extends ApiController
                                     ])
                         ->where('type_order',mb_strtoupper($progress_order))
                         ->where('complete',false)
+                        ->orderBy('date', 'asc')
                         ->get();
 
         return $this->showAll($orders);
@@ -120,7 +126,9 @@ class ProgressOrderController extends ApiController
                 'progress:id,original_quantity,purchased_amount,detail_orders_id',
                 ])         
         ->where('orders_id',$progress_order)                      
-        ->where('complete',false)->get();
+        ->where('complete',false)
+        ->orderBy('orders.date', 'asc')
+        ->get();
 
         return $this->showAll($details);
     }
@@ -175,8 +183,10 @@ class ProgressOrderController extends ApiController
                 $order_status = OrderStatus::where('status',$status)->first();
                 $progress_order->order_statuses_id = $order_status->id;
 
-                if($detail_order->complete == true)
+                if($detail_order->complete == true){
                     $detail_order->deliver = true;
+                    $progress_order->check = true;
+                }
 
                 $product->save();
                 $detail_order->save();                

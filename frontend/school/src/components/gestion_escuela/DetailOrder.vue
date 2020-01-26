@@ -108,7 +108,7 @@
                                     <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>
                                         <br><br>
-                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="!items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
+                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
                                             <i class="fa fa-history">
                                             </i>
                                         </button>                                         

@@ -161,13 +161,13 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         if($product->stock_temporary > 0){
             $product->stock_temporary -= 1;
 
-            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
+            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
             if(!is_null($expiration))
             {
-                $expiration->used += 1;
+                $expiration->used -= 1;
 
-                if($expiration->quantity == $expiration->used)
-                    $expiration->current = true;
+                if($expiration->used == 0)
+                    $expiration->current = false;
     
                 $expiration->save();
             }
