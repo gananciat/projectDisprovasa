@@ -23,6 +23,8 @@ import TransportCheck from '@/components/logistica/TransportCheck'
 import CreateBalance from '@/components/administracion_escuela/balance/Create'
 import CalendarySchool from '@/components/logistica/CalendarySchool'
 import ProductsOrdered from '@/components/logistica/ProductsOrdered'
+import Serie from '@/components/facturacion/Serie'
+import Vat from '@/components/facturacion/Vat'
 import Person from '@/components/acceso/Person'
 import Rol from '@/components/acceso/Rol'
 
@@ -76,6 +78,8 @@ const routes = [
     { path: '/user', name: 'Person', component: Person, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/rol', name: 'Rol', component: Rol, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/products_ordered', name: 'ProductsOrdered', component: ProductsOrdered, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/vat', name: 'Vat', component: Vat, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/serie', name: 'Serie', component: Serie, beforeEnter: multiguard([isLoggedIn]) },
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },

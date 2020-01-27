@@ -18,7 +18,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $fillable = ['order','title','description','date','total','schools_id','aware','on_route',
-                           'people_id','months_id','years_id','complete','type_order','code','repeat','balances_id'];
+                           'people_id','months_id','years_id','complete','type_order','code','repeat','balances_id','invoiced'];
 
     public function setOrderAttribute($value) {
         $this->attributes['order'] = mb_strtoupper($value);

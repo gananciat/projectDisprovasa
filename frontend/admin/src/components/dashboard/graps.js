@@ -32,7 +32,7 @@ export default {
                   format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                 }
               }
-              },
+            },
         }
     },
 }

@@ -20,6 +20,7 @@ class CreateOrdersTable extends Migration
             $table->boolean('complete')->default(0);
             $table->boolean('on_route')->default(0);
             $table->boolean('aware')->default(0);
+            $table->boolean('invoiced')->default(0);
             $table->smallInteger('repeat')->default(0);
             $table->smallInteger('balances_id')->default(0);
             $table->unsignedBigInteger('schools_id');
