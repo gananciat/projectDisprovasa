@@ -12,7 +12,7 @@ class CreateProviderPhoneTable extends Migration
             $table->bigIncrements('id');
             $table->string('number');
             $table->unsignedBigInteger('provider_id');
-            $table->foreign('provider_id')->references('id')->on('provider');  
+            $table->foreign('provider_id')->references('id')->on('provider')->onUpdate('cascade');  
                   
             $table->timestamps();
         });

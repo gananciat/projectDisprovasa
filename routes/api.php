@@ -66,6 +66,8 @@ Route::resource('type_license', 'Sistema\TypeLicenseController', ['except' => ['
 Route::resource('vehicle_brand', 'Sistema\VehicleBrandController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
 Route::resource('vehicle_model', 'Sistema\VehicleModelController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
 Route::resource('vehicle', 'Sistema\VehicleController', ['except' => ['create','edit']]);
+Route::resource('check_delivery', 'Sistema\CheckDeliveryManController', ['except' => ['create','edit','update']]);
+Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['create', 'edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

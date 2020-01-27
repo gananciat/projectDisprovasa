@@ -108,7 +108,7 @@
                                     <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>
                                         <br><br>
-                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="!items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
+                                        <button type="button" class="btn btn-info btn-md pull-right" v-if="items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
                                             <i class="fa fa-history">
                                             </i>
                                         </button>                                         
@@ -272,10 +272,10 @@
                                             <tr v-bind:key="index">
                                                 <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">{{ index+1 }}</td>
                                                 <td style="vertical-align:middle; font-size: 18px; text-align: center; font-weight: bold;">
-                                                    <p v-if="item.complete">
+                                                    <p v-if="item.deliver">
                                                         {{ item.quantity }}
                                                     </p>                                                    
-                                                    <div class="form-group" v-if="!item.complete">
+                                                    <div class="form-group" v-if="!item.deliver">
                                                         <el-input-number v-model="item.quantity" size="mini" 
                                                         :precision="0" :step="1" :min="item.progress.purchased_amount == 0 ? Number(item.progress.purchased_amount+1) : Number(item.progress.purchased_amount)" :max="10000"
                                                         data-vv-name="edit.quantity"
@@ -288,10 +288,10 @@
                                                 </td>
                                                 <td style="vertical-align:middle;">{{ item.product.name+' / '+ item.product.presentation.name }}</td>
                                                 <td style="vertical-align:middle;">
-                                                    <p v-if="item.complete">
+                                                    <p v-if="item.deliver">
                                                         {{ item.observation }}
                                                     </p>
-                                                    <div class="form-group" v-if="!item.complete">
+                                                    <div class="form-group" v-if="!item.deliver">
                                                         <textarea class="form-control" 
                                                         rows="3" 
                                                         placeholder="observación del producto"
@@ -319,7 +319,7 @@
                                                 <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
                                                 <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.subtotal = item.quantity * item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
                                                 <td style="vertical-align:middle; text-align: center;">
-                                                    <button type="button" v-if="!item.complete" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
+                                                    <button type="button" v-if="!item.deliver" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
                                                     <button type="button" v-if="item.progress.purchased_amount == 0" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(item)"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>                       

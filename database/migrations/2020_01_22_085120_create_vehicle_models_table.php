@@ -13,7 +13,7 @@ class CreateVehicleModelsTable extends Migration
             $table->string('name')->unique();
             $table->string('brand_model');
             $table->unsignedBigInteger('vehicle_brands_id');
-            $table->foreign('vehicle_brands_id')->references('id')->on('vehicle_brands');
+            $table->foreign('vehicle_brands_id')->references('id')->on('vehicle_brands')->onUpdate('cascade');
             $table->timestamps();
         });
     }

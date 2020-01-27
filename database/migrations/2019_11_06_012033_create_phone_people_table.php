@@ -12,9 +12,9 @@ class CreatePhonePeopleTable extends Migration
             $table->bigIncrements('id');
             $table->string('number');
             $table->unsignedBigInteger('companies_id');
-            $table->foreign('companies_id')->references('id')->on('companies');              
+            $table->foreign('companies_id')->references('id')->on('companies')->onUpdate('cascade');              
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');              
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');              
             $table->timestamps();
         });
     }

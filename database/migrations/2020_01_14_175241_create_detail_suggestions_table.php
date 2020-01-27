@@ -12,9 +12,9 @@ class CreateDetailSuggestionsTable extends Migration
             $table->bigIncrements('id');
             $table->string('observation',500);
             $table->unsignedBigInteger('products_id');
-            $table->foreign('products_id')->references('id')->on('products');              
+            $table->foreign('products_id')->references('id')->on('products')->onUpdate('cascade');              
             $table->unsignedBigInteger('menu_suggestions_id');
-            $table->foreign('menu_suggestions_id')->references('id')->on('menu_suggestions');                           
+            $table->foreign('menu_suggestions_id')->references('id')->on('menu_suggestions')->onUpdate('cascade');                           
             $table->timestamps();
         });
     }

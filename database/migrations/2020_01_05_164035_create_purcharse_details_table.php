@@ -23,8 +23,8 @@ class CreatePurcharseDetailsTable extends Migration
             $table->integer('decrease')->default(0);
             $table->timestamps();
 
-            $table->foreign('purcharse_id')->references('id')->on('purcharses')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('purcharse_id')->references('id')->on('purcharses')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade');
         });
     }
 

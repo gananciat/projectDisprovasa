@@ -15,7 +15,7 @@ class CreateQuantifyTable extends Migration
             $table->decimal('subtraction',10,2)->default(0); 
             $table->string('year');
             $table->unsignedBigInteger('products_id');
-            $table->foreign('products_id')->references('id')->on('products');             
+            $table->foreign('products_id')->references('id')->on('products')->onUpdate('cascade');             
             $table->timestamps();
         });
     }

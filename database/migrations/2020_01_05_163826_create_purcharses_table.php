@@ -22,7 +22,7 @@ class CreatePurcharsesTable extends Migration
             $table->boolean('cancel')->default(0);
             $table->timestamps();
 
-            $table->foreign('provider_id')->references('id')->on('provider');
+            $table->foreign('provider_id')->references('id')->on('provider')->onUpdate('cascade');
         });
     }
 

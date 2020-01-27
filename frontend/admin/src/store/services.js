@@ -34,6 +34,13 @@ import RolService from '../services/RolService'
 import PersonService from '../services/PersonService'
 import DashboardService from '../services/DashboradService'
 import ProductExpirationService from '../services/ProductExpirationService'
+import CheckDeliveryManService from '../services/CheckDeliveryManService'
+import VehicleService from '../services/VehicleService'
+import VehicleModelService from '../services/VehicleModelService'
+import VehicleBrandService from '../services/VehicleBrandService'
+import LicensePlateService from '../services/LicensePlateService'
+import TypeLicenseService from '../services/TypeLicenseService'
+import DeliveryManService from '../services/DeliveryManService'
 
 
 /* IMPORT SCHOOL */
@@ -41,12 +48,13 @@ import ReservationService from '../services/ReservationService'
 import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
+import MenuSuggestionService from '../services/MenuSuggestionService'
 
 // Axios Configuration
 //let baseUrl = 'http://www.project.com/' //base url desarrollo
-//let baseUrl = 'http://sistematio.test/' //base url desarrollo
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
-let baseUrl = 'http://sistemapro.test:8000/'
+//let baseUrl = 'http://sistemapro.test:8000/'
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -121,12 +129,18 @@ export default {
     quantifyService: new QuantifyService(Axios, baseUrl),
     dashboardService: new DashboardService(Axios, baseUrl),
     productExpirationService: new ProductExpirationService(Axios, baseUrl),
+    checkdeliverymanService: new CheckDeliveryManService(Axios, baseUrl),
+    vehicleService: new VehicleService(Axios, baseUrl),
+    vehiclemodelService: new VehicleModelService(Axios, baseUrl),
+    vehiclebrandService: new VehicleBrandService(Axios, baseUrl),
+    licenseplateService: new LicensePlateService(Axios, baseUrl),
+    typelicenseService: new TypeLicenseService(Axios, baseUrl),
+    deliverymanService: new DeliveryManService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
-
-
+    menusuggestionService: new MenuSuggestionService(Axios, baseUrl),
 }

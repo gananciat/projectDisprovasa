@@ -18,7 +18,7 @@ class CreatePeopleTable extends Migration
             $table->string('direction'); 
             $table->string('email')->unique();
             $table->unsignedBigInteger('municipalities_id');
-            $table->foreign('municipalities_id')->references('id')->on('municipalities');  
+            $table->foreign('municipalities_id')->references('id')->on('municipalities')->onUpdate('cascade');     
                   
             $table->timestamps();
         });

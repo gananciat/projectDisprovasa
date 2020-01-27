@@ -15,7 +15,7 @@ class CreateProviderTable extends Migration
             $table->string('direction'); 
             $table->string('email')->nullable();
             $table->unsignedBigInteger('municipalities_id');
-            $table->foreign('municipalities_id')->references('id')->on('municipalities');  
+            $table->foreign('municipalities_id')->references('id')->on('municipalities')->onUpdate('cascade');  
                   
             $table->timestamps();
         });

@@ -108,86 +108,7 @@
 
     <div :class="'tab-pane fade '+tab_ord" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab" v-if="amount_available">
       <div class="row" v-loading="loading_detail">
-        <div class="col-md-8 col-sm-12">
-          <div class="row">          
-            <div class="col-md-12 col-sm-12">            
-              <div class="form-group">
-                <label>Producto</label>
-                <multiselect v-model="product_id"
-                    @input="information"
-                    v-validate="'required'" 
-                    data-vv-name="detail.product_id"
-                    data-vv-as="producto"
-                    :options="products" placeholder="seleccione producto"  
-                    :searchable="true"
-                    :allow-empty="false"
-                    :show-labels="false"
-                    data-vv-scope="detail"
-                    label="name" track-by="id">
-                    <span slot="noResult">No se encontro ningún registro</span>
-                    </multiselect>
-                    <FormError :attribute_name="'detail.product_id'" :errors_form="errors"> </FormError>
-              </div>
-            </div>
-            <div class="col-md-6 col-sm-12 text-center">
-              <div class="form-group">
-                <label>Categoría</label>
-                <h1>{{ information_product.category }}</h1>
-              </div>
-            </div>     
-            <div class="col-md-6 col-sm-12 text-center">
-              <div class="form-group">
-                <label>Marca</label>
-                <h1>{{ information_product.marca }}</h1>
-              </div>
-            </div>              
-            <div class="col-md-4 col-sm-12">
-              <div class="form-group">
-                <label>Cantidad</label>
-                <el-input-number v-model="quantity" 
-                :precision="0" :step="1" :min="1" :max="10000"
-                data-vv-name="detail.quantity"
-                data-vv-as="cantidad"
-                v-validate="'required|between:1,10000'"
-                data-vv-scope="detail"
-                :class="{'input':true,'has-errors': errors.has('detail.quantity')}"></el-input-number> <br>
-                <FormError :attribute_name="'detail.quantity'" :errors_form="errors"> </FormError>
-              </div>
-            </div>    
-            <div class="col-md-4 col-sm-12 text-right">
-              <div class="form-group">
-                <label>Precio Unitario</label>
-                <h1>{{ information_product.price | currency('Q ',',',2,'.','front',true) }}</h1>
-              </div>
-            </div>     
-            <div class="col-md-4 col-sm-12 text-right">
-              <div class="form-group">
-                <label>Sub Total</label>
-                <h1>{{ information_product.sub_total = quantity * information_product.price | currency('Q ',',',2,'.','front',true) }}</h1>
-              </div>
-            </div>   
-            <div class="col-md-12 col-sm-12">
-              <div class="form-group">
-                <label>Observación</label>
-                <textarea class="form-control" 
-                cols="10" rows="1" 
-                placeholder="observación del producto"
-                name="observation"
-                v-model="observation"
-                data-vv-as="observación del producto"
-                v-validate="'min:5|max:1000'"
-                data-vv-scope="detail"
-                :class="{'input':true,'has-errors': errors.has('detail.observation')}">
-                </textarea>
-                <FormError :attribute_name="'detail.observation'" :errors_form="errors"> </FormError>
-              </div>
-            </div>                               
-            <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
-            </div>      
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-12 col-sm-12">
           <div class="row">
             <div class="col-md-12 col-sm-12 text-right">
               <p><label style="font-size:32px;">Pedido #</label> <label style="font-size:48px;">{{ no_reservation }}</label></p>
@@ -212,13 +133,14 @@
                 <p>En esta sección mostraremos el <br>
                 monto total del pedido.</p>
                 <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
-                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>  
+                  <label>{{ totalMount | currency('Q ',',',2,'.','front',true) }}</label>  
                 </div>             
               </div>       
             </div>
           </div>
         </div>
         <hr>
+        &nbsp;
         &nbsp;
         <div class="col-md-12 col-sm-12">
           <div class="table-responsive">
@@ -227,28 +149,49 @@
                   <tr>
                       <th>Cantidad</th>
                       <th>Producto</th>
+                      <th>Descripción</th>
                       <th>Precio</th>
                       <th>Sub Total</th>
-                      <th></th>
                   </tr>
               </thead>
               <tbody v-if="form.detail_order.length >= 1">
                 <template v-for="(item, index) in form.detail_order">
                   <tr v-bind:key="index" style="font-size: 14px;">
-                      <td class="text-center" v-text="item.quantity"></td>
-                      <td v-text="item.producto"></td>
-                      <td class="text-right">{{ item.sale_price | currency('Q ',',',2,'.','front',true) }}</td>
-                      <td class="text-right">{{ item.sub_total | currency('Q ',',',2,'.','front',true) }}</td>
-                      <td class="text-center"> 
-                          <button class="btn btn-danger btn-sm" @click="quitarProductDetail(index)">
-                            Quitar
-                          </button>
-                      </td>                    
+                      <td class="text-center" style="vertical-align:middle; ">
+                          <div class="form-group">
+                              <el-input-number v-model="item.quantity" size="mini" 
+                              :precision="0" :step="1" :min="0" :max="10000"
+                              data-vv-name="'edit.quantity'"
+                              data-vv-as="cantidad"
+                              v-validate="'required|between:1,10000'"
+                              data-vv-scope="edit"
+                              :class="{'input':true,'has-errors': errors.has('edit.quantity')}"></el-input-number> <br>
+                              <FormError :attribute_name="'edit.quantity'" :errors_form="errors"> </FormError>
+                          </div>                        
+                      </td>
+                      <td style="vertical-align:middle; " v-text="item.producto"></td>
+                      <td style="vertical-align:middle; " class="text-center">
+                        <div class="form-group">
+                            <textarea class="form-control" 
+                            rows="3" 
+                            placeholder="observación del producto"
+                            name="observation"
+                            v-model="item.observation"
+                            data-vv-as="observación del producto"
+                            v-validate="'min:5|max:125'"
+                            data-vv-scope="edit"
+                            :class="{'input':true,'has-errors': errors.has('edit.observation')}">
+                            </textarea>
+                            <FormError :attribute_name="'edit.observation'" :errors_form="errors"> </FormError>
+                        </div>                        
+                      </td>
+                      <td style="vertical-align:middle; " class="text-right">{{ item.sale_price | currency('Q ',',',2,'.','front',true) }}</td>
+                      <td style="vertical-align:middle; " class="text-right">{{ item.sub_total = item.quantity*item.sale_price | currency('Q ',',',2,'.','front',true) }}</td>                  
                   </tr>
                 </template>
               </tbody> 
               <tfoot style="font-size: 18px;">
-                <td class="text-right" colspan="3"><b>Total</b></td>
+                <td class="text-right" colspan="4"><b>Total</b></td>
                 <td class="text-right"><b>{{ total | currency('Q ',',',2,'.','front',true) }}</b></td>
               </tfoot>           
             </table>
@@ -305,12 +248,6 @@ export default {
       amount_available: false,
       disponibility: 0,
       disbursement: '',
-      information_product: {
-        category: '',
-        marca: '',
-        price: '',
-        sub_total: '',
-      },
       form: {
         id: null,
         code: null,
@@ -346,6 +283,7 @@ export default {
     interceptar_error(r){
       let self = this
       let error = 1;
+      self.no_reservation == ''
 
         if(r.response){
             if(r.response.status === 422){
@@ -377,7 +315,6 @@ export default {
             self.form.description = self.items.description
             self.getCodes()
             self.getCalendario()            
-            console.log(r.data.data)        
         })
         .catch(r => {});
     },
@@ -442,6 +379,7 @@ export default {
 
       if(self.no_reservation == '' || self.no_reservation == null)
       {
+        self.form.detail_order = []
         self.loading = true
         let data = ''        
         self.$store.state.services.reservationService
@@ -450,6 +388,14 @@ export default {
             self.loading = false
             self.interceptar_error(r) == 0 ? '' : self.$toastr.success('número de reservación creado', 'exito') 
             self.no_reservation = r.data.data.correlative+'-'+r.data.data.year
+            self.items.details.forEach(function (item){
+              self.form.detail_order.push({ quantity: 0,
+                                            sale_price: item.product.prices[0].price,
+                                            sub_total: 0,                                            
+                                            observation: '',
+                                            products_id: item.product.id, 
+                                            producto: item.product.name+' - '+item.product.presentation.name})
+            })
             self.nav_ord = 'active';
             self.nav_ord = 'show active';
             self.nav_info = '';
@@ -457,7 +403,6 @@ export default {
           })
           .catch(r => {});
       }
-
     },
 
     inforTab(){
@@ -472,39 +417,21 @@ export default {
     createOrEdit(){
       let self = this
       
-      if(self.form.detail_order.length == 0){
-        self.$toastr.error('No hay productos en el detalle del pedido.', 'error')
-        return
-      }
-
-      self.$validator.validateAll('menu').then((result) => {
+      self.$validator.validateAll('edit').then((result) => {
           if (result) {
-            self.pasarMayusculas()
-            self.create()
+            self.$validator.validateAll('menu').then((result2) => {
+                if (result2) {
+                  self.pasarMayusculas()
+                  self.create()
+                } else {
+                  self.$toastr.error('Es necesario que ingrese información del Menú, por favor ir a la sección de "Información del Menú"', 'error')
+                }
+            });
           } else {
-            self.$toastr.error('Es necesario que ingrese información del Menú, por favor ir a la sección de "Información del Menú"', 'error')
+            self.$toastr.error('Verificar las cantidades del detalle del pedido."', 'error')
           }
       });
     },
-
-    //Limpiar formulario
-    clearData(){
-        let self = this
-        var d = new Date();
-
-        self.no_reservation = ''
-        self.form.id = null
-        self.form.order = null
-        self.form.code = null
-        self.form.title = null
-        self.form.description = null
-        self.form.date = d.setDate(d.getDate() - 2)
-        self.form.detail_order = []
-        self.total = 0
-
-        self.$validator.reset()
-        self.$validator.reset()
-    },   
 
     //pasar a mayusculas
     pasarMayusculas(){
@@ -520,81 +447,31 @@ export default {
     //funcion para guardar registro
     create(){
       let self = this
-
-      self.$swal({
-        title: "ADVERTENCIA",
-        text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
-        type: "info",
-        showCancelButton: true
-      }).then((result) => {
-          if (result.value) {
-            self.loading = true
-            let data = self.form
-            data.order = self.no_reservation
-            data.code = self.form.code.id
-            data.type_order = self.title            
-            self.$store.state.services.orderService
-              .create(data)
-              .then(r => {
-                self.loading = false
-                if( self.interceptar_error(r) == 0) return
-                self.$toastr.success('registro agregado con exito', 'exito') 
-                self.$router.push('/school/management/order') 
-              })
-              .catch(r => {});                     
-          }
-      });
-    },
-
-    //Agregar número de teléfono de la persona
-    addProductDetail(){
-      let self = this
-      let encontro = false
       self.loading_detail = true
-
-      if(self.disponibility > self.information_product.sub_total)
+      if(self.disponibility >= self.total)
       {
-        self.$validator.validateAll("detail").then((result) => {
-            if (result) {
-              self.form.detail_order.forEach(function(item) {
-                if(item.products_id == self.product_id.id){
+        self.loading_detail = false
+        self.$swal({
+          title: "ADVERTENCIA",
+          text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
+          type: "info",
+          showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+              self.loading_detail = true
+              let data = self.form
+              data.order = self.no_reservation
+              data.code = self.form.code.id
+              data.type_order = 'alimentacion'
+              self.$store.state.services.orderService
+                .create(data)
+                .then(r => {
                   self.loading_detail = false
-                  encontro = true
-                  self.$swal({
-                    title: "ADVERTENCIA",
-                    text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
-                    type: "warning",
-                    showCancelButton: true
-                  }).then((result) => {
-                      if (result.value) {
-
-                        self.total = self.information_product.sub_total + self.total;
-                        item.quantity = item.quantity + self.quantity
-                        item.sub_total = self.information_product.sub_total + item.sub_total
-                        self.disponibility = self.disponibility - self.information_product.sub_total
-
-                        return                      
-                      }
-                  });
-                }
-              })
-
-              if(self.form.detail_order.length == 0 || encontro == false ){
-                self.total = self.information_product.sub_total + self.total;
-                self.form.detail_order.push({ quantity:self.quantity,
-                                              sale_price:self.product_id.price,
-                                              sub_total:self.information_product.sub_total,                                            
-                                              observation:self.observation,
-                                              products_id:self.product_id.id, 
-                                              producto:self.product_id.name})
-                self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)  
-                self.disponibility = self.disponibility - self.information_product.sub_total  
-
-                self.loading_detail = false                
-              }   
-            } else {
-              self.$toastr.warning('los datos ingresados no son correctos.', 'advertencia')
-              self.loading_detail = false
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro agregado con exito', 'exito') 
+                  self.$router.push('/school/management/order') 
+                })
+                .catch(r => {});                     
             }
         });
       }
@@ -603,19 +480,11 @@ export default {
         self.loading_detail = false
         self.$swal({
           title: "ERROR",
-          text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ self.information_product.sub_total.toFixed(2),
+          text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL TOTAL Q "+ self.total.toFixed(2),
           type: "error",
           showCancelButton: false
         })        
       }
-    }, 
-
-    //Mostrar información del producto seleccionado
-    information(data){
-      let self = this
-      self.information_product.price = data.price
-      self.information_product.category = data.category
-      self.information_product.marca = data.marca
     },
 
     balance(){
@@ -636,6 +505,18 @@ export default {
           self.total = 0          
         })
         .catch(r => {});
+    }
+  },
+  computed: {
+    totalMount(){
+      let self = this
+      self.total = 0
+
+      self.form.detail_order.forEach(function (item){
+        self.total = self.total + item.sub_total
+      })
+
+      return self.total
     }
   },
   mounted(){

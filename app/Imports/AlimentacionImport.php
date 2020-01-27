@@ -48,18 +48,17 @@ class AlimentacionImport implements ToCollection
                         if(!$insert->persevering)
                         {
                             for ($i=0; $i < 5; $i++) {  
-                                $dias = random_int(50,365);                           
+                                $dias = random_int(1,365);                           
                                 $insert_expirtation = new ProductExpiration();
-                                $insert_expirtation->date = date("Y-m-d",strtotime(date("d-m-Y")."+ ".$dias." days")); 
+                                $insert_expirtation->date = date("Y-m-d",strtotime("2020-01-01"."+ ".$dias." days")); 
                                 $insert_expirtation->quantity = random_int(1,100);
-                                $insert_expirtation->used = 0;
                                 $insert_expirtation->return = 0; 
                                 $insert_expirtation->expiration = false;
-                                $insert_expirtation->current = false;
+                                $insert_expirtation->current = true;
                                 $insert_expirtation->products_id = $insert->id;
                                 $insert_expirtation->save();     
                                 
-                                if($insert_expirtation->date <= date("d-m-Y"))
+                                if($insert_expirtation->date <= date("Y-m-d"))
                                 {
                                     $insert_expirtation->expiration = true;
                                     $insert_expirtation->return = $insert_expirtation->quantity;
@@ -68,6 +67,7 @@ class AlimentacionImport implements ToCollection
                                 {
                                     $insert->stock += $insert_expirtation->quantity;
                                     $insert->stock_temporary = $insert->stock;
+                                    $insert_expirtation->used = $insert_expirtation->quantity;
                                 }
 
                                 $insert_expirtation->save(); 

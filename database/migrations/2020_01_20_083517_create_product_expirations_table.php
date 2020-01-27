@@ -17,7 +17,7 @@ class CreateProductExpirationsTable extends Migration
             $table->boolean('expiration')->default(0);
             $table->boolean('current')->default(0);
             $table->unsignedBigInteger('products_id');
-            $table->foreign('products_id')->references('id')->on('products');
+            $table->foreign('products_id')->references('id')->on('products')->onUpdate('cascade');
             $table->timestamps();
         });
     }

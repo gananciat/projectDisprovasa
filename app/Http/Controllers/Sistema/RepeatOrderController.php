@@ -138,24 +138,47 @@ class RepeatOrderController extends ApiController
                     
                     $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',$anio->year)->first();
 
-                    for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
+
+                    if($insert_detalle_orden->quantity > 1){
+                        for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
+                            if($product->stock_temporary > 0){
+                                $product->stock_temporary -= 1;
+                                
+                                if(!$product->persevering)
+                                {
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                                    $expiration->used -= 1;
+                    
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
+                        
+                                    $expiration->save();
+                                }
+    
+                            }else{
+                                $insert_quantify->subtraction += 1;
+                            }
+                        }
+                    }else{
                         if($product->stock_temporary > 0){
                             $product->stock_temporary -= 1;
-
+                            
                             if(!$product->persevering)
                             {
-                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',false)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used += 1;
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                                $expiration->used -= 1;
                 
-                                if($expiration->quantity == $expiration->used)
-                                    $expiration->current = true;
+                                if($expiration->used == 0)
+                                    $expiration->current = false;
                     
                                 $expiration->save();
                             }
+
                         }else{
                             $insert_quantify->subtraction += 1;
                         }
                     }
+                    
                     $insert_quantify->sumary_schools +=  $insert_detalle_orden->quantity;
 
                     $insert_orden->total += $insert_detalle_orden->subtotal;

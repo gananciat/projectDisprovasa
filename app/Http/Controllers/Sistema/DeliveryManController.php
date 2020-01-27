@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers\Sistema;
 
-use App\Http\Controllers\Controller;
 use App\Models\DeliveryMan;
+use App\Models\LicensePlate;
+use App\Models\VehicleModel;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApiController;
 
-class DeliveryManController extends Controller
+class DeliveryManController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +24,11 @@ class DeliveryManController extends Controller
      */
     public function index()
     {
-        //
+        $deliverys = DeliveryMan::with('vehicle.plate','vehicle.model')
+                                ->where('people_id', Auth::user()->people_id)
+                                ->get();
+
+        return $this->showAll($deliverys);
     }
 
     /**

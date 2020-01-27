@@ -20,11 +20,11 @@ class CreateBalancesTable extends Migration
             $table->smallInteger('year'); //Año en que fue asignado el monto
             $table->boolean('current')->default(1); //Llevar control si el monto se encuentra activo
             $table->unsignedBigInteger('schools_id'); //ID de la escuela
-            $table->foreign('schools_id')->references('id')->on('schools');
+            $table->foreign('schools_id')->references('id')->on('schools')->onUpdate('cascade');
             $table->unsignedBigInteger('people_id'); //ID de la persona que registra la información
-            $table->foreign('people_id')->references('id')->on('people');    
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');    
             $table->unsignedBigInteger('disbursement_id'); //ID del titulo del desembolso
-            $table->foreign('disbursement_id')->references('id')->on('disbursement');              
+            $table->foreign('disbursement_id')->references('id')->on('disbursement')->onUpdate('cascade');             
             $table->timestamps();
         });
     }

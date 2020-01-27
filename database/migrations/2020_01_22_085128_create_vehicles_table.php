@@ -17,9 +17,9 @@ class CreateVehiclesTable extends Migration
             $table->string('chasis')->unique();
             $table->smallInteger('motor');
             $table->unsignedBigInteger('license_plates_id');
-            $table->foreign('license_plates_id')->references('id')->on('license_plates');
+            $table->foreign('license_plates_id')->references('id')->on('license_plates')->onUpdate('cascade');
             $table->unsignedBigInteger('vehicle_models_id');
-            $table->foreign('vehicle_models_id')->references('id')->on('vehicle_models');
+            $table->foreign('vehicle_models_id')->references('id')->on('vehicle_models')->onUpdate('cascade');
             $table->timestamps();
         });
     }
