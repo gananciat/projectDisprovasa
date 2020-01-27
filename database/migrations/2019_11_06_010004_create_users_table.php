@@ -17,9 +17,9 @@ class CreateUsersTable extends Migration
             $table->string('verification_token')->nullable();
             $table->string('admin')->default(User::USUARIO_REGULAR);
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');    
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');      
             $table->unsignedBigInteger('rols_id');
-            $table->foreign('rols_id')->references('id')->on('rols');         
+            $table->foreign('rols_id')->references('id')->on('rols')->onUpdate('cascade');        
             $table->boolean('current_school')->default(1);               
             $table->rememberToken();
             $table->timestamps();

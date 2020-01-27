@@ -12,17 +12,17 @@ class CreateCheckDeliveryManTable extends Migration
             $table->bigIncrements('id');
             $table->boolean('check');
             $table->unsignedBigInteger('orders_id');
-            $table->foreign('orders_id')->references('id')->on('orders');
+            $table->foreign('orders_id')->references('id')->on('orders')->onUpdate('cascade');
             $table->unsignedBigInteger('detail_orders_id');
-            $table->foreign('detail_orders_id')->references('id')->on('detail_orders');
+            $table->foreign('detail_orders_id')->references('id')->on('detail_orders')->onUpdate('cascade');
             $table->unsignedBigInteger('progress_orders_id');
-            $table->foreign('progress_orders_id')->references('id')->on('progress_orders');
+            $table->foreign('progress_orders_id')->references('id')->on('progress_orders')->onUpdate('cascade');
             $table->unsignedBigInteger('delivery_mans_id');
-            $table->foreign('delivery_mans_id')->references('id')->on('delivery_mans');
+            $table->foreign('delivery_mans_id')->references('id')->on('delivery_mans')->onUpdate('cascade');
             $table->unsignedBigInteger('vehicles_id');
-            $table->foreign('vehicles_id')->references('id')->on('vehicles');
+            $table->foreign('vehicles_id')->references('id')->on('vehicles')->onUpdate('cascade');
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');
             $table->timestamps();
         });
     }

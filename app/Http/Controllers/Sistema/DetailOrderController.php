@@ -110,7 +110,7 @@ class DetailOrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used += 1;
+                                $expiration->used -= 1;
                 
                                 if($expiration->used == 0)
                                     $expiration->current = false;
@@ -129,7 +129,7 @@ class DetailOrderController extends ApiController
                         if(!$product->persevering)
                         {
                             $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                            $expiration->used += 1;
+                            $expiration->used -= 1;
             
                             if($expiration->used == 0)
                                 $expiration->current = false;
@@ -181,7 +181,7 @@ class DetailOrderController extends ApiController
                                         'school:id,name,municipalities_id',
                                         'school.municipality:id,name,departaments_id',
                                         'school.municipality.departament:id,name',
-                                        'details:id,quantity,sale_price,subtotal,observation,complete,products_id,orders_id',
+                                        'details:id,quantity,sale_price,subtotal,observation,complete,products_id,orders_id,deliver',
                                         'details.product:id,name,presentations_id,categories_id',
                                         'details.product.presentation:id,name',
                                         'details.product.category:id,name',
@@ -220,7 +220,7 @@ class DetailOrderController extends ApiController
                                                       ])
                                     ])                                      
                                 ->withCount(['details as detail_complete' => function(Builder $query) {
-                                    $query->where('complete', true);
+                                    $query->where('deliver', true);
                                 }, 'details as detail_total'])
                                 ->where('id',$detail_order)->get();
 
@@ -285,10 +285,10 @@ class DetailOrderController extends ApiController
                                 $product->stock_temporary += 1;
                                 if(!$product->persevering)
                                 {
-                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                    $expiration->used -= 1;
-                    
-                                    if($expiration->used == 0)
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                    $expiration->used += 1;
+
+                                    if(!$expiration->current)
                                         $expiration->current = true;
                         
                                     $expiration->save();
@@ -303,10 +303,10 @@ class DetailOrderController extends ApiController
                             $product->stock_temporary += 1;
                             if(!$product->persevering)
                             {
-                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                $expiration->used -= 1;
-                
-                                if($expiration->used == 0)
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                $expiration->used += 1;
+
+                                if(!$expiration->current)
                                     $expiration->current = true;
                     
                                 $expiration->save();
@@ -350,9 +350,9 @@ class DetailOrderController extends ApiController
                                 if(!$product->persevering)
                                 {
                                     $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                    $expiration->used += 1;
+                                    $expiration->used -= 1;
                     
-                                    if($expiration->used == $expiration->quantity)
+                                    if($expiration->used == 0)
                                         $expiration->current = false;
                         
                                     $expiration->save();
@@ -369,9 +369,9 @@ class DetailOrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used += 1;
+                                $expiration->used -= 1;
                 
-                                if($expiration->used == $expiration->quantity)
+                                if($expiration->used == 0)
                                     $expiration->current = false;
                     
                                 $expiration->save();
@@ -445,10 +445,10 @@ class DetailOrderController extends ApiController
                                 $product->stock_temporary += 1;
                                 if(!$product->persevering)
                                 {
-                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                    $expiration->used -= 1;
-                    
-                                    if($expiration->used == 0)
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                    $expiration->used += 1;
+    
+                                    if(!$expiration->current)
                                         $expiration->current = true;
                         
                                     $expiration->save();
@@ -463,10 +463,10 @@ class DetailOrderController extends ApiController
                             $product->stock_temporary += 1;
                             if(!$product->persevering)
                             {
-                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                $expiration->used -= 1;
-                
-                                if($expiration->used == 0)
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                $expiration->used += 1;
+
+                                if(!$expiration->current)
                                     $expiration->current = true;
                     
                                 $expiration->save();

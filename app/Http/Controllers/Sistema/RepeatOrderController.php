@@ -147,9 +147,9 @@ class RepeatOrderController extends ApiController
                                 if(!$product->persevering)
                                 {
                                     $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                    $expiration->used += 1;
+                                    $expiration->used -= 1;
                     
-                                    if($expiration->used == $expiration->quantity)
+                                    if($expiration->used == 0)
                                         $expiration->current = false;
                         
                                     $expiration->save();
@@ -166,9 +166,9 @@ class RepeatOrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used += 1;
+                                $expiration->used -= 1;
                 
-                                if($expiration->used == $expiration->quantity)
+                                if($expiration->used == 0)
                                     $expiration->current = false;
                     
                                 $expiration->save();

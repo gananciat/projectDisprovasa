@@ -13,8 +13,8 @@ class DetailOrder extends Model
     use SoftDeletes;
 
     protected $table = 'detail_orders';
-    protected $fillable = ['quantity','sale_price','subtotal','observation',
-                           'complete','products_id','orders_id','deliver'];
+    protected $fillable = ['quantity','sale_price','subtotal','observation','on_route','aware',
+                           'complete','products_id','orders_id','deliver','refund'];
     protected $dates = ['deleted_at'];
 
     public function setObservationAttribute($valor) {

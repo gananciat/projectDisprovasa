@@ -62,17 +62,33 @@
                     </div>
                 </div>                
             </div>
-
+            <div class="col-md-12 col-sm-12 col-12"  style="background: #17a2b8;">
+              <div class="form-group">
+                <label>Vehículo</label>
+                <multiselect v-model="vehicle"
+                    v-validate="'required'" 
+                    data-vv-name="vehicle"
+                    data-vv-as="un vehículo"
+                    :options="vehicles" placeholder="seleccione un vehículo"  
+                    :searchable="true"
+                    :allow-empty="false"
+                    :show-labels="false"
+                    label="name" track-by="id">
+                    <span slot="noResult">No se encontro ningún registro</span>
+                    </multiselect>
+                    <FormError :attribute_name="'vehicle'" :errors_form="errors"> </FormError>
+              </div>                
+            </div>
+            &nbsp;
             <div class="col-md-12 col-sm-12 col-12">
                 <div class="table-responsive">
                     <table class="table table-striped hover bordered" style="background: #17a2b8;">
                         <thead>
                             <tr class="text-center" style="font-size: 18px;">
                                 <th>#</th>
+                                <th>Cantidad pedida</th>  
+                                <th>Cantidad para entregar</th>                                
                                 <th>Producto</th>
-                                <th>Cantidad requerida</th>
-                                <th>Cantidad confirmada</th>
-                                <th>Faltante</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -82,30 +98,18 @@
                                     <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
                                         {{ index+1 }}
                                     </td>
+                                    <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
+                                        {{ Number(item.original) }}
+                                    </td>   
+                                    <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
+                                        {{ Number(item.asign) }}
+                                    </td>                                      
                                     <td style="vertical-align:middle; font-size: 14px; text-align: left; font-weight: bold;">
-                                        <span v-b-tooltip :title="'stock '+item.product.stock">{{ item.product.name+' / '+item.product.presentation.name }}</span>    
-                                    </td>                                     
+                                        <span>{{ item.product+' / '+item.marca }}</span>    
+                                    </td>                                                                       
                                     <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
-                                        {{ Number(item.progress.original_quantity) }}
-                                    </td>                                    
-                                    <td style="vertical-align:middle; text-align: center;">
-                                        <el-input-number v-model="item.progress.purchased_amount" 
-                                        :precision="0" :step="1" :min="0" :max="Number(item.progress.original_quantity)"
-                                        step-strictly
-                                        :data-vv-name="'validate'+index+'.quantity'"
-                                        data-vv-as="cantidad"
-                                        @change="stock_validate(item.product.stock,item.progress.purchased_amount,index)"
-                                        v-validate="'required|between:0,'+Number(item.progress.original_quantity)"
-                                        :data-vv-scope="'validate'+index"
-                                        :class="{'input':true,'has-errors': errors.has('validate'+index+'.quantity')}"></el-input-number> <br>
-                                        <FormError :attribute_name="'validate'+index+'.quantity'" :errors_form="errors"> </FormError>                                        
-                                    </td>                                     
-                                    <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
-                                        {{ Number(item.progress.original_quantity - item.progress.purchased_amount) }}
-                                    </td>
-                                    <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">
-                                        <button type="button" @click="update(index,item)" class="btn btn-success btn-sm" v-b-tooltip title="guardar"><i class="fa fa-save"></i></button>
-                                        <button type="button" @click="entregar(item)" class="btn btn-info btn-sm" v-b-tooltip title="subir al vehículo"><i class="fa fa-suitcase"></i></button>
+                                        <button v-if="!item.on_route" type="button" @click="check(item)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-save"></i></button>
+                                        <button v-if="item.on_route" type="button" @click="destroy(item,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>
                             </template>
@@ -126,7 +130,7 @@
 <script>
 import FormError from '../shared/FormError'
 export default {
-  name: "assignproduct",
+  name: "transportcheck",
   components: {
       FormError
   },
@@ -145,12 +149,15 @@ export default {
           total: ''
       },
       items: [],
+      vehicle: '',
+      vehicles: []
     };
   },
   created() {
       let self = this
       self.order_id = self.$route.params.id
       self.getAll()
+      self.getVehicle()
   },
 
   methods: {
@@ -180,8 +187,8 @@ export default {
       let self = this;
       self.loading = true;
 
-      self.$store.state.services.progressorderService
-        .getProgress(self.order_id)
+      self.$store.state.services.checkdeliverymanService
+        .get(self.order_id)
         .then(r => {
           self.loading = false; 
           self.items = r.data.data;
@@ -198,91 +205,90 @@ export default {
         })
         .catch(r => {});
     },
+    getVehicle(){
+      let self = this;
+      self.loading = true;
 
-    stock_validate(stock,cantidad,index){
-        let self = this
-        if(stock < cantidad)
-        {
-            self.$swal({
-                title: "Advertencia",
-                text: "No hay suficiente stock.",
-                type: "warning",
-                showCancelButton: false
-            })
-
-            return true
-        }
-
-        return false
+      self.$store.state.services.deliverymanService
+        .getAll()
+        .then(r => {
+          self.loading = false; 
+          r.data.data.forEach(function (item) {
+              self.vehicles.push({id: item.vehicle.id, name: item.vehicle.model.brand_model+' / '+item.vehicle.plate.type+'-'+item.vehicle.placa})
+          });
+        })
+        .catch(r => {});
     },
-
-    update(index, item){
+    check(item){
         let self = this
-        if(self.stock_validate(item.product.stock,item.progress.purchased_amount))
-            return
 
-        self.$validator.validateAll('validate'+index).then((result) => {
+        self.$validator.validateAll().then((result) => {
             if (result) {
-                self.loading = true
-                let data = {}
-                data.id = item.progress.id
-                data.purchased_amount = item.progress.purchased_amount
-                
-                self.$store.state.services.progressorderService
-                    .update(data)
-                    .then(r => {
-                        self.loading = false
-                        if( self.interceptar_error(r) == 0) return 
-                        if(r.data.complete_order)
-                        { 
-                            self.$router.push('/progressorder') 
-                        }
-                        else 
-                        { 
-                            if(r.data.complete_detail)
-                            { 
-                                self.$toastr.success('producto listo para entregar', 'exito')  
-                                self.getAll() 
-                            }
-                            else{
-                                self.$toastr.info('registro actualizado con exito, actualizando stock.', 'exito')
-                                self.getAll() 
-                            } 
-                        }                          
-                    })
-                    .catch(r => {});
+
+                self.$swal({
+                    title: "ADVERTENCIA",
+                    text: "¿ESTA SEGURO QUE QUIERE AGREGAR EL PRODUCTO "+item.product+' / '+item.marca+ ', AL VEHICULO?',
+                    type: "warning",
+                    showCancelButton: true
+                }).then((result) => { 
+                    if (result.value) { 
+                        self.loading = true
+                        let data = {}
+                        data.progress_orders_id = item.progress_orders_id
+                        data.vehicles_id = self.vehicle.id
+                        
+                        self.$store.state.services.checkdeliverymanService
+                            .create(data)
+                            .then(r => {
+                                self.loading = false
+                                if( self.interceptar_error(r) == 0) return 
+                                if(r.data.ready)
+                                {
+                                    self.$router.push('/transport') 
+                                }
+                                else
+                                {
+                                    self.$toastr.success('producto ingresado al vehículo', 'exito')  
+                                    self.getAll()  
+                                    self.vehicles.forEach(function (history) {
+                                        if(history.id == r.data.vehicle)
+                                        {
+                                            self.vehicle = history
+                                        }
+                                    }); 
+                                }                                      
+                            })
+                            .catch(r => {}); 
+                    }
+                });
             }
-        });
+        });       
     },
+    destroy(item,index){
+      let self = this
 
-    entregar(item){
-        let self = this
-        self.loading = true
-        let data = {}
-        data.detail_orders_id = item.id
-        
-        self.$store.state.services.progressorderService
-            .create(data)
-            .then(r => {
-                self.loading = false
-                if( self.interceptar_error(r) == 0) return
-                self.$toastr.success('producto listo para entregar', 'exito')
-                if(r.data.complete_order)
-                { 
-                    self.$router.push('/progressorder') 
-                }
-                else 
-                { 
-                    if(r.data.complete_detail)
-                    { 
-                        self.$toastr.success('producto listo para entregar', 'exito')  
-                        self.getAll() 
-                    } 
-                }  
-            })
-            .catch(r => {});
+      self.$swal({
+        title: "ADVERTENCIA",
+        text: "¿ESTA SEGURO QUE DESEA ELIMINAR EL CHECK EN LA POSICION #"+index+"?",
+        type: "warning",
+        showCancelButton: true
+      }).then((result) => { 
+          if (result.value) { 
+              self.loading = true
+              let data = {}
+              data.id = item.check
+              self.$store.state.services.checkdeliverymanService
+                .destroy(data)
+                .then(r => {
+                  self.loading = false
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  self.getAll()
+                })
+                .catch(r => {});
+          }
+      });
     },
-
     getLogo(logo){
       let self = this
       return logo !== null ? self.$store.state.base_url+logo : self.$store.state.base_url+'img/logo_empty.png'

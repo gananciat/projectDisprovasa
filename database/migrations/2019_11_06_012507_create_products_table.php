@@ -17,9 +17,9 @@ class CreateProductsTable extends Migration
             $table->boolean('camouflage')->default(0);
             $table->boolean('persevering')->default(0);
             $table->unsignedBigInteger('categories_id');
-            $table->foreign('categories_id')->references('id')->on('categories');
+            $table->foreign('categories_id')->references('id')->on('categories')->onUpdate('cascade');
             $table->unsignedBigInteger('presentations_id');
-            $table->foreign('presentations_id')->references('id')->on('presentations');                            
+            $table->foreign('presentations_id')->references('id')->on('presentations')->onUpdate('cascade');                           
             $table->timestamps();
         });
     }

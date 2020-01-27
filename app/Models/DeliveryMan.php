@@ -6,11 +6,15 @@ use App\Models\Person;
 use App\Models\Vehicle;
 use App\Models\TypeLicense;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DeliveryMan extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'delivery_mans';
     protected $fillableee = ['people_id','type_license_id','vehicles_id'];
+    protected $dates = ['deleted_at'];
 
     public function person()
     {

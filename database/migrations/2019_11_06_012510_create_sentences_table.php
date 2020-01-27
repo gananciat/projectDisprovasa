@@ -13,7 +13,7 @@ class CreateSentencesTable extends Migration
             $table->string('name');
             $table->boolean('current')->default(1);
             $table->unsignedBigInteger('products_id');
-            $table->foreign('products_id')->references('id')->on('products');              
+            $table->foreign('products_id')->references('id')->on('products')->onUpdate('cascade');              
             $table->timestamps();
         });
     }

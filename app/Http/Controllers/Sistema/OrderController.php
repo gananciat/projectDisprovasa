@@ -168,9 +168,9 @@ class OrderController extends ApiController
                                 if(!$product->persevering)
                                 {
                                     $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                    $expiration->used += 1;
+                                    $expiration->used -= 1;
                     
-                                    if($expiration->used == $expiration->quantity)
+                                    if($expiration->used == 0)
                                         $expiration->current = false;
                         
                                     $expiration->save();
@@ -187,9 +187,9 @@ class OrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used += 1;
+                                $expiration->used -= 1;
                 
-                                if($expiration->used == $expiration->quantity)
+                                if($expiration->used == 0)
                                     $expiration->current = false;
                     
                                 $expiration->save();
@@ -242,12 +242,12 @@ class OrderController extends ApiController
             ])->first();
 
             $orders = Order::withCount(['details as detail_complete' => function(Builder $query) {
-                $query->where('complete', true);
+                $query->where('deliver', true);
             }, 'details as detail_total'])->where('type_order',$order)
             ->where('schools_id',$person_school->schools_id)->get();
         } else {
             $orders = Order::withCount(['details as detail_complete' => function(Builder $query) {
-                $query->where('complete', true);
+                $query->where('deliver', true);
             }, 'details as detail_total'])->where('type_order',$order)->get();
         }
         return $this->showAll($orders, 201);
@@ -366,10 +366,10 @@ class OrderController extends ApiController
                                     $product->stock_temporary += 1;
                                     if(!$product->persevering)
                                     {
-                                        $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                        $expiration->used -= 1;
+                                        $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                        $expiration->used += 1;
     
-                                        if($expiration->used == 0)
+                                        if(!$expiration->current)
                                             $expiration->current = true;
                             
                                         $expiration->save();
@@ -386,10 +386,10 @@ class OrderController extends ApiController
                                 $product->stock_temporary += 1;
                                 if(!$product->persevering)
                                 {
-                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used','!=',0)->latest()->orderBy('date', 'desc')->first();
-                                    $expiration->used -= 1;
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                    $expiration->used += 1;
 
-                                    if($expiration->used == 0)
+                                    if(!$expiration->current)
                                         $expiration->current = true;
                         
                                     $expiration->save();

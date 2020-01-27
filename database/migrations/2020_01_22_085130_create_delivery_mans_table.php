@@ -11,12 +11,13 @@ class CreateDeliveryMansTable extends Migration
         Schema::create('delivery_mans', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');
             $table->unsignedBigInteger('type_license_id');
-            $table->foreign('type_license_id')->references('id')->on('type_license');
+            $table->foreign('type_license_id')->references('id')->on('type_license')->onUpdate('cascade');
             $table->unsignedBigInteger('vehicles_id');
-            $table->foreign('vehicles_id')->references('id')->on('vehicles');
+            $table->foreign('vehicles_id')->references('id')->on('vehicles')->onUpdate('cascade');
             $table->timestamps();
+            $table->softDeletes(); 
         });
     }
 

@@ -9,6 +9,7 @@ use App\Models\Person;
 use App\Models\School;
 use App\Models\Balance;
 use App\Models\Company;
+use App\Models\Vehicle;
 use App\Models\Provider;
 use App\Models\Quantify;
 use App\Models\Purcharse;
@@ -20,6 +21,7 @@ use App\Models\Reservation;
 use Illuminate\Support\Str;
 use App\Imports\MarcaImport;
 use App\Models\Municipality;
+use App\Models\VehicleModel;
 use App\Models\ProgressOrder;
 use App\Imports\EscuelaImport;
 use App\Models\CalendarSchool;
@@ -30,14 +32,14 @@ use App\Imports\CategoriaImport;
 use App\Imports\GratuidadImport;
 use App\Imports\MunicipioImport;
 use App\Models\DetailSuggestion;
+use App\Imports\TypeLicenseImport;
+use Illuminate\Support\Facades\DB;
 use App\Imports\AlimentacionImport;
 use App\Imports\DepartamentoImport;
 use App\Imports\LicensePlateImport;
-use App\Imports\TypeLicenseImport;
 use App\Imports\VehicleBrandImport;
 use App\Imports\VehicleModelImport;
-use App\Models\Vehicle;
-use App\Models\VehicleModel;
+use App\Models\DeliveryMan;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DatabaseSeeder extends Seeder
@@ -453,13 +455,49 @@ class DatabaseSeeder extends Seeder
         $detail_order = DetailOrder::all();
 
         foreach ($detail_order as $key => $value) {
-            $insert = new ProgressOrder();
-            $insert->purchased_amount = 0;
-            $insert->order_statuses_id = 1;
-            $insert->detail_orders_id = $value->id;
-            $insert->products_id = $value->products_id;
-            $insert->original_quantity = $value->quantity;
-            $insert->save();
+            DB::beginTransaction();
+                $print = false;
+                $insert = new ProgressOrder();
+                $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::PEDIDO)->first()->id;
+                $insert->detail_orders_id = $value->id;
+                $insert->products_id = $value->products_id;
+                $insert->original_quantity = $value->quantity;
+                $insert->purchased_amount = rand(0,$insert->original_quantity);
+
+                if($insert->purchased_amount > 0)
+                {              
+                    if($insert->purchased_amount == $insert->original_quantity)
+                    {
+                        $value->complete = true;
+                        $value->deliver = true;
+                        $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::COMPLETADO)->first()->id;
+                        $insert->check = true;
+                    }
+                    else
+                    {
+                        $value->deliver = true;
+                        $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::EN_PROCESO)->first()->id;
+                        $insert->check = true;
+                    }
+                }
+
+                $insert->save();
+                $value->save();
+
+                $verify = DetailOrder::where('orders_id',$value->orders_id)->where('deliver', false)->count();
+
+                if($verify == 0)
+                {
+                    $order = Order::find($value->orders_id);
+                    $order->complete = true;
+                    $order->save();
+                    $print = true;
+                }
+
+                if($print)
+                    echo "EL PEDIDO #".$order->order.", ESTA COMPLETO".PHP_EOL;
+
+            DB::commit();
         }
 
         for($i=1; $i<51; $i++){
@@ -493,5 +531,6 @@ class DatabaseSeeder extends Seeder
         factory(MenuSuggestion::class, 25)->create();
         factory(DetailSuggestion::class, 500)->create();
         factory(Vehicle::class, 500)->create();
+        factory(DeliveryMan::class, 10)->create();
     }
 }

@@ -19,9 +19,9 @@ class CreateSchoolsTable extends Migration
             $table->string('code_high_school')->nullable();
             $table->boolean('current')->default(1);
             $table->unsignedBigInteger('municipalities_id');
-            $table->foreign('municipalities_id')->references('id')->on('municipalities');  
+            $table->foreign('municipalities_id')->references('id')->on('municipalities')->onUpdate('cascade');
             $table->unsignedBigInteger('people_id'); //Usuario que agrega la escuela
-            $table->foreign('people_id')->references('id')->on('people');                       
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');                       
             $table->timestamps();
         });
     }

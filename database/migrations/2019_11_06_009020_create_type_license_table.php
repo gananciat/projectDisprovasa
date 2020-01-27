@@ -11,7 +11,7 @@ class CreateTypeLicenseTable extends Migration
         Schema::create('type_license', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('type',1)->unique();
+            $table->string('type',2)->unique();
             $table->timestamps();
         });
     }

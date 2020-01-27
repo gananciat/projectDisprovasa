@@ -11,9 +11,9 @@ class CreateMenuRolsTable extends Migration
         Schema::create('menu_rols', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('rols_id');
-            $table->foreign('rols_id')->references('id')->on('rols');             
+            $table->foreign('rols_id')->references('id')->on('rols')->onUpdate('cascade');             
             $table->unsignedBigInteger('menus_id');
-            $table->foreign('menus_id')->references('id')->on('menus');            
+            $table->foreign('menus_id')->references('id')->on('menus')->onUpdate('cascade');             
             $table->timestamps();
         });
     }

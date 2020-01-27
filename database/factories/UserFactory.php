@@ -3,6 +3,7 @@
 use App\Category;
 use App\Models\Balance;
 use App\Models\CalendarSchool;
+use App\Models\DeliveryMan;
 use App\Models\DetailOrder;
 use App\Models\DetailSuggestion;
 use App\Models\LicensePlate;
@@ -18,6 +19,7 @@ use App\Models\Provider;
 use App\Models\Quantify;
 use App\Models\Reservation;
 use App\Models\School;
+use App\Models\TypeLicense;
 use App\Models\Vehicle;
 use App\Models\VehicleModel;
 use App\Models\Year;
@@ -235,5 +237,13 @@ $factory->define(Vehicle::class, function (Faker $faker) {
         'motor' => $faker->randomElement(['1000','1200','1400','1600','1800','2000','2200','2400','2600']),
         'license_plates_id' => LicensePlate::all()->random()->id,
         'vehicle_models_id' => VehicleModel::all()->random()->id
+    ];
+});
+
+$factory->define(DeliveryMan::class, function (Faker $faker) {
+    return [
+        'people_id' => 1,
+        'type_license_id' => 2,
+        'vehicles_id' => Vehicle::all()->random()->id
     ];
 });

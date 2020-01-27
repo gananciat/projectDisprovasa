@@ -47,9 +47,9 @@
                                     <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
                                     <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
                                     <div class="progress">
-                                        <div class="progress-bar" :style="'width:'+(item.detail_complete*100)/item.detail_total+'%'"></div>
+                                        <div class="progress-bar" :style="'width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
                                     </div>
-                                    <span class="progress-description text-center"> {{ (item.detail_complete*100)/item.detail_total }}%</span>
+                                    <span class="progress-description text-center"> {{ Number((item.detail_complete*100)/item.detail_total).toFixed(2) }}%</span>
                                 </div>
                             </div>
                         </router-link>
@@ -72,10 +72,10 @@
                                     <span class="info-box-text">Menú, {{ item.title }}</span>
                                     <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
                                     <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
-                                    <div class="progress">
-                                        <div class="progress-bar" :style="'width:'+(item.detail_complete*100)/item.detail_total+'%'"></div>
+                                    <div class="progress" style="width:100%;">
+                                        <div class="progress-bar" :style="'width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
                                     </div>
-                                    <span class="progress-description text-center"> {{ (item.detail_complete*100)/item.detail_total }}%</span>
+                                    <span class="progress-description text-center"> {{ Number((item.detail_complete*100)/item.detail_total).toFixed(2) }}%</span>
                                 </div>
                             </div>
                         </router-link>
@@ -98,10 +98,10 @@
                                     <span class="info-box-text">Menú, {{ item.title }}</span>
                                     <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
                                     <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
-                                    <div class="progress">
-                                        <div class="progress-bar" :style="'width:'+(item.detail_complete*100)/item.detail_total+'%'"></div>
+                                    <div class="progress" style="width:100%;">
+                                        <div class="progress-bar" :style="'width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
                                     </div>
-                                    <span class="progress-description text-center"> {{ (item.detail_complete*100)/item.detail_total }}%</span>
+                                    <span class="progress-description text-center"> {{ Number((item.detail_complete*100)/item.detail_total).toFixed(2) }}%</span>
                                 </div>
                             </div>
                         </router-link>
@@ -124,10 +124,10 @@
                                     <span class="info-box-text">Menú, {{ item.title }}</span>
                                     <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
                                     <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
-                                    <div class="progress">
-                                        <div class="progress-bar" :style="'width:'+(item.detail_complete*100)/item.detail_total+'%'"></div>
+                                    <div class="progress" style="width:100%;">
+                                        <div class="progress-bar" :style="'width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
                                     </div>
-                                    <span class="progress-description text-center"> {{ (item.detail_complete*100)/item.detail_total }}%</span>
+                                    <span class="progress-description text-center"> {{ Number((item.detail_complete*100)/item.detail_total).toFixed(2) }}%</span>
                                 </div>
                             </div>
                         </router-link>

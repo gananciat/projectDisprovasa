@@ -13,7 +13,7 @@ class CreateMenuSuggestionsTable extends Migration
             $table->string('title');
             $table->string('description',1000)->nullable();
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');                                        
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');                                        
             $table->timestamps();
         });
     }
