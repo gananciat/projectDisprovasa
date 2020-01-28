@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
    protected $table = 'invoices';
-   protected $fillable = ['total','order_id','bill','vat_id','serie_id','date','total_iva','cancel'];
+   protected $fillable = ['total','order_id','invoice','vat_id','serie_id','date','total_iva','cancel'];
 
    public function vat(){
    	return $this->belongsTo(Vat::class);

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Serie extends Model
 {
     protected $table = 'series';
-    protected $fillable = ['total','init','expiration_date','actual_bill','active'];
+    protected $fillable = ['serie','total','init','expiration_date','actual_bill','active'];
 
    public function invoices(){
    	return $this->hasMany(Invoice::class);

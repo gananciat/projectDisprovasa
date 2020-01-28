@@ -49,6 +49,13 @@ class OrderController extends ApiController
         return $this->showAll($orders);
     }
 
+    //ger orders for invoiced
+    public function indexOrders()
+    { 
+        $orders = Order::where('invoiced',false)->orderBy('date')->with('school')->get();
+        return $this->showAll($orders);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -251,6 +258,13 @@ class OrderController extends ApiController
             }, 'details as detail_total'])->where('type_order',$order)->get();
         }
         return $this->showAll($orders, 201);
+    }
+
+    //get order by id with progress order by invoce
+    public function showOrder($id)
+    {
+        $order = Order::where('id',$id)->with('details.product','details.progress')->first();
+        return $this->showOne($order);
     }
 
     /**

@@ -22,6 +22,7 @@ class SerieController extends ApiController
     public function store(Request $request)
     {
         $rules = [
+            'serie' => 'required|unique:series,serie',
             'total' => 'required|integer',
             'init' => 'required|integer',
             'expiration_date' => 'required'
@@ -49,6 +50,7 @@ class SerieController extends ApiController
     public function update(Request $request, Serie $serie)
     {
         $rules = [
+            'serie' => 'required|unique:series,serie,'.$serie->serie,
             'total' => 'required|integer',
             'init' => 'required|integer',
             'expiration_date' => 'required'
@@ -56,6 +58,7 @@ class SerieController extends ApiController
 
         $this->validate($request, $rules);
 
+        $serie->serie = $request->serie;
         $serie->total = $request->total;
         $serie->init = $request->init;
         $serie->actual = $request->init - 1;

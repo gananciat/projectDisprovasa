@@ -22,6 +22,16 @@
         <b-modal ref="nuevo" :title="title" hide-footer class="modal-backdrop" no-close-on-backdrop>
           <form>
             <div class="row">
+              <div class="form-group col-md-6 col-lg-6">
+                <label>Serie</label>
+                <input type="text" class="form-control" placeholder="serie"
+                name="serie"
+                v-model="form.serie"
+                data-vv-as="serie"
+                v-validate="'required|numeric|min_value:1'"
+              :class="{'input':true,'has-errors': errors.has('serie')}">
+              <FormError :attribute_name="'serie'" :errors_form="errors"> </FormError>
+              </div>
               
               <div class="form-group col-md-6 col-lg-6">
                 <label>Total de facturas</label>
@@ -187,6 +197,7 @@ export default {
       loading: false,
       items: [],
       fields: [
+        { key: 'serie', label: 'Serie', sortable: true },
         { key: 'total', label: 'Total de facturas', sortable: true },
         { key: 'init', label: 'Numero de inicio', sortable: true },     
         { key: 'actual', label: 'Factura actual', sortable: true },
@@ -203,6 +214,7 @@ export default {
 
       form: {
           id: null,
+          serie: '',
           total: null,
           init: null,
           actual_date: null,
@@ -321,11 +333,11 @@ export default {
      //mapear datos a formulario
     mapData(data){
         let self = this
-        console.log(data)
         self.form.id = data.id
         self.form.total = data.total
         self.form.init = data.init
         self.form.actual = data.actual
+        self.form.serie = data.serie
         this.$refs['nuevo'].show()
     },
 

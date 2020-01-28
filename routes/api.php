@@ -49,6 +49,8 @@ Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit
 Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
 Route::get('reservations_money/{code}/{type_order}', 'Sistema\ReservationController@money');
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
+Route::get('orders_by_invoices', 'Sistema\OrderController@indexOrders');
+Route::get('orders_get/{id}', 'Sistema\OrderController@showOrder');
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
 Route::name('purchases_update_detail')->put('purchases_update_detail', 'Sistema\PurchaseController@updateDetails');
@@ -70,6 +72,7 @@ Route::resource('check_delivery', 'Sistema\CheckDeliveryManController', ['except
 Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['create', 'edit']]);
 Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']]);
 Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
+Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
@@ -86,6 +89,7 @@ Route::get('information_disbursement_school/{id}', 'Dashboard\School\Information
 Route::get('dashboard_graph_purchases', 'Dashboard\sistema\GraphController@purchasesLastGraph');
 Route::get('dashboard_graph_orders', 'Dashboard\sistema\GraphController@ordersLastGraph');
 Route::get('products_orders/{start_date}/{end_date}', 'Reports\OrderReportControler@ProductsOrderedByDates');
+
 
 
 

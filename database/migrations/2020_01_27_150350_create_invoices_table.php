@@ -16,7 +16,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->decimal('total',11,2);
-            $table->integer('bill');
+            $table->integer('invoice');
             $table->decimal('total_iva',11,2);
             $table->date('date');
             $table->boolean('cancel')->default(0);

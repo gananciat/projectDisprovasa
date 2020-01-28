@@ -15,6 +15,7 @@ class CreateSeriesTable extends Migration
     {
         Schema::create('series', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('serie',5);
             $table->integer('total');
             $table->integer('init')->default(1);
             $table->integer('actual_bill');
