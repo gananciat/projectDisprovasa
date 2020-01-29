@@ -21,7 +21,7 @@ class InvoiceController extends ApiController
 
     public function index()
     {
-        $invoices = Invoice::with('vat','serie','order','order.school')->get();
+        $invoices = Invoice::with('vat','serie','order','order.school','products')->get();
         return $this->showAll($invoices);
     }
 
@@ -68,8 +68,9 @@ class InvoiceController extends ApiController
         return $this->showOne($invoice,201);
     }
 
-    public function show(invoice $invoice)
+    public function show(Invoice $invoice)
     {
+        //$invoice = Invice::where('id',$invoice->id)->with('product')
         return $this->showOne($invoice);
     }
 
@@ -100,7 +101,21 @@ class InvoiceController extends ApiController
     public function cancel($id)
     {
         DB::beginTransaction();
+            $invoice = Invoice::find($id);
+            $invoice->cancel = true;
+            $invoice->save();
+            $products = $invoice->products()->with('progress')->get();
 
+            foreach ($products as $p) {
+                $progress = $p->progress;
+                $progress->check = false;
+                $progress->save();
+            }
+
+            $order = Order::find($invoice->order->id);
+            $order->invoiced = false;
+            $order->save();
         DB::commit();
+        return $this->showOne($invoice,201);
     }
 }

@@ -73,6 +73,7 @@ Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['
 Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']]);
 Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
 Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
+Route::put('invoices_cancel/{id}', 'sistema\InvoiceController@cancel');
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Vat;
+use App\Models\InvoiceProduct;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
@@ -20,5 +21,10 @@ class Invoice extends Model
 
    public function order(){
    	return $this->belongsTo(Order::class);
+   }
+
+   public function products()
+   {
+      return $this->hasMany(InvoiceProduct::class);
    }
 }

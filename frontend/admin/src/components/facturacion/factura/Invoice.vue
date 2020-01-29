@@ -1,6 +1,29 @@
 <template>
 <!--Contenido-->
         <div class="card" v-loading="loading">
+
+            <b-modal ref="nuevo" :title="'editar factura '+form.invoice_name" size="xl" hide-footer class="modal-backdrop" no-close-on-backdrop>
+            <form>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Fecha factura</label>
+                        <input type="date" class="form-control" placeholder="fcha factura"
+                        name="date"
+                        v-model="form.date"
+                        data-vv-as="fecha factura"
+                        v-validate="'required'"
+                    :class="{'input':true,'has-errors': errors.has('date')}">
+                    <FormError :attribute_name="'date'" :errors_form="errors"> </FormError>
+                    </div>
+                </div>
+              <div class="row">
+                <div class="col-12 text-right">
+                  <button @click="close" type="button" class="btn btn-danger btn-sm"><i class="fa fa-undo"></i> Cancelar</button>
+                  <button @click="update" type="button" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Actualizar</button>
+                </div>
+              </div>
+            </form>
+        </b-modal>
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">FACTURAS EMITIDAS</h3>
@@ -45,9 +68,27 @@
                       <template v-slot:cell(school)="data">
                         {{data.item.order.school.name}}
                       </template>
+                       <template v-slot:cell(total)="data">
+                        {{data.item.total | currency('Q ')}}
+                      </template>
+                       <template v-slot:cell(total_iva)="data">
+                        {{data.item.total_iva | currency('Q ')}} ({{data.item.vat.value}}%)
+                      </template>
+                      <template v-slot:cell(status)="data">
+                        <b-badge class="bg-red" v-if="data.item.cancel"> Anulada</b-badge>
+                        <b-badge class="bg-green" v-else> Activa</b-badge>
+                      </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-primary btn-sm">
-                              <i class="fa fa-eye">
+                          <button type="button" class="btn btn-info btn-sm">
+                              <i class="fa fa-print">
+                              </i>
+                          </button>
+                          <button @click="edit(data.item)" v-if="!data.item.cancel" type="button" class="btn btn-primary btn-sm">
+                              <i class="fa fa-pencil">
+                              </i>
+                          </button>
+                          <button v-if="!data.item.cancel" type="button" @click="cancel(data.item)" class="btn btn-danger btn-sm">
+                              <i class="fa fa-ban">
                               </i>
                           </button>
                       </template>
@@ -84,8 +125,12 @@
 
 <script>
     import moment from 'moment'
+    import FormError from '../../shared/FormError'
     export default {
     name: 'index_invoice',
+    components: {
+        FormError
+    },
     data() {
         return {
             loading: false,
@@ -97,6 +142,9 @@
                 { key: 'date', label: 'Fecha emisión', sortable: true },
                 { key: 'order', label: 'Pedido', sortable: true },
                 { key: 'school', label: 'Escuela', sortable: true },
+                { key: 'total', label: 'Monto facturado', sortable: true },
+                { key: 'total_iva', label: 'Iva a cancelar', sortable: true },
+                { key: 'status', label: 'Estado', sortable: true },
                 { key: 'option', label: 'Opciones', sortable: true },
             ],
             filter: null,
@@ -105,6 +153,11 @@
             totalRows: 0,
             pageOptions: [ 5, 10, 25 ],
             showStringEmpty: 'no hay pedidos pendientes de facturar',
+            form:{
+                date: '',
+                invoice_name: '',
+                details: []
+            }
         }
     },
 
@@ -133,9 +186,54 @@
             })
         },
 
+        //funcion para eliminar registro
+        cancel(data){
+            let self = this
+
+            self.$swal({
+                title: "anular factura?",
+                text: "Esta seguro de anular factura "+self.getFullInvoice(data) + '?',
+                type: "warning",
+                showCancelButton: true
+            }).then((result) => { // <--
+                if (result.value) { // <-- if confirmed
+                    self.loading = true
+                    self.$store.state.services.invoiceService
+                        .cancel(data.id)
+                        .then(r => {
+                        self.loading = false
+                        if(r.response){
+                            this.$toastr.error(r.response.data.error, 'error')
+                            return
+                        }
+                        this.$toastr.success('factura anulada con exito', 'exito')
+                        self.getAll()
+                        })
+                        .catch(r => {});
+                }
+            });
+        },
+
+        //update invice
+        update(){
+            let self = this
+        },
+
+        edit(item){
+            let self = this
+            this.$refs['nuevo'].show()
+            self.form.date = item.date
+            self.form.invoice_name = item.serie.serie+'-'+self.formatCode(item.invoice,String(item.serie.total).length)
+        },
+
+        //cerrar modal limpiar registros
+        close(){
+            let self= this
+            self.$refs['nuevo'].hide()
+        },
+
         getFullInvoice(item){
             let self = this
-            console.log(item)
             var invoice = self.formatCode(item.invoice,String(item.serie.total).length)
             return item.serie.serie+'-'+invoice
         },
