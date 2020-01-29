@@ -266,7 +266,6 @@ export default {
             .then(r => {
                 self.loading = false
                 if( self.interceptar_error(r) == 0) return
-                self.$toastr.success('producto listo para entregar', 'exito')
                 if(r.data.complete_order)
                 { 
                     self.$router.push('/progressorder') 

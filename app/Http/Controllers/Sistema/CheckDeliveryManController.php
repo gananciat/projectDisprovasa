@@ -87,13 +87,13 @@ class CheckDeliveryManController extends ApiController
                     $detail = DetailOrder::find($progress->detail_orders_id);
 
                     $insert_check = new CheckDeliveryMan();
-                    $insert_check->check = true;
+                    $insert_check->check = false;
                     $insert_check->orders_id = $detail->orders_id;
                     $insert_check->detail_orders_id = $detail->id;
                     $insert_check->progress_orders_id = $progress->id;
                     $insert_check->delivery_mans_id = DeliveryMan::where('vehicles_id',$request->vehicles_id)->where('people_id',Auth::user()->people_id)->first()->id;
                     $insert_check->vehicles_id = $request->vehicles_id;
-                    $insert_check->people_id = Auth::user()->people_id;
+                    $insert_check->people_id = DeliveryMan::where('vehicles_id',$request->vehicles_id)->where('people_id',Auth::user()->people_id)->first()->people_id;
                     $insert_check->save();
 
                     $detail->on_route = true;
@@ -194,10 +194,16 @@ class CheckDeliveryManController extends ApiController
     {
         try {
             DB::beginTransaction();
-            $detail = DetailOrder::find($check_delivery->detail_orders_id);
-            $detail->on_route = false;
-            $detail->save();
-            $check_delivery->delete();
+                $detail = DetailOrder::find($check_delivery->detail_orders_id);
+                $detail->on_route = false;
+                $detail->save();
+
+                $order = Order::find($detail->orders_id);
+                $order->on_route = false;
+                $order->save();
+
+                $check_delivery->delete();
+            DB::commit();
             return $this->showOne($check_delivery, 201);
         } catch (\Exception $e) {
             DB::rollBack();

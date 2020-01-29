@@ -62,7 +62,7 @@
                     </div>
                 </div>                
             </div>
-            <div class="col-md-12 col-sm-12 col-12"  style="background: #17a2b8;">
+            <div class="col-md-12 col-sm-12 col-12"  style="background: #17a2b8;" v-if="!ocultar">
               <div class="form-group">
                 <label>Vehículo</label>
                 <multiselect v-model="vehicle"
@@ -138,6 +138,7 @@ export default {
     return {
       loading: false,
       order_id: 0,
+      ocultar: false,
       information: {
           order: '',
           school: '',
@@ -250,6 +251,7 @@ export default {
                                 {
                                     self.$toastr.success('producto ingresado al vehículo', 'exito')  
                                     self.getAll()  
+                                    self.ocultar = true
                                     self.vehicles.forEach(function (history) {
                                         if(history.id == r.data.vehicle)
                                         {

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class CheckSchool extends Model
 {
     protected $table = 'check_schools';
-    protected $fillableee = ['check','orders_id','detail_orders_id','progress_orders_id','schools_id','people_id'];
+    protected $fillableee = ['check','orders_id','detail_orders_id','check_delivery_man_id','schools_id','people_id'];
 
     public function order()
     {

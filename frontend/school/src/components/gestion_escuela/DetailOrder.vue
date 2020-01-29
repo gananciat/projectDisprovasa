@@ -99,13 +99,17 @@
                                     <dd>{{ items.balance | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>Monto Total Pedido</dt>
                                     <dd>{{ items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Monto Total de Reembolso</dt>
+                                    <dd>{{ items.subtraction | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>Disponible Total</dt>
-                                    <dd>{{ items.balance - items.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dd>{{ items.balance - (items.subtraction_temporary - items.subtraction) | currency('Q',',',2,'.','front',true) }}</dd>
                                     <hr>
                                     <dt>Monto del Pedido # {{ items.order }}</dt>
                                     <dd>{{ items.total | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dt>Monto del Reembolso # {{ items.order }}</dt>
+                                    <dd>{{ items.refund | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>Disponible hasta este pedido</dt>
-                                    <dd>{{ items.balance - (items.subtraction_temporary - items.total) | currency('Q',',',2,'.','front',true) }}</dd>
+                                    <dd>{{ items.balance - (items.subtraction_temporary - items.subtraction - (items.total - items.refund)) | currency('Q',',',2,'.','front',true) }}</dd>
                                     <dt>
                                         <br><br>
                                         <button type="button" class="btn btn-info btn-md pull-right" v-if="items.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="repertir pedido" @click="repeatOrder(items)">
@@ -273,7 +277,7 @@
                                                 <td style="vertical-align:middle; font-size: 14px; text-align: center; font-weight: bold;">{{ index+1 }}</td>
                                                 <td style="vertical-align:middle; font-size: 18px; text-align: center; font-weight: bold;">
                                                     <p v-if="item.deliver">
-                                                        {{ item.quantity }}
+                                                        {{ Number(item.quantity).toFixed(0) }}
                                                     </p>                                                    
                                                     <div class="form-group" v-if="!item.deliver">
                                                         <el-input-number v-model="item.quantity" size="mini" 
@@ -306,8 +310,8 @@
                                                     </div>
                                                 </td>
                                                 <td style="vertical-align:middle; text-align: center;">
-                                                    <small>{{ `${((item.progress.purchased_amount/item.quantity) * 100).toFixed(2)}%` }}</small>
-                                                    <div class="progress progress-sm">
+                                                    <small>{{ `${Number((item.progress.purchased_amount/item.quantity) * 100).toFixed(2)}%` }}</small>
+                                                    <div class="progress progress-sm" v-b-tooltip.hover :title="'C '+Number(item.progress.purchased_amount).toFixed(0)+'/'+' P '+Number(item.quantity).toFixed(0)">
                                                     <div class="progress-bar bg-green" role="progressbar" :aria-volumenow="item.progress.purchased_amount" aria-volumemin="0" :aria-volumemax="item.quantity" :style="'width:'+((item.progress.purchased_amount/item.quantity) * 100)+'%'"></div>
                                                     </div>
                                                 </td>
@@ -317,8 +321,13 @@
                                                     <span v-if="item.progress.purchased_amount == item.quantity" class="badge badge-success">COMPLETADO</span>
                                                 </td>
                                                 <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
-                                                <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ item.subtotal = item.quantity * item.sale_price | currency('Q',',',2,'.','front',true) }}</td>
+                                                <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">
+                                                    <p v-b-tooltip.hover :title="'R '+Number(item.refund).toFixed(2)+'/'+' S '+Number(item.subtotal).toFixed(2)">
+                                                        {{ item.subtotal = item.quantity * item.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                    </p>
+                                                </td>
                                                 <td style="vertical-align:middle; text-align: center;">
+                                                    <button type="button" v-if="item.deliver" class="btn btn-success btn-sm" v-b-tooltip.hover title="listo"><i class="fa fa-check"></i></button>
                                                     <button type="button" v-if="!item.deliver" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
                                                     <button type="button" v-if="item.progress.purchased_amount == 0" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(item)"><i class="fa fa-trash"></i></button>
                                                 </td>
@@ -336,6 +345,21 @@
                         </div>                
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12" v-if="items.complete">
+                <div class="callout callout-warning" style="width: 100%;">
+                    <h1>Detalle de la gestión del pedido # {{ items.order }}</h1>
+                    <p style="font-size: 28px; text-align: right; font-weight: bold;">
+                        Monto total del pedido {{ total | currency('Q',',',2,'.','front',true) }}
+                        <br>
+                        Monto total del reembolso {{ items.refund | currency('Q',',',2,'.','front',true) }}
+                    </p>
+                    <hr>
+                    <p style="font-size: 28px; text-align: right; font-weight: bold;">
+                        Monto total facturado {{items.total - items.refund | currency('Q',',',2,'.','front',true) }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -425,8 +449,8 @@ export default {
         .get(id)
         .then(r => {
             self.items = r.data.data[0];
-            self.disponibility = self.items.balance - self.items.subtraction_temporary
-            self.temporary = self.items.subtraction_temporary
+            self.disponibility = self.items.balance - (self.items.subtraction_temporary - self.items.subtraction)
+            self.temporary = self.items.subtraction_temporary - self.items.subtraction
             self.guard_total = self.items.total
             self.getProduct(r.data.data[0].type_order)
             self.loading = false;           

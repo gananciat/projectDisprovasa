@@ -667,7 +667,7 @@ export default {
         .then(r => {
           self.loading = false
           if( self.interceptar_error(r) == 0) return
-          self.disponibility = r.data.data[0].balance - r.data.data[0].subtraction_temporary
+          self.disponibility = r.data.data[0].balance - (r.data.data[0].subtraction_temporary - r.data.data[0].subtraction)
           self.disponibility = self.disponibility - self.total
           self.disbursement = r.data.data[0].disbursement.name
           self.amount_available = true

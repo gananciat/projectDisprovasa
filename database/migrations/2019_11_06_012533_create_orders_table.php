@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->string('type_order');
             $table->date('date');
             $table->decimal('total',12,2)->default(0);
+            $table->decimal('refund',12,2)->default(0);
             $table->boolean('complete')->default(0);
             $table->boolean('on_route')->default(0);
             $table->boolean('aware')->default(0);

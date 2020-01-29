@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
+use App\Models\CheckDeliveryMan;
 use Illuminate\Database\Eloquent\Model;
 
 class ProgressOrder extends Model
@@ -20,5 +21,10 @@ class ProgressOrder extends Model
     public function order_status()
     {
         return $this->belongsTo(OrderStatus::class,'order_statuses_id');
+    }
+
+    public function check()
+    {
+        return $this->hasOne(CheckDeliveryMan::class,'progress_orders_id');
     }
 }

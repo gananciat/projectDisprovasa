@@ -137,6 +137,12 @@
                               <div class="col-sm-12 text-center align-items-center">
                                 <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
                               </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
                             </div>
                             <div class="row">
                               <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
@@ -150,17 +156,17 @@
 
                           <template v-slot:cell(order)="data">
                             <div class="col-sm-12 text-center">
-                              <b-button size="md" @click="data.toggleDetails" class="mr-2">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.complete == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
                                 {{ data.item.order }}
                               </b-button>
                             </div>
                           </template> 
 
                           <template v-slot:cell(date)="data">
-                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
                           </template>                  
                           <template v-slot:cell(created_at)="data">
-                            {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
                               <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
@@ -229,6 +235,20 @@
 
                           <template v-slot:row-details="data">
                             <div class="row">
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Código </b> {{ data.item.code }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
                               <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
                                 <b>Progreso del pedido</b>
                                 <b-progress :max="data.item.detail_total" style="font-weight: bold; font-size: 14px;" show-progress height="20px" class="w-100 mb-2">
@@ -240,24 +260,24 @@
 
                           <template v-slot:cell(order)="data">
                             <div class="col-sm-12 text-center">
-                              <b-button size="md" @click="data.toggleDetails" class="mr-2">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.complete == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
                                 {{ data.item.order }}
                               </b-button>
                             </div>
                           </template> 
 
                           <template v-slot:cell(date)="data">
-                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
                           </template>                  
                           <template v-slot:cell(created_at)="data">
-                            {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
                               <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
                               <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
-                              </button>                                
+                              </button>                                                          
                               <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
@@ -319,6 +339,20 @@
 
                           <template v-slot:row-details="data">
                             <div class="row">
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Código </b> {{ data.item.code }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
                               <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
                                 <b>Progreso del pedido</b>
                                 <b-progress :max="data.item.detail_total" style="font-weight: bold; font-size: 14px;" show-progress height="20px" class="w-100 mb-2">
@@ -330,24 +364,24 @@
 
                           <template v-slot:cell(order)="data">
                             <div class="col-sm-12 text-center">
-                              <b-button size="md" @click="data.toggleDetails" class="mr-2">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.complete == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
                                 {{ data.item.order }}
                               </b-button>
                             </div>
                           </template> 
 
                           <template v-slot:cell(date)="data">
-                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
                           </template>                  
                           <template v-slot:cell(created_at)="data">
-                            {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
                               <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
                               <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
-                              </button>                                
+                              </button>                                                          
                               <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
@@ -409,6 +443,20 @@
 
                           <template v-slot:row-details="data">
                             <div class="row">
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Código </b> {{ data.item.code }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-12 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
                               <div class="col-sm-12 text-center d-flex justify-content-between align-items-center">
                                 <b>Progreso del pedido</b>
                                 <b-progress :max="data.item.detail_total" style="font-weight: bold; font-size: 14px;" show-progress height="20px" class="w-100 mb-2">
@@ -420,24 +468,24 @@
 
                           <template v-slot:cell(order)="data">
                             <div class="col-sm-12 text-center">
-                              <b-button size="md" @click="data.toggleDetails" class="mr-2">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.complete == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
                                 {{ data.item.order }}
                               </b-button>
                             </div>
                           </template> 
 
                           <template v-slot:cell(date)="data">
-                            {{ data.item.date | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
                           </template>                  
                           <template v-slot:cell(created_at)="data">
-                            {{ data.item.created_at | moment('dddd DD MMMM YYYY') }}
+                            <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
                               <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
                               <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
-                              </button>                                
+                              </button>                                                          
                               <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>

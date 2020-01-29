@@ -68,6 +68,7 @@ Route::resource('vehicle_model', 'Sistema\VehicleModelController', ['except' => 
 Route::resource('vehicle', 'Sistema\VehicleController', ['except' => ['create','edit']]);
 Route::resource('check_delivery', 'Sistema\CheckDeliveryManController', ['except' => ['create','edit','update']]);
 Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['create', 'edit']]);
+Route::resource('check_school', 'Sistema\CheckSchoolController', ['except' => ['create','edit','update']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
