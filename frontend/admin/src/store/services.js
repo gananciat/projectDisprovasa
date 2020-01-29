@@ -41,6 +41,9 @@ import VehicleBrandService from '../services/VehicleBrandService'
 import LicensePlateService from '../services/LicensePlateService'
 import TypeLicenseService from '../services/TypeLicenseService'
 import DeliveryManService from '../services/DeliveryManService'
+import VatService from '../services/VatService'
+import SerieService from '../services/SerieService'
+import InvoiceService from '../services/InvoiceService'
 
 
 /* IMPORT SCHOOL */
@@ -51,10 +54,10 @@ import CalendarySchoolService from '../services/CalendarySchoolService'
 import MenuSuggestionService from '../services/MenuSuggestionService'
 
 // Axios Configuration
-//let baseUrl = 'http://www.project.com/' //base url desarrollo
-let baseUrl = 'http://sistematio.test/' //base url desarrollo
+let baseUrl = 'http://www.project.com/' //base url desarrollo
+    //let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
-//let baseUrl = 'http://sistemapro.test:8000/'
+    //let baseUrl = 'http://sistemapro.test:8000/'
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -136,6 +139,9 @@ export default {
     licenseplateService: new LicensePlateService(Axios, baseUrl),
     typelicenseService: new TypeLicenseService(Axios, baseUrl),
     deliverymanService: new DeliveryManService(Axios, baseUrl),
+    serieService: new SerieService(Axios, baseUrl),
+    vatService: new VatService(Axios, baseUrl),
+    invoiceService: new InvoiceService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),

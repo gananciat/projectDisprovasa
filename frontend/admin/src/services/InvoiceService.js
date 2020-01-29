@@ -1,10 +1,10 @@
-class OrderService {
+class InvoiceService {
     axios
     baseUrl
 
     constructor(axios, baseUrl) {
         this.axios = axios
-        this.baseUrl = `${baseUrl}orders`
+        this.baseUrl = `${baseUrl}invoices`
     }
 
     getAll() {
@@ -12,19 +12,9 @@ class OrderService {
         return self.axios.get(`${self.baseUrl}`);
     }
 
-    getAllByInvoices() {
-        let self = this;
-        return self.axios.get(`${self.baseUrl}_by_invoices`);
-    }
-
     get(id) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${id}`);
-    }
-
-    getOrder(id) {
-        let self = this;
-        return self.axios.get(`${self.baseUrl}_get/${id}`);
     }
 
     create(data) {
@@ -43,4 +33,4 @@ class OrderService {
     }
 }
 
-export default OrderService
+export default InvoiceService
