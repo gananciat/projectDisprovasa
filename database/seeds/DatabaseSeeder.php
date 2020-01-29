@@ -475,6 +475,17 @@ class DatabaseSeeder extends Seeder
                     }
                     else
                     {
+                        $value->refund = $value->subtotal - ($insert->purchased_amount * $value->sale_price);
+
+                        $order = Order::find($value->orders_id);
+                        $order->refund += $value->refund;
+                        $order->save();
+
+                        $balance = Balance::find($order->balances_id);
+                        $balance->subtraction += $value->refund;
+                        $balance->current == true;
+                        $balance->save();
+
                         $value->deliver = true;
                         $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::EN_PROCESO)->first()->id;
                         $insert->check = true;

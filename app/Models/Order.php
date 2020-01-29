@@ -17,8 +17,8 @@ class Order extends Model
     const VALIJA_DIDACTICA = 'VALIJA DIDACTICA';
 
     protected $table = 'orders';
-    protected $fillable = ['order','title','description','date','total','schools_id','aware','on_route',
-                           'people_id','months_id','years_id','complete','type_order','code','repeat','balances_id','invoiced'];
+    protected $fillable = ['order','title','description','date','total','schools_id','aware','on_route','refund',
+                           'people_id','months_id','years_id','complete','type_order','code','repeat','balances_id'];
 
     public function setOrderAttribute($value) {
         $this->attributes['order'] = mb_strtoupper($value);

@@ -41,9 +41,11 @@ class OrderController extends ApiController
                 ['people_id','=',Auth::user()->people_id]
             ])->first();
 
-            $orders = Order::where('schools_id',$person_school->schools_id)->get();
+            $orders = Order::where('schools_id',$person_school->schools_id)
+                            ->orderBy('date','desc')
+                            ->get();
         } else {
-            $orders = Order::all();
+            $orders = Order::orderBy('date','desc')->get();
         }
 
         return $this->showAll($orders);
@@ -175,12 +177,15 @@ class OrderController extends ApiController
                                 if(!$product->persevering)
                                 {
                                     $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                    $expiration->used -= 1;
+                                    if(!is_null($expiration))
+                                    {
+                                        $expiration->used -= 1;
                     
-                                    if($expiration->used == 0)
-                                        $expiration->current = false;
-                        
-                                    $expiration->save();
+                                        if($expiration->used == 0)
+                                            $expiration->current = false;
+                            
+                                        $expiration->save();
+                                    }
                                 }
     
                             }else{
@@ -194,12 +199,15 @@ class OrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used -= 1;
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used -= 1;
                 
-                                if($expiration->used == 0)
-                                    $expiration->current = false;
-                    
-                                $expiration->save();
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
+                        
+                                    $expiration->save();
+                                }
                             }
 
                         }else{
@@ -251,11 +259,11 @@ class OrderController extends ApiController
             $orders = Order::withCount(['details as detail_complete' => function(Builder $query) {
                 $query->where('deliver', true);
             }, 'details as detail_total'])->where('type_order',$order)
-            ->where('schools_id',$person_school->schools_id)->get();
+            ->where('schools_id',$person_school->schools_id)->orderBy('date','asc')->get();
         } else {
             $orders = Order::withCount(['details as detail_complete' => function(Builder $query) {
                 $query->where('deliver', true);
-            }, 'details as detail_total'])->where('type_order',$order)->get();
+            }, 'details as detail_total'])->where('type_order',$order)->orderBy('date','desc')->get();
         }
         return $this->showAll($orders, 201);
     }

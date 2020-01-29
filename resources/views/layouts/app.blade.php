@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Sistema Proalsa - Empresa</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -17,7 +17,7 @@
 </head>
 <body>
   <v-app id="app">
-    <base-component logo="https://randomuser.me/api/portraits/men/78.jpg" sistema="{{ config('app.name', 'Laravel') }}"></base-component>
+    <base-component logo="https://randomuser.me/api/portraits/men/78.jpg" sistema="Sistema Proalsa - Empresa"></base-component>
 
     <v-content>
       <v-container style="height: 100%; width: 100%;">
@@ -34,7 +34,7 @@
         class="text-center white--text"
         cols="12"
       >
-        2019 — <strong>{{ config('app.name', 'Laravel') }}</strong>
+        2019 — <strong>Sistema Proalsa - Empresa</strong>
       </v-col>
     </v-footer>
     

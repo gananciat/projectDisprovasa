@@ -70,6 +70,7 @@ Route::resource('vehicle_model', 'Sistema\VehicleModelController', ['except' => 
 Route::resource('vehicle', 'Sistema\VehicleController', ['except' => ['create','edit']]);
 Route::resource('check_delivery', 'Sistema\CheckDeliveryManController', ['except' => ['create','edit','update']]);
 Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['create', 'edit']]);
+Route::resource('check_school', 'Sistema\CheckSchoolController', ['except' => ['create','edit','update']]);
 Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']]);
 Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
 Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);

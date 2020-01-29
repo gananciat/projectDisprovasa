@@ -117,7 +117,7 @@
                         <router-link v-b-tooltip title="gestionar orden" v-bind:key="index" :to="'/assign_product/'+item.id" >
                             <div v-bind:key="'1.'+index" :class="color_v(item.date)">
                                 <span class="info-box-icon"><i class="fa fa-book"></i></span>
-                                <div class="info-box-content">
+                                <div class="info-box-content" style="color:black;">
                                     <span class="info-box-number">{{ item.school.name }}</span>
                                     <span class="info-box-number">Código, {{ item.code }}</span>
                                     <span class="info-box-text">Pedido #{{ item.order }}</span>
@@ -125,7 +125,7 @@
                                     <span class="info-box-text">Fecha de entrega, {{ item.date | moment('dddd DD MMMM YYYY') }}</span>
                                     <span class="info-box-text">Monto, {{ item.total | currency('Q ',',',2,'.','front',true) }}</span>
                                     <div class="progress" style="width:100%;">
-                                        <div class="progress-bar" :style="'width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
+                                        <div class="progress-bar" :style="'background-color: blue; width:'+Number((item.detail_complete*100)/item.detail_total).toFixed(2)+'%'"></div>
                                     </div>
                                     <span class="progress-description text-center"> {{ Number((item.detail_complete*100)/item.detail_total).toFixed(2) }}%</span>
                                 </div>

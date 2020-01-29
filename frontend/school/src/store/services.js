@@ -17,6 +17,7 @@ import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
 import RepeatOrderService from '../services/RepeatOrderService'
 import MenuSuggestionService from '../services/MenuSuggestionService'
+import CheckSchoolService from '../services/CheckSchoolService'
 
 /* IMPORT DASHBOARD */
 import GraphService from '../services/GraphService'
@@ -85,6 +86,7 @@ export default {
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
     repeatorderService: new RepeatOrderService(Axios, baseUrl),
+    checkschoolService: new CheckSchoolService(Axios, baseUrl),
 
     /* EXPORT DASHBOARD */
     graphService: new GraphService(Axios, baseUrl),

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Order;
+use App\Models\Balance;
+use App\Models\Product;
 use App\Models\DetailOrder;
+use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use App\Models\ProgressOrder;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
-use App\Models\OrderStatus;
-use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProgressOrderController extends ApiController
@@ -64,14 +65,32 @@ class ProgressOrderController extends ApiController
 
                 $detail_order = DetailOrder::find($request->detail_orders_id);
                 $detail_order->deliver = true;
+
+                $progress_order = ProgressOrder::where('detail_orders_id', $detail_order->id)->first();
+
+                if($progress_order->purchased_amount != $progress_order->original_quantity)
+                {
+                    $detail_order->refund = $detail_order->subtotal - ($progress_order->purchased_amount * $detail_order->sale_price);
+                    
+                    $order = Order::find($detail_order->orders_id);
+                    $order->refund += $detail_order->refund;
+                    $order->save();
+
+                    $balance = Balance::find($order->balances_id);
+                    $balance->subtraction += $detail_order->refund;
+                    $balance->current == true;
+                    $balance->save();
+                }
+
                 $detail_order->save();                
 
                 $order_complete = DetailOrder::where('orders_id',$detail_order->orders_id)->where('deliver',false)->count();
+                
                 if($order_complete == 0){
                     $order = Order::find($detail_order->orders_id);
                     $order->complete = true;
                     $order->save();
-
+    
                     $complete_order = $order->complete;
                 }
 
@@ -199,11 +218,22 @@ class ProgressOrderController extends ApiController
                 $order_complete = DetailOrder::where('orders_id',$detail_order->orders_id)->where('deliver',false)->count();
                 
                 if($order_complete == 0){
+
+                    $detail_order->refund = $detail_order->subtotal - ($progress_order->purchased_amount * $detail_order->sale_price);
+                    $detail_order->save();
+
                     $order = Order::find($detail_order->orders_id);
                     $order->complete = true;
+                    $order->refund += $detail_order->refund;
                     $order->save();
 
+                    $balance = Balance::find($order->balances_id);
+                    $balance->subtraction += $detail_order->refund;
+                    $balance->current == true;
+                    $balance->save();
+
                     $complete_order = $order->complete;
+
                 }
 
                 $complete_detail = $detail_order->complete;

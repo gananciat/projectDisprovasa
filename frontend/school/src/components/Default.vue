@@ -19,7 +19,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="card">
 
-              <highcharts :options="chartAlimentacion" class="card-img-top"></highcharts>
+              <highcharts :options="chartAlimentacion" style="width: 99%;" class="card-img-top"></highcharts>
 
               <div class="card-body">
                 <h2 class="card-title"><b>Porcentaje de pedidos</b></h2>
@@ -33,7 +33,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="card">
 
-              <highcharts :options="chartGratuidad" class="card-img-top"></highcharts>
+              <highcharts :options="chartGratuidad" style="width: 99%;" class="card-img-top"></highcharts>
 
               <div class="card-body">
                 <h2 class="card-title"><b>Porcentaje de pedidos</b></h2>
@@ -47,7 +47,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="card">
 
-              <highcharts :options="chartUtiles" class="card-img-top"></highcharts>
+              <highcharts :options="chartUtiles" style="width: 99%;" class="card-img-top"></highcharts>
 
               <div class="card-body">
                 <h2 class="card-title"><b>Porcentaje de pedidos</b></h2>
@@ -61,7 +61,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="card">
 
-              <highcharts :options="chartValijas" class="card-img-top"></highcharts>
+              <highcharts :options="chartValijas" style="width: 99%;" class="card-img-top"></highcharts>
 
               <div class="card-body">
                 <h2 class="card-title"><b>Porcentaje de pedidos</b></h2>
@@ -90,6 +90,7 @@
                                     <th>Desembolso</th>
                                     <th>Monto Apobado</th>
                                     <th>Monto Pedido</th>
+                                    <th>Monto Reembolso</th>
                                     <th>Monto Facturado</th>
                                     <th>Disponible</th>
                                 </tr>
@@ -102,7 +103,8 @@
                                         <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.balance | currency('Q',',',2,'.','front',true) }}</td>
                                         <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</td>
                                         <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.subtraction | currency('Q',',',2,'.','front',true) }}</td>
-                                        <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.balance - balance.subtraction_temporary | currency('Q',',',2,'.','front',true) }}</td>
+                                        <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.subtraction_temporary - balance.subtraction | currency('Q',',',2,'.','front',true) }}</td>
+                                        <td style="vertical-align:middle; font-size: 12px; text-align: right; font-weight: bold;">{{ balance.balance - (balance.subtraction_temporary - balance.subtraction) | currency('Q',',',2,'.','front',true) }}</td>
                                     </tr>                       
                                 </template>
                             </tbody>
@@ -224,7 +226,7 @@ export default {
                               allowPointSelect: true,
                               showInLegend: true,
                               data: this.data_alimetnacion
-                          }],
+                          }],                         
             }
       },
       chartGratuidad() { 

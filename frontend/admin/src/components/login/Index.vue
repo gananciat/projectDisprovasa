@@ -3,7 +3,7 @@
 <body class="login-page">
 <div class="login-box" style="margin-top: -150px;">
   <div class="login-logo">
-    <a><b>SISTEMA</b> DISPROVASA</a>
+    <a><b>Sistema Proalsa - </b> Empresa</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

@@ -147,12 +147,15 @@ class RepeatOrderController extends ApiController
                                 if(!$product->persevering)
                                 {
                                     $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                    $expiration->used -= 1;
+                                    if(!is_null($expiration))
+                                    {
+                                        $expiration->used -= 1;
                     
-                                    if($expiration->used == 0)
-                                        $expiration->current = false;
-                        
-                                    $expiration->save();
+                                        if($expiration->used == 0)
+                                            $expiration->current = false;
+                            
+                                        $expiration->save();
+                                    }
                                 }
     
                             }else{
@@ -166,12 +169,15 @@ class RepeatOrderController extends ApiController
                             if(!$product->persevering)
                             {
                                 $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
-                                $expiration->used -= 1;
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used -= 1;
                 
-                                if($expiration->used == 0)
-                                    $expiration->current = false;
-                    
-                                $expiration->save();
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
+                        
+                                    $expiration->save();
+                                }
                             }
 
                         }else{
@@ -218,7 +224,7 @@ class RepeatOrderController extends ApiController
 
         if(!is_null($balance))
         {
-            if(($balance->subtraction_temporary + $repeat_order->total) > $balance->balance)
+            if((($balance->subtraction_temporary - $balance->subtraction) + ($repeat_order->total - $repeat_order->refund)) > $balance->balance)
                 return $this->errorResponse('El código '.$repeat_order->code.', no tiene suficiente crédito para realizar el pedido.',422);
 
 
