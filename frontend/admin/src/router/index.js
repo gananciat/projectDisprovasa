@@ -20,6 +20,7 @@ import ProgressOrder from '@/components/logistica/ProgressOrder'
 import AssignProduct from '@/components/logistica/AssignProduct'
 import Transport from '@/components/logistica/Transport'
 import TransportCheck from '@/components/logistica/TransportCheck'
+import TransportHistory from '@/components/logistica/TransportHistory'
 import CreateBalance from '@/components/administracion_escuela/balance/Create'
 import CalendarySchool from '@/components/logistica/CalendarySchool'
 import ProductsOrdered from '@/components/logistica/ProductsOrdered'
@@ -75,6 +76,7 @@ const routes = [
     { path: '/assign_product/:id', name: 'AssignProduct', component: AssignProduct, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/transport', name: 'Transport', component: Transport, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/transport/check/:id', name: 'TransportCheck', component: TransportCheck, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/transport/history', name: 'TransportHistory', component: TransportHistory, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school_create_balance/:id', name: 'CreateBalance', component: CreateBalance, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school/calendar', name: 'CalendarySchool', component: CalendarySchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/user', name: 'Person', component: Person, beforeEnter: multiguard([isLoggedIn]) },

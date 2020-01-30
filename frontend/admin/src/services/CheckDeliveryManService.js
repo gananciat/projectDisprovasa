@@ -12,6 +12,11 @@ class CheckDeliveryManService {
         return self.axios.get(`${self.baseUrl}`);
     }
 
+    getHistory() {
+        let self = this;
+        return self.axios.get(`${self.baseUrl}/create`);
+    }
+
     get(id) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${id}`);

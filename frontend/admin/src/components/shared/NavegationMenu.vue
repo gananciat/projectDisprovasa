@@ -78,43 +78,7 @@
 export default {
   name: "NavegationMenu",
   data: () => ({
-    items: [
-      {
-        icon: "cog",
-        text: "Administración",
-        children: [
-          { icon: "circle-o", text: "Categorías", path: "/category" },
-          { icon: "circle-o", text: "Companias", path: "/company" },
-          { icon: "circle-o", text: "Marcas", path: "/presentation" },
-          { icon: "circle-o", text: "Productos", path: "/product" },
-          { icon: "circle-o", text: "Escuelas", path: "/school" },
-        ]
-      },
-      {
-        icon: "shopping-cart",
-        text: "Ingresos",
-        children: [
-          { icon: "circle-o", text: "Proveedores", path: "/provider" },
-          { icon: "circle-o", text: "Productos faltantes", path: "/missing_product" },
-          { icon: "circle-o", text: "Compras", path: "/purchase" }
-        ]
-      },
-      {
-        icon: "truck",
-        text: "Logistica",
-        children: [
-          { icon: "circle-o", text: "Gestionar Pedido", path: "/progressorder" },
-          { icon: "circle-o", text: "Calendario", path: "/school/calendar" }
-        ]
-      },
-      {
-        icon: "user",
-        text: "Acceso",
-        children: [
-          { icon: "circle-o", text: "Usuarios", path: "/user" },
-        ]
-      },
-    ]
+
   }),
 
   methods: {

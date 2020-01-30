@@ -208,7 +208,7 @@
 import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
-  name: "order",
+  name: "receiveorder",
   components: {
       FormError,
       moment
@@ -238,7 +238,7 @@ export default {
   },
   created() {
     let self = this;
-    self.getAll('UTILES');
+    self.getAll('ALIMENTACION');
   },
 
   methods: {
