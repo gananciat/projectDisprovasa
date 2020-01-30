@@ -36,6 +36,12 @@ class InvoiceService {
         let self = this;
         return self.axios.delete(`${self.baseUrl}/${data.id}`);
     }
+
+    //peticion a funcion create
+    printInvoice(id) {
+        let self = this
+        return self.axios.get(`${self.baseUrl}_invoice/${id}`, { responseType: 'blob' });
+    }
 }
 
 export default InvoiceService

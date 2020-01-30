@@ -10,14 +10,15 @@
     "require": {
         "php": "^7.2",
         "barryvdh/laravel-cors": "^0.11.4",
+        "barryvdh/laravel-dompdf": "^0.8.5",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.2",
         "laravel/passport": "^7.5",
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.1",
         "laraveles/spanish": "^1.4",
-        "nicolaslopezj/searchable": "1.*",
-        "maatwebsite/excel": "^3.1"
+        "maatwebsite/excel": "^3.1",
+        "nicolaslopezj/searchable": "1.*"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

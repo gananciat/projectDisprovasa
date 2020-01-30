@@ -1,8 +1,11 @@
 <template>
 <!--Contenido-->
         <div class="card" v-loading="loading">
+        <b-modal ref="print" :title="'imprimir factura '+form.invoice_name" size="lg" hide-footer class="modal-backdrop" no-close-on-backdrop>
+          <print></print>
+        </b-modal>
 
-            <b-modal ref="nuevo" :title="'editar factura '+form.invoice_name" size="xl" hide-footer class="modal-backdrop" no-close-on-backdrop>
+          <b-modal ref="nuevo" :title="'editar factura '+form.invoice_name" size="xl" hide-footer class="modal-backdrop" no-close-on-backdrop>
             <form>
                 <div class="row">
                     <div class="form-group col-md-4">
@@ -16,6 +19,47 @@
                     <FormError :attribute_name="'date'" :errors_form="errors"> </FormError>
                     </div>
                 </div>
+                <div class="row">
+                  <div class="col-md-12 col-lg-12">
+                    <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Editar nombres para facturar</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <table class="table table-sm table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+                      <th>Nombre producto</th>
+                      <th>Facturar como</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(p,i) in form.details" :key="i">
+                      <td>{{i+1}}</td>
+                      <td>{{p.progress.product.name}}</td>
+                      <td><div v-if="p.progress.product.camouflage">
+                              <input class="form-control form-control-sm" v-model="p.invoiced_as" 
+                                :name="p.progress.product.name"
+                                :data-vv-as="'facturar como '+p.progress.product.name | lowercase "
+                                v-validate="'required|min:5|max:250'"
+                                :class="{'input':true,'has-errors': errors.has(p.progress.product.name)}">
+                                <FormError :attribute_name="p.progress.product.name" :errors_form="errors"> </FormError>
+                          </div></td>
+                    </tr>
+                    <tr>
+                      <td colspan="3">
+                      <p class="text-center text-bold text-primary" v-if="form.details.length === 0">ningun producto facturado con otro nombre</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+                  </div>
+                </div>
               <div class="row">
                 <div class="col-12 text-right">
                   <button @click="close" type="button" class="btn btn-danger btn-sm"><i class="fa fa-undo"></i> Cancelar</button>
@@ -23,7 +67,7 @@
                 </div>
               </div>
             </form>
-        </b-modal>
+          </b-modal>
               <div class="card-header no-border">
                 <div class="d-flex justify-content-between">
                   <h3 class="card-title">FACTURAS EMITIDAS</h3>
@@ -79,7 +123,7 @@
                         <b-badge class="bg-green" v-else> Activa</b-badge>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm">
+                          <button @click="openPrint(data.item)" type="button" class="btn btn-info btn-sm">
                               <i class="fa fa-print">
                               </i>
                           </button>
@@ -126,10 +170,12 @@
 <script>
     import moment from 'moment'
     import FormError from '../../shared/FormError'
+    import Print from './Print'
     export default {
     name: 'index_invoice',
     components: {
-        FormError
+        FormError,
+        Print
     },
     data() {
         return {
@@ -154,6 +200,7 @@
             pageOptions: [ 5, 10, 25 ],
             showStringEmpty: 'no hay pedidos pendientes de facturar',
             form:{
+                id: null,
                 date: '',
                 invoice_name: '',
                 details: []
@@ -217,11 +264,39 @@
         //update invice
         update(){
             let self = this
+             this.$validator.validateAll().then((result) => {
+                if (result) {
+                  var data = self.form
+                  self.loading = true
+                  self.$store.state.services.invoiceService
+                  .update(data)
+                  .then(r => {
+                      self.loading = false
+                      if(r.response){
+                          this.$toastr.error(r.response.data.error, 'error')
+                          return
+                      }
+                      this.$toastr.success('factura actualizada con exito', 'exito')
+                      self.close()
+                      self.getAll()
+                  })
+                  .catch(r => {});
+                }
+            });
         },
 
         edit(item){
             let self = this
             this.$refs['nuevo'].show()
+            self.loading = true
+            self.$store.state.services.invoiceService.get(item.id)
+            .then(r=>{
+                self.loading = false
+                self.form.details = r.data.data.products.filter(x=>x.progress.product.camouflage)
+            }).catch(e=>{
+
+            })
+            self.form.id = item.id
             self.form.date = item.date
             self.form.invoice_name = item.serie.serie+'-'+self.formatCode(item.invoice,String(item.serie.total).length)
         },
@@ -230,6 +305,7 @@
         close(){
             let self= this
             self.$refs['nuevo'].hide()
+            self.$refs['print'].hide()
         },
 
         getFullInvoice(item){
@@ -242,6 +318,16 @@
         formatCode(n, len = 4) {
             return (new Array(len + 1).join('0') + n).slice(-len)
         },
+
+        openPrint(item){
+          let self = this
+          self.$refs['print'].show()
+          self.form.invoice_name = item.serie.serie+'-'+self.formatCode(item.invoice,String(item.serie.total).length)
+
+          self.$nextTick(()=>{
+            events.$emit('get_invoice',item.id)
+          })
+        }
     },
 }
 </script>

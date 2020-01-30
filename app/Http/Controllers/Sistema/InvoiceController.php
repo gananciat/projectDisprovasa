@@ -16,7 +16,7 @@ class InvoiceController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     public function index()
@@ -70,7 +70,7 @@ class InvoiceController extends ApiController
 
     public function show(Invoice $invoice)
     {
-        //$invoice = Invice::where('id',$invoice->id)->with('product')
+        $invoice = Invoice::where('id',$invoice->id)->with('products.progress.detail','serie','vat','products.progress.product','order.school')->first();
         return $this->showOne($invoice);
     }
 
@@ -81,14 +81,17 @@ class InvoiceController extends ApiController
         ];
 
         $this->validate($request, $rules);
+        DB::beginTransaction();
+            $invoice->date = $request->date;
 
-        $invoice->total = $request->total;
+            foreach ($request->details as $p) {
+                $invoice_product = InvoiceProduct::find($p['id']);
+                $invoice_product->invoiced_as = $p['invoiced_as'];
+                $invoice_product->save();
+            }
 
-        if (!$invoice->isDirty()) {
-            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
-        }
-
-        $invoice->save();
+            $invoice->save();
+        DB::commit();
         return $this->showOne($invoice,201);
     }
 
@@ -117,5 +120,14 @@ class InvoiceController extends ApiController
             $order->save();
         DB::commit();
         return $this->showOne($invoice,201);
+    }
+
+    public function invoice($id)
+    {
+        $invoice = Invoice::where('id',$id)->with('products.progress.detail','serie','vat','products.progress.product','order.school')->first();
+        $pdf = \PDF::loadView('pdfs.invoice',['invoice'=>$invoice]);
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('invoice.pdf');
     }
 }

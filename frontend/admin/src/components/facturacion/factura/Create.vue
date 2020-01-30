@@ -49,7 +49,7 @@
               </div>
               <div class="row">
                 <div class="col-12 table-responsive">
-                  <table class="table table-bordered">
+                  <table class="table table-bordered table-sm">
                     <thead class="bg-primary disabled color-palette">
                     <tr>
                       <th>Cantidad</th>

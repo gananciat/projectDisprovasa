@@ -95,7 +95,7 @@
                         <el-divider></el-divider>
                                 <h3 class="card-title">Detalle de compra</h3>
                                 <div class="table-responsive">
-                                    <table class="table table-condensed table-bordered">
+                                    <table class="table table-condensed table-bordered table-sm">
                                         <thead>
                                             <tr>
                                                 <th>Producto</th>

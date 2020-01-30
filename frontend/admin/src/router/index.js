@@ -29,6 +29,7 @@ import Person from '@/components/acceso/Person'
 import Rol from '@/components/acceso/Rol'
 import InvoiceIndex from '@/components/facturacion/factura/Index'
 import InvoiceCreate from '@/components/facturacion/factura/Create'
+import InvoiceDownload from '@/components/facturacion/factura/InvoiceDownload'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -84,6 +85,7 @@ const routes = [
     { path: '/serie', name: 'Serie', component: Serie, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/invoice_index', name: 'InvoiceIndex', component: InvoiceIndex, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/invoice_create/:id', name: 'InvoiceCreate', component: InvoiceCreate, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/invoice_download', name: 'InvoiceDownload', component: InvoiceDownload, beforeEnter: multiguard([isLoggedIn]) },
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },

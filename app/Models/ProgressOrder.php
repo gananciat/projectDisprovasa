@@ -13,9 +13,9 @@ class ProgressOrder extends Model
     protected $fillable = ['purchased_amount','order_statuses_id',
     'detail_orders_id','products_id','original_quantity','check'];
 
-    public function details()
+    public function detail()
     {
-        return $this->belongsTo(DetailOrder::class);            
+        return $this->belongsTo(DetailOrder::class,'detail_orders_id');            
     } 
 
     public function order_status()
