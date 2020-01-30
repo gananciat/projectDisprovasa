@@ -23,6 +23,11 @@ class ProgressOrder extends Model
         return $this->belongsTo(OrderStatus::class,'order_statuses_id');
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class,'products_id');
+    }
+    
     public function check()
     {
         return $this->hasOne(CheckDeliveryMan::class,'progress_orders_id');

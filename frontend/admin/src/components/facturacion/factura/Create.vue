@@ -2,6 +2,8 @@
 <!--Contenido-->
       <!-- Content Wrapper. Contains page content -->
         <!-- Content Wrapper. Contains page content -->
+    <div v-loading="loading">
+        
   <div class="content-wrapper"  v-if="order !== null">
     <!-- Content Header (Page header) -->
     <!-- Modal para nuevo registro -->
@@ -71,7 +73,7 @@
                           </div>
                       </td>
                       <td>{{p.sale_price | currency('Q ')}}</td>
-                      <td>{{p.subtotal | currency('Q ')}}</td>
+                      <td>{{p.progress.purchased_amount * p.sale_price | currency('Q ')}}</td>
                     </tr>
                     </tbody>
                   </table>
@@ -119,7 +121,7 @@
             </div><!-- /.col -->
             <div class="col-sm-5">
                 <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#/invoice_index">PEDIDOS Y FACTURACIÓN</a></li>
+                <li class="breadcrumb-item"><a @click="returnOrders()" href="javascript:void(0);">PEDIDOS Y FACTURACIÓN</a></li>
                 <li class="breadcrumb-item active">NUEVA FACTURA</li>
                 </ol>
             </div>
@@ -145,7 +147,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <ul class="todo-list ui-sortable" data-widget="todo-list">
-                                <li v-for="(item, i) in items" :key="i" v-b-tooltip title="ver y generar factura" @click="viewInvoice(item)">
+                                <li v-for="(item, i) in items" :key="i" v-b-tooltip title="ver y generar factura" @click="viewInvoice(item,i)">
                                     <!-- drag handle -->
                                     <span class="handle ui-sortable-handle">
                                         <i class="fa fa-file"></i>
@@ -171,6 +173,8 @@
     </div>
     <!-- /.content -->
   </div>
+
+    </div>
   <!--Fin-Contenido-->
 </template>
 
@@ -227,7 +231,7 @@ export default {
                     title: 'información',
                     message: 'este pedido por el numero de productos que cuenta se factura en '+ self.items.length+' facturas',
                     offset: 95,
-                    duration: 0
+                    duration: 4000
                 })
                 self.getVat()
                 self.getSerie()
@@ -257,16 +261,19 @@ export default {
 
         //divider array en items segun factura
         chunkArray(items, chunk_size){
+            let self = this
             var index = 0
             items = items.filter(x=>!x.progress.check)
-
             if(items.length == 0){
                self.$notify.info({
                     title: 'información',
                     message: 'pedido ya se ha facturado completo',
                 }) 
+
+                self.$router.push('/invoice_index')
+                return
             }
-            
+
             var arrayLength = items.length
             var tempArray = []
             for (index = 0; index < arrayLength; index += chunk_size) {
@@ -336,8 +343,12 @@ export default {
 
         },
 
-        viewInvoice(items){
+        viewInvoice(items,i){
             let self = this
+            if(i !== 0){
+                self.$toastr.error('por favor genere las facturas en orden mostrado, existen '+(i)+' facturas que generar antes','error')
+                return
+            }
             items = items.map(obj=>({ ...obj, invoiced_as: ''}))
             self.form.details = items
             this.$refs['nuevo'].show()
@@ -352,6 +363,22 @@ export default {
         //formatear codigo para tarjeta de reponsabilidades
         formatCode(n, len = 4) {
             return (new Array(len + 1).join('0') + n).slice(-len)
+        },
+
+        //funcion para eliminar registro
+        returnOrders(data){
+            let self = this
+
+            self.$swal({
+                title: "¿regresear a pedidos?",
+                text: "Esta seguro que desea regresar a pedidos aun quedan "+self.items.length + ' facturas por facturar?',
+                type: "warning",
+                showCancelButton: true
+            }).then((result) => { // <--
+                if (result.value) { // <-- if confirmed
+                    self.$router.push('/invoice_index')
+                }
+            });
         },
     },
 
