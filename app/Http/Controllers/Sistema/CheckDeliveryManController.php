@@ -20,7 +20,7 @@ class CheckDeliveryManController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -47,10 +47,18 @@ class CheckDeliveryManController extends ApiController
      */
     public function create()
     {
-        $orders = Order::select('id','order','title','date','total','schools_id','code','type_order')
-                        ->with(['school:id,name','checks_delivery'])
+        $orders = Order::select('id','order','title','date','total','schools_id','code','type_order','on_route','refund','aware')
+                        ->with([
+                            'details:id,orders_id,products_id,sale_price,subtotal,refund,aware',
+                            'details.product:id,name,presentations_id',
+                            'details.product.presentation:id,name',
+                            'details.progress:id,detail_orders_id,purchased_amount,original_quantity',
+                            'details.progress.check:id,progress_orders_id,people_id',
+                            'details.progress.check.person:id,name_one,name_two,last_name_one,last_name_two',
+                            'school:id,name'
+                        ])
                         ->where('complete', true)
-                        ->where('on_route', false)
+                        ->where('on_route', true)
                         ->orderBy('date', 'asc')
                         ->get();
 
