@@ -16,7 +16,7 @@ class CreateInvoiceProductsTable extends Migration
         Schema::create('invoice_products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('invoice_id');
-            $table->string('invoice_as',250)->nullable();
+            $table->string('invoiced_as',250)->nullable();
             $table->foreign('invoice_id')->references('id')->on('invoices')->onUpdate('cascade');
             $table->unsignedBigInteger('progress_order_id');
             $table->foreign('progress_order_id')->references('id')->on('progress_orders')->onUpdate('cascade');

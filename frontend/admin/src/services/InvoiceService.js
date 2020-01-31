@@ -38,9 +38,9 @@ class InvoiceService {
     }
 
     //peticion a funcion create
-    printInvoice(id) {
+    printInvoice(id,total) {
         let self = this
-        return self.axios.get(`${self.baseUrl}_invoice/${id}`, { responseType: 'blob' });
+        return self.axios.get(`${self.baseUrl}_invoice/${id}/${total}`, { responseType: 'blob' });
     }
 }
 

@@ -271,7 +271,7 @@ class OrderController extends ApiController
     //get order by id with progress order by invoce
     public function showOrder($id)
     {
-        $order = Order::where('id',$id)->with('details.product','details.progress')->first();
+        $order = Order::where('id',$id)->with('details.product','details.progress','school')->first();
         return $this->showOne($order);
     }
 

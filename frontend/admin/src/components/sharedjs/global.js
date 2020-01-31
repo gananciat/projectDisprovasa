@@ -79,12 +79,13 @@ export default {
         };
 
         if (data.centavos > 0) {
-            data.letrasCentavos = "CON " + (function() {
-                if (data.centavos == 1)
-                    return this.Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular
+            var centavos = ''
+            if (data.centavos == 1)
+                    centavos = this.Millones(data.centavos) + " " + data.letrasMonedaCentavoSingular
                 else
-                    return this.Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural
-            })();
+                    centavos = this.Millones(data.centavos) + " " + data.letrasMonedaCentavoPlural
+
+            data.letrasCentavos = "CON " +centavos
         };
 
         if (data.enteros == 0)
@@ -153,19 +154,19 @@ export default {
                         return "VEINTE Y " + this.Unidades(unidad)
                 }
             case 3:
-                return this.DecenasY("TREINTA Y", unidad)
+                return this.DecenasY("TREINTA", unidad)
             case 4:
-                return this.DecenasY("CUARENTA Y", unidad)
+                return this.DecenasY("CUARENTA", unidad)
             case 5:
-                return this.DecenasY("CINCUENTA Y", unidad)
+                return this.DecenasY("CINCUENTA", unidad)
             case 6:
-                return this.DecenasY("SESENTA Y", unidad)
+                return this.DecenasY("SESENTA", unidad)
             case 7:
-                return this.DecenasY("SETENTA Y", unidad)
+                return this.DecenasY("SETENTA", unidad)
             case 8:
-                return this.DecenasY("OCHENTA Y", unidad)
+                return this.DecenasY("OCHENTA", unidad)
             case 9:
-                return this.DecenasY("NOVENTA Y", unidad)
+                return this.DecenasY("NOVENTA", unidad)
             case 0:
                 return this.Unidades(unidad)
         }

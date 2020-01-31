@@ -471,7 +471,7 @@ class DatabaseSeeder extends Seeder
                         $value->complete = true;
                         $value->deliver = true;
                         $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::COMPLETADO)->first()->id;
-                        $insert->check = true;
+                        $insert->check = false;
                     }
                     else
                     {

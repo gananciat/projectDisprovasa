@@ -27,35 +27,78 @@
               <div class="row">
                 <div class="col-12">
                   <h4>
-                    <i class="fa fa-globe"></i> DISPROVASA.
-                    <small class="float-right">Fecha: {{form.date | moment('DD/MM/YYYY')}}<br />
-                        <label>Factura:</label> <label class="text-danger">{{serie.serie+'-'+ formatCode(serie.actual_bill+1, String(serie.total).length)}}</label> 
-                    </small>
+                    <div class="row">
+                      <div class="col-md-8 col-sm-8 col-lg-8">
+                        <address class="text-center">
+                          <i class="fa fa-globe"></i> DISPROVASA.<br />
+                            su proveedor de calidad
+                        </address>
+                      </div>
+                      <div class="col-md-4 col-sm-4 col-lg-4">
+                      <small class="float-right">
+                          <label>N°.    </label> <label class="text-danger">{{formatCode(serie.actual_bill+1, String(serie.total).length)}}</label> 
+                      </small>
+                      </div>
+                    </div>
                   </h4>
                 </div>
                 <!-- /.col -->
               </div>
               <!-- info row -->
-              <div class="row invoice-info">
-                <div class="col-sm-12 invoice-col">
-                  <address>
-                    <strong>Distribuidora de productos varios.</strong><br>
-                    795 Folsom Ave, Suite 600<br>
-                    San Francisco, CA 94107<br>
-                    Phone: (804) 123-5432<br>
-                    Email: info@almasaeedstudio.com
+              <div class="row invoice-info" style="margin: 1px;">
+                <div class="col-sm-5 invoice-col bg-blue" >
+                  <address class="text-right">
+                    <strong>Disprovasa, Sociedad Anónima.</strong><br>
+                    <strong>Centro Comercial, local25, Zona 10 Residenciales.</strong><br>
+                    <strong>Naciones Unidas, Villa Nueva, Guatemala.</strong><br>
+                  </address>
+                </div>
+                 <div class="col-sm-4 invoice-col bg-blue">
+                  <address class="text-right">
+                   <br>
+                    <strong>e-mail: disprovasa@disprovasa.com</strong><br>
+                    <strong>Teléfono: 6630-7145</strong><br>
+                  </address>
+                </div>
+                <div class="col-sm-3 invoice-col bg-orange text-white">
+                  <address class="text-center">
+                    <strong>FACTURA CAMBIARIA</strong><br>
+                    <strong>SERIE {{ serie.serie }}</strong><br>
+                    <strong>NIT: 6652675-9</strong><br>
                   </address>
                 </div>
               </div>
-              <div class="row">
+              <div class="progress progress-xxs">
+                <div class="progress-bar bg-orange" style="width: 100%"></div>
+              </div>
+              <div class="row invoice-info">
+                <div class="col-sm-12 invoice-col">
+                  <address class="text-primary" style="margin-left: 5%;">
+                    <strong>Fecha: {{ order.date| moment('DD/MM/YYYY') }}</strong><br />
+                    <strong>Nombre: {{ order.school.name }}</strong><br />
+                    <strong>Dirección: {{ order.school.direction }}</strong><br />
+                    <strong>
+                      <div class="row">
+                        <div class="col-md-4">Nit: {{ order.school.nit }}</div>
+                        <div class="col-md-4">Tel: </div>
+                        <div class="col-md-4">Email: </div>
+                      </div>
+                      </strong>
+                  </address>
+                </div>
+              </div>
+              <div class="progress progress-xxs">
+                <div class="progress-bar bg-orange" style="width: 100%"></div>
+              </div>
+              <div class="row invoice-info">
                 <div class="col-12 table-responsive">
                   <table class="table table-bordered table-sm">
-                    <thead class="bg-primary disabled color-palette">
+                    <thead class="bg-blue">
                     <tr>
                       <th>Cantidad</th>
                       <th>Descripcion</th>
                       <th>Precio unitario</th>
-                      <th>Subtotal</th>
+                      <th class="columns_orange">Subtotal</th>
                     </tr>
                     </thead>
                     <tbody class="bg-light color-palette">
@@ -397,3 +440,13 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+  .columns_orange {
+    background-color:rgb(196, 92, 18)
+  }
+
+  .progress-xxs {
+      height: 5px;
+  }
+</style>

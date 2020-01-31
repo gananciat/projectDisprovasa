@@ -28,7 +28,7 @@
                 name="serie"
                 v-model="form.serie"
                 data-vv-as="serie"
-                v-validate="'required|numeric|min_value:1'"
+                v-validate="'required|max:1'"
               :class="{'input':true,'has-errors': errors.has('serie')}">
               <FormError :attribute_name="'serie'" :errors_form="errors"> </FormError>
               </div>
@@ -338,6 +338,7 @@ export default {
         self.form.init = data.init
         self.form.actual = data.actual
         self.form.serie = data.serie
+        self.form.expiration_date = data.expiration_date
         this.$refs['nuevo'].show()
     },
 

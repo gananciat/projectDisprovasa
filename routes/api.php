@@ -75,7 +75,7 @@ Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']
 Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
 Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
 Route::put('invoices_cancel/{id}', 'sistema\InvoiceController@cancel');
-Route::get('invoices_invoice/{id}', 'sistema\InvoiceController@invoice');
+Route::get('invoices_invoice/{id}/{total}', 'sistema\InvoiceController@invoice');
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
