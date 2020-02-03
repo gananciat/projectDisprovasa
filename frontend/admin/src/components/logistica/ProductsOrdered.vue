@@ -60,9 +60,10 @@
                         <h4>del {{form.start_date | moment('dddd, DD MMMM YYYY')  }} al {{form.end_date | moment('dddd, DD MMMM YYYY')  }}</h4>
                       </div>
                       <el-divider></el-divider>
+                      
+                    <button v-if="show_form" @click="exportExel" class="btn btn-success btn-sm" type="button"><i class="fa fa-file-excel-o"></i> exportar</button>
                     <b-row>
                       
-                    
                     <b-col md="4" class="my-1 form-inline">
                       <label>mostrando: </label>
                           <b-form-select :options="pageOptions" v-model="perPage" />
@@ -141,6 +142,7 @@
 <script>
 import moment from 'moment'
 import FormError from '../shared/FormError'
+import fileSaver from 'file-saver'
 export default {
   name: "ProductsPurcharsed",
   components: {
@@ -235,7 +237,27 @@ export default {
           }
         });
       }
-    }
+    },
+
+    exportExel(id){
+        let self = this
+        var data = self.form
+        self.loading = true
+        self.$store.state.services.reportService
+            .exportOrderProduct(data.start_date, data.end_date)
+            .then(response => {
+              self.loading = false
+                var file_name = 'productos_pedidos_'+data.start_date+'_'+data.end_date
+                if(response.response){
+                    this.$toastr.error(r.response.data.error, 'error')
+                    return
+                }
+                var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                fileSaver.saveAs(blob, file_name);
+                a.click();
+            })
+            .catch(r => {});
+        }
   },
 
 

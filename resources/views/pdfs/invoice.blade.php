@@ -73,7 +73,7 @@
                     </tbody>
                 </table>
             </section><br /><br />
-            <section style="margin-top:55%">
+            <section style="position: fixed; top: 80%; left: 0">
                 <table style="width: 100%">
                     <tbody>
                         <tr>

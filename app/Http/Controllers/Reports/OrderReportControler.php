@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Reports;
 
-use App\Models\DetailOrder;
+use App\Exports\QuantityProductOrdersExport;
 use App\Http\Controllers\ApiController;
+use App\Models\DetailOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderReportControler extends ApiController
 {
@@ -16,23 +18,26 @@ class OrderReportControler extends ApiController
 
     public function ProductsOrderedByDates($start_date, $end_date)
     {
-       /* $orders = DB::table('detail_orders')
-            ->join('products', 'products.id', '=', 'detail_orders.products_id')
-            ->join('orders', 'orders.id', '=', 'detail_orders.orders_id')
-            ->select(
-                DB::raw('products_id'),
-                DB::raw('products.name as product'),
-                DB::raw('SUM(sale_price) as sum'),
-                DB::raw('COUNT(products_id) as total')
-            )
-            ->groupBy('products_id')
-            ->get();*/
+        $orders = $this->getDataByDate($start_date, $end_date);
 
-         $orders = DB::table('detail_orders')
+        return $this->showQuery($orders);
+    }
+
+    public function exportExcel($start_date, $end_date)
+    {
+        $orders = $this->getDataByDate($start_date, $end_date);
+        $description = 'REPORTE DE PRODUCTOS PEDIDOS '.$this->getDates($start_date,$end_date);
+
+        return Excel::download(new QuantityProductOrdersExport($orders,$description), 'products.xlsx');
+    }
+
+    public function getDataByDate($start_date, $end_date)
+    {
+        $orders = DB::table('detail_orders')
                             ->join('progress_orders','progress_orders.detail_orders_id','=','detail_orders.id')
                             ->join('orders', 'detail_orders.orders_id', '=', 'orders.id')
                             ->join('products','detail_orders.products_id','=','products.id')
-                            ->select('products.name as product','products.id', 
+                            ->select('products.name as product', 
                                 DB::raw('SUM(quantity) as original_quantity'),
                                 DB::raw('SUM(progress_orders.purchased_amount) as quantity'))
                             ->where('orders.date','>=',$start_date)
@@ -41,6 +46,14 @@ class OrderReportControler extends ApiController
                             ->groupBy('product')
                             ->get();
 
-        return $this->showQuery($orders);
+        return $orders;
+    }
+
+    public function getDates($start_date, $end_date)
+    {
+        if(!is_null($start_date) && !is_null($end_date)){
+            return 'DE '. date("d/m/Y", strtotime($start_date)). ' A '. date("d/m/Y", strtotime($end_date));
+        }
+        return '';
     }
 }

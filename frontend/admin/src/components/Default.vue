@@ -222,13 +222,14 @@ export default {
 
     },
 
-    getSeries(data_values,name){
+    //obtener series con suma de montos o total
+    getSeries(data_values,name,sum = true){
       let self = this
       var data = []
       var series = []
       data_values.forEach(item => {
         data.push({
-          y: parseFloat(item.sum),
+          y: parseFloat(sum ? item.sum : item.total),
           name: moment().month(item.month-1).format("MMM")+' '+item.year
         })
       })
@@ -258,11 +259,11 @@ export default {
   },
    computed: {
         chartOptions() { 
-          return graps.getData(this.getSeries(this.data,'COMPRAS'), this.getLabels(this.data),this.modo,'COMPRAS')
+          return graps.getData(this.getSeries(this.data,'COMPRAS'), this.getLabels(this.data),this.modo,'COMPRAS','Q ',' GTQ',2)
         },
 
         chartOptionsOrder() { 
-          return graps.getData(this.getSeries(this.original_orders,'PEDIDOS'), this.getLabels(this.original_orders), this.modo,'PEDIDOS')
+          return graps.getData(this.getSeries(this.original_orders,'PEDIDOS',false), this.getLabels(this.original_orders), this.modo,'PEDIDOS')
         },
 
         /*chartOptionsOrder() { 
