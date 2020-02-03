@@ -7,7 +7,7 @@
             }
 
             #school_information{
-                margin-top: 10%;
+                margin-top: 15%;
             }
 
             .school_data {
@@ -31,18 +31,25 @@
                 <table style="width: 100%">
                     <tbody>
                         <tr>
+                            <td><span class="school_data"> {{Carbon\Carbon::parse($invoice->date)->format('d-m-Y')}}</span></td>
+                        </tr>
+                        <tr>
                             <td><span class="school_data"> {{$invoice->order->school->name}}</span></td>
                         </tr>
                         <tr>
                             <td><span class="school_data"> {{$invoice->order->school->direction}}</span></td>
                         </tr>
                         <tr>
-                            <td><span class="school_data"> {{$invoice->order->school->nit}}</span></td>
+                            <td>
+                                <span class="school_data"> {{$invoice->order->school->nit}}</span>
+                                <span class="school_data" style="margin-left: 30%"> </span>
+                                <span class="school_data" style="margin-left: 30%"> {{$invoice->order->school->email}}</span>
+                            </td>
                         </tr>
                         
                     </tbody>
                 </table>
-            </section><br /><br /><br />
+            </section><br /><br /><br /><br />
             <section id="table_data">
                 <table style="width: 100%">
                     @if($invoice->cancel)
@@ -53,25 +60,29 @@
                     <tbody>
                         @foreach($invoice->products as $p)
                         <tr>
-                            <td>{{$p->progress->purchased_amount}}</td>
+                            <td width="13%">{{$p->progress->purchased_amount}}</td>
                             @if($p->progress->product->camouflage)
-                                <td>{{$p->invoiced_as}}</td>
+                                <td width="50%">{{$p->invoiced_as}}</td>
                             @else
-                                <td>{{$p->progress->product->name}}</td>
+                                <td width="50%">{{$p->progress->product->name}}</td>
                             @endif
-
-                            <td>Q {{number_format($p->progress->detail->sale_price,2)}}</td>
-                            <td>Q {{number_format(($p->progress->purchased_amount * $p->progress->detail->sale_price),2)}}</td>
+                            <td width="15%">Q {{number_format(($p->progress->purchased_amount * $p->progress->detail->sale_price),2)}}</td>
                         </tr>
                          @endforeach
                         
                     </tbody>
                 </table>
             </section><br /><br />
-            <section style="margin-left: 80%">
-                <span>Q {{number_format($invoice->total,2)}}</span><br />
-                <span>Q {{number_format($invoice->total_iva,2)}}</span><br />
-                <span>Q {{number_format(($invoice->total - $invoice->total_iva),2)}}</span><br />
+            <section style="margin-top:55%">
+                <table style="width: 100%">
+                    <tbody>
+                        <tr>
+                            <td width="13%"></td>
+                            <td width="50%">{{$total}}</td>
+                            <td width="15%">Q {{number_format($invoice->total,2)}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
         </div>
         </div>
