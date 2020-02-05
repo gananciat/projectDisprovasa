@@ -13,7 +13,7 @@ class ProductController extends ApiController
 {
     public function __construct()
     {
-        //parent::__construct();
+        parent::__construct();
     }
 
     /**
@@ -220,11 +220,11 @@ class ProductController extends ApiController
         $products = Product::with(['category','presentation','prices' => function ($query){
             $query->where('current', true);
         }])
-        ->where('propierty','ALIMENTACION')
+        ->where('propierty',mb_strtoupper($product))
         ->get();
         
         foreach ($products as $key => $value) {
-            for ($i=1; $i < 6; $i++) { 
+            for ($i=1; $i < 21; $i++) { 
                 if($value->prices[0]['price']*$i == $price)
                 {
                     $data['cantidad'] = $i;

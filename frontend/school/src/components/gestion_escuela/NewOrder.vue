@@ -14,6 +14,43 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
+            <b-modal ref="cuadra_opc" hide-footer class="modal-backdrop" no-close-on-backdrop size="lg" title="Opciones para cuadrar">
+              <div class="col-md-12 col-sm-12 col-12" v-if="Number(total) > 0">
+                  <div class="table-responsive">
+                      <table class="table table-striped hover bordered">
+                          <thead>
+                              <tr class="text-center" style="font-size: 16px;">
+                                  <th style="vertical-align:middle;">Cantidad</th>
+                                  <th style="vertical-align:middle;">Producto</th>                                                    
+                                  <th style="vertical-align:middle;">Precio</th>                                                      
+                                  <th style="vertical-align:middle;">Total</th>  
+                              </tr>
+                          </thead>
+                          <tbody style="font-size: 11px;">
+                              <template v-for="(row, index) in cuadrar_opciones">
+                                  <tr v-bind:key="index">
+                                      <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                          {{ row.cantidad }}
+                                      </td> 
+                                      <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                          {{ row.producto+' / '+row.marca }}
+                                      </td>  
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>   
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.cantidad * row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>                                  
+                                  </tr>
+                              </template>
+                          </tbody>
+                      </table>   
+                  </div>                   
+              </div>              
+            </b-modal>
+          </div>
+
+          <div class="col-lg-12">
             
             <div class="card">
               <div class="card-header border-0">
@@ -198,10 +235,12 @@
                 </textarea>
                 <FormError :attribute_name="'detail.observation'" :errors_form="errors"> </FormError>
               </div>
-            </div>                               
+            </div>   
+            &nbsp;                            
             <div class="col-md-12 col-sm-12 text-right">
               <button type="button" class="btn btn-success btn-sm" v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
-            </div>      
+            </div>   
+            &nbsp;   
           </div>
         </div>
         <div class="col-md-4 col-sm-12">
@@ -218,7 +257,13 @@
                 <br>
                 <small>{{ disbursement }}</small>            
               </div>
-            </div>                    
+            </div>    
+            &nbsp;  
+            <div class="col-md-12 col-sm-12 text-right" v-if="Number(total) > 0">
+              <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.hover title="cuadrar" @click="cuadrar(title, disponibility)">Cuadrar</button>
+              <br>
+            </div>     
+            &nbsp;        
             <div class="col-md-12 col-sm-12">
               <div class="position-relative p-5 bg-green">
                 <div class="ribbon-wrapper ribbon-xl">
@@ -315,6 +360,7 @@ export default {
       title: '',
       items: {},
       products: [],
+      cuadrar_opciones: [],
       product_id: null,
       quantity: '',
       observation: '',
@@ -569,7 +615,7 @@ export default {
       let encontro = false
       self.loading_detail = true
 
-      if(self.disponibility > self.information_product.sub_total)
+      if(self.disponibility >= self.information_product.sub_total)
       {
         self.$validator.validateAll("detail").then((result) => {
             if (result) {
@@ -673,6 +719,24 @@ export default {
           self.amount_available = true
           self.form.detail_order = []
           self.total = 0          
+        })
+        .catch(r => {});
+    },
+    
+    cuadrar(produt, price){
+      let self = this
+      self.loading = true
+
+      self.$store.state.services.productService
+        .getCuadrar(produt, price)
+        .then(r => {
+          self.loading = false
+          self.cuadrar_opciones = []
+          self.interceptar_error(r) == 0 ? '' : self.cuadrar_opciones = r.data
+          
+          if(self.cuadrar_opciones.length > 0)
+            self.$refs['cuadra_opc'].show()
+
         })
         .catch(r => {});
     }

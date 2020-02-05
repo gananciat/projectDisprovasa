@@ -153,12 +153,13 @@ class DetailOrderController extends ApiController
                 $product->save();
 
                 $order->total += $insert_detalle_orden->subtotal;
+
                 $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
 
-                if($balance->balance == $balance->subtraction_temporary)
+                if($balance->balance === ($balance->subtraction_temporary - $balance->subtraction))
                     $balance->current = false;
 
-                if(($balance->balance - $balance->subtraction_temporary) < 0)
+                if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
                     return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
                 $order->balances_id = $balance->id;
@@ -348,13 +349,14 @@ class DetailOrderController extends ApiController
                     $detail_order->complete = false;
 
                     //Asignamos el nuevo subtotal al total
-                    $balance->subtraction_temporary += $detail_order->subtotal;
                     $order->total = $order->total + $detail_order->subtotal;
 
-                    if($balance->balance == $balance->subtraction_temporary)
-                        $balance->current = false;
+                    $balance->subtraction_temporary += $detail_order->subtotal;
 
-                    if(($balance->balance - $balance->subtraction_temporary) < 0)
+                    if($balance->balance === ($balance->subtraction_temporary - $balance->subtraction))
+                        $balance->current = false;
+    
+                    if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
                     $progress_order->order_statuses_id = $estado_orden->id;
@@ -509,11 +511,11 @@ class DetailOrderController extends ApiController
                             $insert_quantify->subtraction -= 1;
                     }
 
-                    if($balance->balance != $balance->subtraction_temporary)
+                    if($balance->balance !== ($balance->subtraction_temporary - $balance->subtraction))
                         $balance->current = true;
-
-                    if(($balance->balance - $balance->subtraction_temporary) < 0)
-                        return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);                                     
+    
+                    if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
+                        return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);                             
                         
                     $insert_quantify->save();
                     $product->save();

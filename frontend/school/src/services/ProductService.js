@@ -24,7 +24,7 @@ class productService {
 
     getCuadrar(product, price) {
         let self = this;
-        return self.axios.get(`${self.baseUrl}/products/${product}/cuadrar/${price}`);
+        return self.axios.get(`${self.baseUrl}/${product}/cuadrar/${price}`);
     }
 
     create(data) {

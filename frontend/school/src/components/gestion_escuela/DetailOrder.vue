@@ -56,6 +56,43 @@
                 </div>
             </div>
 
+          <div class="col-lg-12">
+            <b-modal ref="cuadra_opc" hide-footer class="modal-backdrop" no-close-on-backdrop size="lg" title="Opciones para cuadrar">
+              <div class="col-md-12 col-sm-12 col-12" v-if="Number(total) > 0">
+                  <div class="table-responsive">
+                      <table class="table table-striped hover bordered">
+                          <thead>
+                              <tr class="text-center" style="font-size: 16px;">
+                                  <th style="vertical-align:middle;">Cantidad</th>
+                                  <th style="vertical-align:middle;">Producto</th>                                                    
+                                  <th style="vertical-align:middle;">Precio</th>                                                      
+                                  <th style="vertical-align:middle;">Total</th>  
+                              </tr>
+                          </thead>
+                          <tbody style="font-size: 11px;">
+                              <template v-for="(row, index) in cuadrar_opciones">
+                                  <tr v-bind:key="index">
+                                      <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                          {{ row.cantidad }}
+                                      </td> 
+                                      <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                          {{ row.producto+' / '+row.marca }}
+                                      </td>  
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>   
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.cantidad * row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>                                  
+                                  </tr>
+                              </template>
+                          </tbody>
+                      </table>   
+                  </div>                   
+              </div>              
+            </b-modal>
+          </div>
+
             <div class="col-md-12 col-sm-12">
                 <div class="card border-info">
                     <div class="card-header">
@@ -223,7 +260,12 @@
                         <br>
                         <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
                     </div>
-                </div>                        
+                </div>   
+                &nbsp;  
+                <div class="col-md-12 col-sm-12 text-right" v-if="Number(total) > 0">
+                    <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.hover title="cuadrar" @click="cuadrar(items.type_order, disponibility)">Cuadrar</button>
+                </div>     
+                &nbsp;                                        
                 <div class="col-md-12 col-sm-12">
                     <div class="position-relative p-5 bg-green">
                         <div class="ribbon-wrapper ribbon-xl">
@@ -386,6 +428,7 @@ export default {
       items: {},
       calendario: [],
       products: [],
+      cuadrar_opciones: [],
       total_insert: 0,
       disponibility: 0,
       temporary: 0,
@@ -449,6 +492,7 @@ export default {
         .get(id)
         .then(r => {
             self.items = r.data.data[0];
+            console.log(self.items)
             self.disponibility = self.items.balance - (self.items.subtraction_temporary - self.items.subtraction)
             self.temporary = self.items.subtraction_temporary - self.items.subtraction
             self.guard_total = self.items.total
@@ -479,8 +523,8 @@ export default {
       let self = this
       let sumar = parseFloat(self.guard_total) + parseFloat(self.disponibility)
       let resta = parseFloat(sumar) - parseFloat(self.total_insert)
-      
-        if(resta  > 0)
+
+        if(resta > -1)
         {
             self.$validator.validateAll('insert').then((result) => {
                 if (result) {
@@ -528,7 +572,7 @@ export default {
       let sumar = parseFloat(self.guard_total) + parseFloat(self.disponibility)
       let resta = parseFloat(sumar) - parseFloat(self.total_insert)
  
-        if(resta > 0)
+        if(resta > -1)
         {
             self.$validator.validateAll('edit').then((result) => {
                 if (result) {
@@ -802,7 +846,26 @@ export default {
             }
         });
       }    
-    },    
+    },   
+    
+    cuadrar(produt, price){
+      let self = this
+      self.loading = true
+      console.log(produt, price)
+
+      self.$store.state.services.productService
+        .getCuadrar(produt, price)
+        .then(r => {
+          self.loading = false
+          self.cuadrar_opciones = []
+          self.interceptar_error(r) == 0 ? '' : self.cuadrar_opciones = r.data
+          
+          if(self.cuadrar_opciones.length > 0)
+            self.$refs['cuadra_opc'].show()
+
+        })
+        .catch(r => {});
+    }    
   },
   computed: {
     total(){

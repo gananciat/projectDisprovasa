@@ -190,10 +190,10 @@ class RepeatOrderController extends ApiController
                     $insert_orden->total += $insert_detalle_orden->subtotal;
                     $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
 
-                    if($balance->balance == $balance->subtraction_temporary)
-                        $balance->current = true;
-
-                    if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
+                    if($balance->balance === ($balance->subtraction_temporary - $balance->subtraction))
+                        $balance->current = false;
+    
+                    if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
                     $insert_orden->balances_id = $balance->id;

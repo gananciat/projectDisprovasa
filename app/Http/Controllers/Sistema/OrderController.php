@@ -219,13 +219,10 @@ class OrderController extends ApiController
                 $balance->subtraction_temporary += $insert_orden->total;
 
                 if($balance->balance === $balance->subtraction_temporary)
-                {
                     $balance->current = false;
-                }
 
-                if($balance->subtraction_temporary > $balance->balance){
+                if($balance->subtraction_temporary > $balance->balance)
                     return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$request->code, 422);
-                }
 
                 $insert_quantify->sumary_schools +=  $insert_detalle_orden->quantity;
 

@@ -69,7 +69,7 @@ class VehicleController extends ApiController
         $rules = [
             'placa' => 'required|string|max:6|unique:vehicles,placa',
             'color' => 'required|string|max:25',
-            'anio' => 'required|integer|max:4|between:1890,'.date("Y",strtotime(date('Y-m-d')."+ 1 year")),
+            'anio' => 'required|integer|min:4|between:1890,'.date("Y",strtotime(date('Y-m-d')."+ 1 year")),
             'vin' => 'required|string|max:16|unique:vehicles,vin',
             'chasis' => 'required|string|max:16|unique:vehicles,chasis',
             'motor' => 'required|integer|between:1000,5000',
@@ -139,7 +139,7 @@ class VehicleController extends ApiController
         $rules = [
             'placa' => 'required|string|max:6|unique:vehicles,placa,'.$vehicle->id,
             'color' => 'required|string|max:25',
-            'anio' => 'required|integer|max:4|between:1890,'.date("Y",strtotime(date('Y-m-d')."+ 1 year")),
+            'anio' => 'required|integer|min:4|between:1890,'.date("Y",strtotime(date('Y-m-d')."+ 1 year")),
             'vin' => 'required|string|max:16|unique:vehicles,vin,'.$vehicle->id,
             'chasis' => 'required|string|max:16|unique:vehicles,chasis,'.$vehicle->id,
             'motor' => 'required|integer|between:1000,5000',
@@ -157,6 +157,10 @@ class VehicleController extends ApiController
         $vehicle->motor = $request->motor;
         $vehicle->license_plates_id = $request->license_plates_id;
         $vehicle->vehicle_models_id = $request->vehicle_models_id;
+
+        if (!$vehicle->isDirty()) 
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
+
         $vehicle->save();
 
         return $this->showOne($vehicle,201);
