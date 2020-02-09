@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Usuario;
 use App\User;
 use App\Models\Rol;
 use App\Models\Person;
+use App\Mail\WelcomeUser;
 use App\Models\PhonePerson;
 use Illuminate\Support\Str;
 use App\Models\PersonSchool;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ApiController;
 
 class UserController extends ApiController
@@ -109,8 +111,9 @@ class UserController extends ApiController
                     $insert = new User();
                 }
 
+                $password = $this->generarPassword(16);
                 $insert->email = $insert_people->email;
-                $insert->password = Hash::make($this->generarPassword(16));
+                $insert->password = Hash::make($password);
                 $insert->remember_token = Str::random(20);
                 $insert->verified = User::USUARIO_NO_VERIFICADO;
                 $insert->verification_token = User::generarVerificationToken();
@@ -121,6 +124,7 @@ class UserController extends ApiController
 
             DB::commit();
 
+            Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -208,16 +212,19 @@ class UserController extends ApiController
                     $update_phone_people->save();
                 }     
                 
+                $enviar_correo = false;
                 if($user->email != $update_people->email) 
                 {
+                    $password = $this->generarPassword(16);
                     $user->email = $update_people->email;
-                    $user->password = Hash::make($this->generarPassword(16));
+                    $user->password = Hash::make($password);
                     $user->remember_token = Str::random(20);
                     $user->verified = User::USUARIO_NO_VERIFICADO;
                     $user->verification_token = User::generarVerificationToken();
                     $user->admin = User::USUARIO_REGULAR;
                     $user->rols_id = $data->rols_id;
                     $user->save(); 
+                    $enviar_correo = true;
                 } else {
                     $user->rols_id = $data->rols_id;
                     $user->save(); 
@@ -225,6 +232,9 @@ class UserController extends ApiController
 
             DB::commit();
 
+            if($enviar_correo)
+                Mail::to($user->email)->send(new WelcomeUser($user, $password));
+                
             return $this->showOne($update_people,201);
         } catch (\Exception $e) {
             DB::rollBack();

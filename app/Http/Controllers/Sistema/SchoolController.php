@@ -7,6 +7,7 @@ use App\Models\Rol;
 use App\Models\Order;
 use App\Models\Person;
 use App\Models\School;
+use App\Mail\WelcomeUser;
 use App\Models\PhonePerson;
 use App\Models\PhoneSchool;
 use Illuminate\Support\Str;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 
@@ -201,6 +203,7 @@ class SchoolController extends ApiController
 
             DB::commit();
 
+            Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();

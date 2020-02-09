@@ -208,7 +208,7 @@ class DatabaseSeeder extends Seeder
 
         $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
         $insert_person = new Person();
-        $insert_person->cui = '12345678912345';
+        $insert_person->cui = '12345678912301';
         $insert_person->name_one = 'Héctor';
         $insert_person->name_two = 'Renato';
         $insert_person->last_name_one = 'de la Cruz';
@@ -226,20 +226,21 @@ class DatabaseSeeder extends Seeder
         $insert_user->verification_token = User::generarVerificationToken();
         $insert_user->admin = User::USUARIO_ADMINISTRADOR;
         $insert_user->people_id = $insert_person->id;
-        $insert_user->rols_id = 1;
+        $insert_user->rols_id = Rol::where('name', Rol::ADMINISTRADOR)->first()->id;
         $insert_user->current_school = 0;
         $insert_user->save();
 
-        $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::ADMINISTRADOR.PHP_EOL;  
+    
         $insert_person = new Person();
-        $insert_person->cui = '12345678912346';
-        $insert_person->name_one = 'Juan';
+        $insert_person->cui = '12345678912302';
+        $insert_person->name_one = 'Gerente';
         $insert_person->name_two = 'Renato';
-        $insert_person->last_name_one = 'Estrada';
+        $insert_person->last_name_one = 'de la Cruz';
         $insert_person->last_name_two = 'Ojeda';
         $insert_person->direction = 'barrio belén';
         $insert_person->email = 'gerente@gmail.com';
-        $insert_person->municipalities_id = $municipality->id;
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
         $insert_person->save();
 
         $insert_user = new User();
@@ -248,23 +249,24 @@ class DatabaseSeeder extends Seeder
         $insert_user->remember_token = Str::random(20);
         $insert_user->verified = User::USUARIO_VERIFICADO;
         $insert_user->verification_token = User::generarVerificationToken();
-        $insert_user->admin = User::USUARIO_ADMINISTRADOR;
+        $insert_user->admin = User::USUARIO_REGULAR;
         $insert_user->people_id = $insert_person->id;
-        $insert_user->rols_id = 2;
+        $insert_user->rols_id = Rol::where('name', Rol::GERENTE)->first()->id;
         $insert_user->current_school = 0;
         $insert_user->save();
 
-        $municipality =  Municipality::where('name', 'CHIQUIMULILLA')->first();
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::GERENTE.PHP_EOL;  
+    
         $insert_person = new Person();
-        $insert_person->cui = '12345678912347';
-        $insert_person->name_one = 'Pedro';
+        $insert_person->cui = '12345678912303';
+        $insert_person->name_one = 'Bodega';
         $insert_person->name_two = 'Renato';
         $insert_person->last_name_one = 'de la Cruz';
         $insert_person->last_name_two = 'Ojeda';
         $insert_person->direction = 'barrio belén';
-        $insert_person->email = 'compra@gmail.com';
-        $insert_person->municipalities_id = $municipality->id;
-        $insert_person->save();  
+        $insert_person->email = 'bodega@gmail.com';
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
+        $insert_person->save();
 
         $insert_user = new User();
         $insert_user->email = $insert_person->email;
@@ -272,14 +274,115 @@ class DatabaseSeeder extends Seeder
         $insert_user->remember_token = Str::random(20);
         $insert_user->verified = User::USUARIO_VERIFICADO;
         $insert_user->verification_token = User::generarVerificationToken();
-        $insert_user->admin = User::USUARIO_ADMINISTRADOR;
+        $insert_user->admin = User::USUARIO_REGULAR;
         $insert_user->people_id = $insert_person->id;
-        $insert_user->rols_id = 5;
+        $insert_user->rols_id = Rol::where('name', Rol::BODEGA)->first()->id;
         $insert_user->current_school = 0;
         $insert_user->save();
-        
-        echo 'CUI: '.$insert_person->cui.'PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: ADMINISTRADOR'.PHP_EOL;  
+
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::BODEGA.PHP_EOL;  
     
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912304';
+        $insert_person->name_one = 'Supervisor';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'de la Cruz';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'supervisor@gmail.com';
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
+        $insert_person->save();
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_REGULAR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = Rol::where('name', Rol::SUPERVISOR)->first()->id;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::SUPERVISOR.PHP_EOL;  
+    
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912305';
+        $insert_person->name_one = 'compra';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'de la Cruz';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'compra@gmail.com';
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
+        $insert_person->save();
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_REGULAR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = Rol::where('name', Rol::COMPRA)->first()->id;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::COMPRA.PHP_EOL;  
+    
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912306';
+        $insert_person->name_one = 'facturador';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'de la Cruz';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'facturador@gmail.com';
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
+        $insert_person->save();
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_REGULAR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = Rol::where('name', Rol::FACTURADOR)->first()->id;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::FACTURADOR.PHP_EOL;   
+    
+        $insert_person = new Person();
+        $insert_person->cui = '12345678912307';
+        $insert_person->name_one = 'repartidor';
+        $insert_person->name_two = 'Renato';
+        $insert_person->last_name_one = 'de la Cruz';
+        $insert_person->last_name_two = 'Ojeda';
+        $insert_person->direction = 'barrio belén';
+        $insert_person->email = 'repartidor@gmail.com';
+        $insert_person->municipalities_id = Municipality::all()->random()->id;
+        $insert_person->save();
+
+        $insert_user = new User();
+        $insert_user->email = $insert_person->email;
+        $insert_user->password = 'secret';
+        $insert_user->remember_token = Str::random(20);
+        $insert_user->verified = User::USUARIO_VERIFICADO;
+        $insert_user->verification_token = User::generarVerificationToken();
+        $insert_user->admin = User::USUARIO_REGULAR;
+        $insert_user->people_id = $insert_person->id;
+        $insert_user->rols_id = Rol::where('name', Rol::REPARTIDOR)->first()->id;
+        $insert_user->current_school = 0;
+        $insert_user->save();
+
+        echo 'EMAIL: '.$insert_user->email.' PERSONA: '.$insert_person->name_one.' '.$insert_person->last_name_one.' ROL: '.Rol::REPARTIDOR.PHP_EOL;  
+
+
         Excel::import(new MenuImport, 'database/seeds/Catalogos/Menu.xlsx'); 
 
         Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');  
