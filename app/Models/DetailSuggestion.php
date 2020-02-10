@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class DetailSuggestion extends Model
 {
     protected $table = 'detail_suggestions';
-    protected $fillable = ['observation','products_id','menu_suggestions_id'];
+    protected $fillable = ['observation','products_id','menu_suggestions_id','current'];
 
     public function setObservationAttribute($valor) {
         $this->attributes['observation'] = strtoupper($valor);    

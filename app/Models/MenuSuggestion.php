@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuSuggestion extends Model
 {
     protected $table = 'menu_suggestions';
-    protected $fillable = ['title','description','people_id'];
+    protected $fillable = ['title','description','people_id','current'];
 
     public function setTitleAttribute($value) {
         $this->attributes['title'] = mb_strtoupper($value);

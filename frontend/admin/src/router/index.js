@@ -32,6 +32,9 @@ import InvoiceIndex from '@/components/facturacion/factura/Index'
 import InvoiceCreate from '@/components/facturacion/factura/Create'
 import InvoiceDownload from '@/components/facturacion/factura/InvoiceDownload'
 import Vehicle from '@/components/administracion/Vehicle'
+import MenuSugge from '@/components/administracion/MenuSugge'
+import NewMenu from '@/components/administracion/NewMenu'
+import EditMenu from '@/components/administracion/EditMenu'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -70,28 +73,31 @@ const routes = [
     { path: '/provider', name: 'Provider', component: Provider, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/inventory', name: 'Inventory', component: Inventory, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/purchase', name: 'Purcharse', component: Purchase, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/purchase_create', name: 'PurchaseCreate', component: PurchaseCreate, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/purchase_view_info/:id', name: 'PurchaseViewInfo', component: PurchaseViewInfo, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school_balance/:id', name: 'Balance', component: Balance, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/purchase_create', name: 'PurchaseCreate', component: PurchaseCreate, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/purchase_view_info/:id', name: 'PurchaseViewInfo', component: PurchaseViewInfo, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/school_balance/:id', name: 'Balance', component: Balance, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/progressorder', name: 'ProgressOrder', component: ProgressOrder, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/assign_product/:id', name: 'AssignProduct', component: AssignProduct, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/assign_product/:id', name: 'AssignProduct', component: AssignProduct, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/transport', name: 'Transport', component: Transport, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/transport/check/:id', name: 'TransportCheck', component: TransportCheck, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/transport/history', name: 'TransportHistory', component: TransportHistory, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/school_create_balance/:id', name: 'CreateBalance', component: CreateBalance, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/transport/check/:id', name: 'TransportCheck', component: TransportCheck, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/transport/history', name: 'TransportHistory', component: TransportHistory, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/school_create_balance/:id', name: 'CreateBalance', component: CreateBalance, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/school/calendar', name: 'CalendarySchool', component: CalendarySchool, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/user', name: 'Person', component: Person, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/rol', name: 'Rol', component: Rol, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/products_ordered', name: 'ProductsOrdered', component: ProductsOrdered, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/products_ordered', name: 'ProductsOrdered', component: ProductsOrdered, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/vat', name: 'Vat', component: Vat, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/serie', name: 'Serie', component: Serie, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/invoice_index', name: 'InvoiceIndex', component: InvoiceIndex, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/invoice_create/:id', name: 'InvoiceCreate', component: InvoiceCreate, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/invoice_download', name: 'InvoiceDownload', component: InvoiceDownload, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/invoice_index', name: 'InvoiceIndex', component: InvoiceIndex, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/invoice_create/:id', name: 'InvoiceCreate', component: InvoiceCreate, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/invoice_download', name: 'InvoiceDownload', component: InvoiceDownload, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/vehicle', name: 'Vehicle', component: Vehicle, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/menu', name: 'MenuSugge', component: MenuSugge, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/new/menu', name: 'NewMenu', component: NewMenu, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/edit/menu/:id', name: 'EditMenu', component: EditMenu, beforeEnter: multiguard([isLoggedIn]) },
 
-    { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn]) },
-    { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
 ]
 
 export default new Router({

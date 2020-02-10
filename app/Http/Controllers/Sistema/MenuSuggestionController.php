@@ -27,9 +27,12 @@ class MenuSuggestionController extends ApiController
         $menus = MenuSuggestion::with(['details.product.presentation',
                                         'details.product.prices' => function ($query) {
                                             $query->where('current', true);
-                                        }
+                                        },'person'
                                     ]
-                                    )->get();
+                                    )
+                                    ->where('current',true)
+                                    ->orderBy('created_at','desc')
+                                    ->get();
 
         return $this->showAll($menus);
     }
@@ -101,9 +104,10 @@ class MenuSuggestionController extends ApiController
         $menus = MenuSuggestion::with(['details.product.presentation',
                                         'details.product.prices' => function ($query) {
                                             $query->where('current', true);
-                                        }
+                                        },'person'
                                     ]
                                     )
+                                ->where('current',true)
                                 ->where('id', $menu_suggestion->id)
                                 ->get();
 
@@ -135,9 +139,8 @@ class MenuSuggestionController extends ApiController
         ];
 
         $rules = [
-            'title' => 'required|string|max:125|unique:orders,title,'.$menu_suggestion->id,
+            'title' => 'required|string|max:125|unique:menu_suggestions,title,'.$menu_suggestion->id,
             'description' => 'required|string|max:200',
-            'date' => 'required|date',
         ];
         
         $this->validate($request, $rules, $messages);
@@ -170,10 +173,12 @@ class MenuSuggestionController extends ApiController
                 $detalle = DetailSuggestion::where('menu_suggestions_id','=',$menu_suggestion->id)->get();
 
                 foreach ($detalle as $key => $value) {
-                    $value->delete();
+                    $value->current = false;
+                    $value->save();
                 }
 
-            $menu_suggestion->delete();
+                $menu_suggestion->current = false;
+                $menu_suggestion->save();
 
             DB::commit();
 

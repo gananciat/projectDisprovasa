@@ -76,6 +76,7 @@ Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'ed
 Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
 Route::put('invoices_cancel/{id}', 'Sistema\InvoiceController@cancel');
 Route::get('invoices_invoice/{id}/{total}', 'Sistema\InvoiceController@invoice');
+Route::resource('detail_suggestion', 'Sistema\DetailSuggestionController', ['except' => ['index', 'create', 'edit', 'show']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);

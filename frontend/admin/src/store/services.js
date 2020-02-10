@@ -44,6 +44,7 @@ import DeliveryManService from '../services/DeliveryManService'
 import VatService from '../services/VatService'
 import SerieService from '../services/SerieService'
 import InvoiceService from '../services/InvoiceService'
+import DetailSuggestionService from '../services/DetailSuggestionService'
 
 
 /* IMPORT SCHOOL */
@@ -55,10 +56,10 @@ import MenuSuggestionService from '../services/MenuSuggestionService'
 
 // Axios Configuration
 //let baseUrl = 'http://www.project.com/' //base url desarrollo
-let baseUrl = 'http://64.225.113.86/'
-//let baseUrl = 'http://sistematio.test/' //base url desarrollo
+//let baseUrl = 'http://64.225.113.86/'
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
 let token_data = $cookies.get('token_data')
-    //let baseUrl = 'http://sistemapro.test:8000/'
+//let baseUrl = 'http://sistemapro.test:8000/'
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -143,6 +144,7 @@ export default {
     serieService: new SerieService(Axios, baseUrl),
     vatService: new VatService(Axios, baseUrl),
     invoiceService: new InvoiceService(Axios, baseUrl),
+    detailsuggestionService: new DetailSuggestionService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),

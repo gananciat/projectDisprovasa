@@ -615,7 +615,7 @@ export default {
       let encontro = false
       self.loading_detail = true
 
-      if(Number(self.disponibility).toFixed(2) >= self.information_product.sub_total)
+      if(self.disponibility >= self.information_product.sub_total)
       {
         self.$validator.validateAll("detail").then((result) => {
             if (result) {
@@ -635,6 +635,7 @@ export default {
                         item.quantity = item.quantity + self.quantity
                         item.sub_total = self.information_product.sub_total + item.sub_total
                         self.disponibility = self.disponibility - self.information_product.sub_total
+                        self.disponibility = Number(self.disponibility).toFixed(2)
 
                         self.limpiarInputDetail()
                         return                      
@@ -652,7 +653,8 @@ export default {
                                               products_id:self.product_id.id, 
                                               producto:self.product_id.name})
                 self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)  
-                self.disponibility = self.disponibility - self.information_product.sub_total  
+                self.disponibility = self.disponibility - self.information_product.sub_total
+                self.disponibility = Number(self.disponibility).toFixed(2)  
               
                 self.limpiarInputDetail()
                 self.loading_detail = false                
@@ -692,6 +694,7 @@ export default {
       let self = this
       self.total = self.total - self.form.detail_order[index].sub_total
       self.disponibility = self.disponibility - self.form.detail_order[index].sub_total
+      self.disponibility = Number(self.disponibility).toFixed(2)
       self.form.detail_order.splice(index, 1);
     },    
 
@@ -715,6 +718,7 @@ export default {
           if( self.interceptar_error(r) == 0) return
           self.disponibility = r.data.data[0].balance - (r.data.data[0].subtraction_temporary - r.data.data[0].subtraction)
           self.disponibility = self.disponibility - self.total
+          self.disponibility = Number(self.disponibility).toFixed(2)
           self.disbursement = r.data.data[0].disbursement.name
           self.amount_available = true
           self.form.detail_order = []
