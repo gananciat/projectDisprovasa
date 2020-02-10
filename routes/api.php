@@ -39,7 +39,7 @@ Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'cre
 Route::resource('products', 'Sistema\ProductController', ['except' => ['create']]);
 Route::get('products/{product}/cuadrar/{price}', 'Sistema\ProductController@cuadrar');
 Route::resource('providers', 'Sistema\ProviderController', ['except' => ['create']]);
-Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\providerController@showByNit');
+Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\ProviderController@showByNit');
 
 Route::resource('products.prices', 'Sistema\ProductPriceController', ['except' => ['edit']]);
 Route::resource('products.purchases', 'Sistema\ProductPurchaseController', ['except' => ['edit']]);
@@ -74,15 +74,15 @@ Route::resource('check_school', 'Sistema\CheckSchoolController', ['except' => ['
 Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']]);
 Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
 Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
-Route::put('invoices_cancel/{id}', 'sistema\InvoiceController@cancel');
-Route::get('invoices_invoice/{id}/{total}', 'sistema\InvoiceController@invoice');
+Route::put('invoices_cancel/{id}', 'Sistema\InvoiceController@cancel');
+Route::get('invoices_invoice/{id}/{total}', 'Sistema\InvoiceController@invoice');
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
 Route::resource('disbursements', 'Sistema\DisbursementController', ['except' => ['edit']]);
 Route::resource('balances', 'Sistema\BalanceController', ['except' => ['edit']]);
 Route::resource('schools.balances', 'Sistema\SchoolBalanceController', ['except' => ['edit']]);
-Route::name('schools_show')->get('schools_show/{id}', 'Sistema\schoolController@getOne');
+Route::name('schools_show')->get('schools_show/{id}', 'Sistema\SchoolController@getOne');
 Route::resource('notifications', 'Reports\NotificationsController', ['except' => ['edit']]);
 
 //New Route Gráficas Escuela y Admin

@@ -615,7 +615,7 @@ export default {
       let encontro = false
       self.loading_detail = true
 
-      if(self.disponibility >= self.information_product.sub_total)
+      if(Number(self.disponibility).toFixed(2) >= self.information_product.sub_total)
       {
         self.$validator.validateAll("detail").then((result) => {
             if (result) {
