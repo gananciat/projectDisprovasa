@@ -225,7 +225,7 @@ class ProductController extends ApiController
         
         foreach ($products as $key => $value) {
             for ($i=1; $i < 21; $i++) { 
-                if($value->prices[0]['price']*$i == $price)
+                if($value->prices[0]['price']*$i == number_format($price,2))
                 {
                     $data['cantidad'] = $i;
                     $data['producto'] = $value->name;

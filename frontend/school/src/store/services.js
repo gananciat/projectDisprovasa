@@ -24,7 +24,8 @@ import GraphService from '../services/GraphService'
 import InformationSchoolService from '../services/InformationSchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://sistematio.test/' //base url desarrollo
+let baseUrl = 'http://64.225.113.86/'
+//let baseUrl = 'http://sistematio.test/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
 let token_data = $cookies.get('token_data')
 

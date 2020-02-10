@@ -92,7 +92,7 @@ class CheckSchoolController extends ApiController
                 ])->first();
 
                 $check_delivery = CheckDeliveryMan::where('progress_orders_id',$request->progress_orders_id)->first();
-                if($check_delivery->check)
+                if(!$check_delivery->check)
                 {
                     $detail = DetailOrder::find($check_delivery->detail_orders_id);
 
@@ -124,7 +124,7 @@ class CheckSchoolController extends ApiController
                 }
                 else
                 {
-                    return $this->errorResponse('El producto aún se encuentra en ruta de entrega.', 422);
+                    return $this->errorResponse('El producto ya fue facturado y entregado.', 422);
                 }
 
             DB::commit();

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'Vuex'
+import Vuex from 'vuex'
 import services from './services'
 import moment from 'moment'
 import auth from '../auth'
@@ -23,8 +23,11 @@ const state = {
     //base_url: 'http://www.project.com/',
     //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
 
-    base_url: 'http://sistematio.test/',
+    base_url: 'http://64.225.113.86/',
     client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
+
+    //base_url: 'http://sistematio.test/',
+    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 
     //base_url: 'http://sistemapro.test:8000/',
     //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
