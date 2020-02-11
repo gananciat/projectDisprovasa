@@ -12,6 +12,14 @@ class ProductService {
         return self.axios.get(`${self.baseUrl}`);
     }
 
+    getAllFilter(search) {
+        let self = this
+        if (search == '') {
+            search = 0
+        }
+        return self.axios.get(`${self.baseUrl}_paginate/${search}`);
+    }
+
     getPrices($id) {
         let self = this;
         return self.axios.get(`${self.baseUrl}/${$id}/prices`);

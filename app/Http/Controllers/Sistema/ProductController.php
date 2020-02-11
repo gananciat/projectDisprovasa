@@ -13,7 +13,7 @@ class ProductController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**
@@ -25,6 +25,22 @@ class ProductController extends ApiController
     {
         $products = Product::with('category','presentation','prices','quantify')->get();
         return $this->showAll($products);
+    }
+
+    public function indexPaginate($query = '')
+    {
+        if($query === 0){
+            $query = '';
+        }
+        $queryModel = Product::query();
+        $columns = ['id','name'];
+
+        foreach($columns as $column){
+            $queryModel->orWhere($column, 'LIKE', '%'.$query.'%');
+        }
+
+        $activos = $queryModel->with('category','presentation','prices','quantify')->orderBy('id')->get();
+        return $this->showAllPaginate($activos);
     }
 
     /**

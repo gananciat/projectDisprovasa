@@ -80,7 +80,14 @@
                                 <multiselect v-model="product"
                                     :options="products" placeholder="agregue producto"  
                                     :searchable="true"
+                                    :internal-search="false" 
+                                    :options-limit="300" :limit="3" :limit-text="limitText" 
+                                    :max-height="600" 
+                                    :show-no-results="true" 
+                                    :hide-selected="true"
                                     label="name"
+                                    :loading="isLoading"
+                                    @search-change="asyncProducts"
                                     :allow-empty="false">
                                     <span slot="noResult">Ningun producto encontrada</span>
                                     </multiselect>
@@ -192,6 +199,8 @@ export default {
       loading: false,
       products: [],
       product: null,
+      search: '',
+      timeout: null,
       form: {
           id: null,
           nit: '',
@@ -215,6 +224,21 @@ export default {
   },
 
   methods: {
+    asyncProducts (query) {
+      let self = this
+      self.search = query
+      clearTimeout(self.timeout)
+
+      self.timeout = setTimeout(() => {
+        self.getProducts()
+      }, 700);
+      
+    },
+
+     limitText (count) {
+      return `y ${count} otros productos`
+    },
+
     create(){
         let self = this
         var data = self.form
@@ -263,12 +287,12 @@ export default {
 
     getProducts(){
         let self = this
-        self.loading = true;
+        self.isLoading = true;
 
         self.$store.state.services.productService
-        .getAll()
+        .getAllFilter(self.search)
             .then(r => {
-            self.loading = false
+            self.isLoading = false
             self.products = r.data.data
         })
         .catch(r => {});

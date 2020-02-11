@@ -37,6 +37,7 @@ Route::resource('phone_schools', 'Sistema\PhoneSchoolController', ['except' => [
 Route::resource('presentations', 'Sistema\PresentationController', ['except' => ['create', 'edit']]);
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('products', 'Sistema\ProductController', ['except' => ['create']]);
+Route::get('products_paginate/{query?}', 'Sistema\ProductController@indexPaginate');
 Route::get('products/{product}/cuadrar/{price}', 'Sistema\ProductController@cuadrar');
 Route::resource('providers', 'Sistema\ProviderController', ['except' => ['create']]);
 Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\ProviderController@showByNit');
