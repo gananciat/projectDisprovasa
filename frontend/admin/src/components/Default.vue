@@ -37,24 +37,14 @@
                 <!-- /.d-flex -->
 
                <div >
-                  <div class="row">
-                    <div class="col-md-4 col-lg-4">
+                  <div class="row col-md-12">
+                    <div class="col-md-6 col-lg-6">
                         <b-form-select v-model="modo" :options="options" size="sm" class="mt-3"></b-form-select>
                     </div>
                   </div>
                       
                       <highcharts class="card-img-top" :options="chartOptions" ></highcharts>
                   </div>
-
-                <div class="d-flex flex-row justify-content-end">
-                  <span class="mr-2">
-                    <i class="fa fa-square text-primary"></i> This Week
-                  </span>
-
-                  <span>
-                    <i class="fa fa-square text-gray"></i> Last Week
-                  </span>
-                </div>
               </div>
             </div>
             <!-- /.card -->
@@ -79,24 +69,14 @@
                 <!-- /.d-flex -->
 
                <div >
-                  <div class="row">
-                    <div class="col-md-4 col-lg-4">
+                  <div class="row col-md-12">
+                    <div class="col-md-6 col-lg-6">
                         <b-form-select v-model="modo" :options="options" size="sm" class="mt-3"></b-form-select>
                     </div>
                   </div>
                       
                       <highcharts class="card-img-top" :options="chartOptionsOrder" ></highcharts>
                   </div>
-
-                <div class="d-flex flex-row justify-content-end">
-                  <span class="mr-2">
-                    <i class="fa fa-square text-primary"></i> This Week
-                  </span>
-
-                  <span>
-                    <i class="fa fa-square text-gray"></i> Last Week
-                  </span>
-                </div>
               </div>
             </div>
             <!-- /.card -->
@@ -121,8 +101,11 @@ export default {
   data() {
       return {
           title: '',
-          options: ['spline', 'line', 'bar', 'pie'],
-          modo: 'spline',
+          options: [{ text: 'gráfica de lineas',value: 'spline'},
+                    { text: 'gráfica de lineas con valores',value: 'line'},
+                    { text: 'gráfica de barras',value: 'bar'},
+                    { text: 'gráfica pie',value: 'pie'}],
+          modo: {},
           data: [],
           data: [],
           orders: [],
@@ -150,6 +133,7 @@ export default {
     let self = this
     this.getPurchases()
     self.getOrders()
+    self.modo = 'spline'
   },
 
   methods: {
