@@ -43,7 +43,7 @@
           <template>
             
           <li class="nav-item" v-for="item in getMenu" :key="item.text">
-            <a href="#/" class="nav-link" v-if="item.childrens.length === 0">
+            <a :href="'#/'+item.path" class="nav-link" v-if="item.childrens.length === 0">
               <i :class="'nav-icon fa fa-'+item.icon"></i>
               <p>
                 {{item.text}}

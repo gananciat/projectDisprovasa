@@ -35,6 +35,7 @@ import Vehicle from '@/components/administracion/Vehicle'
 import MenuSugge from '@/components/administracion/MenuSugge'
 import NewMenu from '@/components/administracion/NewMenu'
 import EditMenu from '@/components/administracion/EditMenu'
+import Report from '@/components/reportes/Index'
 
 /* IMPORT DE ROUTER SCHOOL */
 import School from '@/components/administracion/School'
@@ -94,6 +95,7 @@ const routes = [
     { path: '/menu', name: 'MenuSugge', component: MenuSugge, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/new/menu', name: 'NewMenu', component: NewMenu, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/edit/menu/:id', name: 'EditMenu', component: EditMenu, beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/report', name: 'Report', component: Report, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
 
     { path: '/new/school', name: 'NewSchool', component: NewSchool, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/information/school/:id', name: 'InformationSchool', component: InformationSchool, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },

@@ -10,6 +10,12 @@
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">CANTIDAD COMPRADA POR PRODUCTOS FILTRADO POR FECHAS</h1>
           </div><!-- /.col -->
+          <div class="col-sm-5">
+                <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#/report">REPORTES</a></li>
+                <li class="breadcrumb-item active">PEDIDOS POR PRODUCTO</li>
+                </ol>
+            </div>
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
