@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="widget-user-image text-center">
-                            <img class="elevation-2" style="width: 100%;" src="../../../assets/logodiproalsa.png" alt="User Avatar">
+                            <img class="elevation-2 img-circle" style="width: 100%; height: 80px;" src="../../../assets/logo.jpeg" alt="User Avatar">
                         </div>
                     </div>
                     

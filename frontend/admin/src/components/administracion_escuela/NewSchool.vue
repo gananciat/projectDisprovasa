@@ -33,7 +33,7 @@
           <div class="input-group">
             <div class="custom-file">
               <input accept="image/*" type="file" class="custom-file-input" id="exampleInputFile" @change="selectedFile">
-              <label class="custom-file-label" for="exampleInputFile">sleccionar logo</label>
+              <label class="custom-file-label" for="exampleInputFile">seleccionar logo</label>
             </div>
           </div>
         </div>

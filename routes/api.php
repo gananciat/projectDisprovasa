@@ -54,6 +54,8 @@ Route::get('orders_get/{id}', 'Sistema\OrderController@showOrder');
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
 Route::name('purchases_update_detail')->put('purchases_update_detail', 'Sistema\PurchaseController@updateDetails');
+Route::name('purchases_destroy_detail')->delete('purchases_destroy_detail/{id}', 'Sistema\PurchaseController@detroyDetail');
+
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['create', 'edit', 'update']]);
 Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'destroy']]);
 Route::resource('rols', 'Sistema\RolController', ['except' => ['create', 'edit']]);

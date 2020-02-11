@@ -107,7 +107,7 @@
                         # {{ data.item.order.order }}
                       </template>
                       <template v-slot:cell(date)="data">
-                        {{data.item.date}}
+                        {{data.item.date | moment('DD/MM/YYYY')}}
                       </template>
                       <template v-slot:cell(school)="data">
                         {{data.item.order.school.name}}
@@ -123,15 +123,15 @@
                         <b-badge class="bg-green" v-else> Activa</b-badge>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button @click="openPrint(data.item)" type="button" class="btn btn-info btn-sm">
+                          <button @click="openPrint(data.item)" type="button" class="btn btn-info btn-sm" v-tooltip="'ver e imprimir'">
                               <i class="fa fa-print">
                               </i>
                           </button>
-                          <button @click="edit(data.item)" v-if="!data.item.cancel" type="button" class="btn btn-primary btn-sm">
+                          <button @click="edit(data.item)" v-if="!data.item.cancel" type="button" class="btn btn-primary btn-sm" v-tooltip="'editar'">
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button v-if="!data.item.cancel" type="button" @click="cancel(data.item)" class="btn btn-danger btn-sm">
+                          <button v-if="!data.item.cancel" type="button" @click="cancel(data.item)" class="btn btn-danger btn-sm" v-tooltip="'anular'">
                               <i class="fa fa-ban">
                               </i>
                           </button>

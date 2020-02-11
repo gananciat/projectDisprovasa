@@ -10,6 +10,22 @@ export default {
         return only_hour ? hrs : only_minutes ? min : hrs + ':' + min
     },
 
+    captureError(r){
+        if(r.response){
+            console.log(typeof r.response.data)
+            if (r.response.data.error == undefined && typeof r.response.data === 'object') {
+                for (let value of Object.values(r.response.data)) {
+                    toastr.error(value, 'Mensaje')
+                }
+                return true
+            } else {
+                toastr.error(r.response.data.error, 'error')
+                return true
+            }
+        }
+        return false
+    },
+
     getHoursByMinutes(mins) {
         var decimals = mins / 60
         return this.decimalToHour(decimals)

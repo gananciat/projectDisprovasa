@@ -10,8 +10,10 @@ import exportingInit from 'highcharts/modules/exporting'
 exportingInit(Highcharts)
 
 //Tooltipe
-import VTooltip from 'v-tooltip'
-Vue.use(VTooltip)
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css';
+
+Vue.use(Tooltip);
 
 import VueCurrencyFilter from 'vue-currency-filter'
 Vue.use(VueCurrencyFilter)
@@ -74,7 +76,7 @@ import _ from 'lodash'
 
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+import '../static/vue-multiselect.min.css'
 
 //validators
 import VeeValidate from 'vee-validate'

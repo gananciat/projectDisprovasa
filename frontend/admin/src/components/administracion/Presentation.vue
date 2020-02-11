@@ -230,8 +230,7 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro actualizado con exito', 'exito')

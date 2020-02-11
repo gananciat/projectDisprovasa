@@ -133,11 +133,11 @@
                         <b-badge v-else class="bg-danger"> INACTIVA</b-badge>
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)">
+                          <button type="button" class="btn btn-info btn-sm" @click="mapData(data.item)" v-tooltip="'editar'">
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
                               <i class="fa fa-trash">
                               </i>
                           </button>

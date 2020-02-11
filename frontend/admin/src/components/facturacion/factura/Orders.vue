@@ -49,7 +49,7 @@
                         {{data.item.school.name}}
                       </template>
                       <template v-slot:cell(option)="data">
-                          <button type="button" class="btn btn-success btn-sm" @click="$router.push('/invoice_create/'+data.item.id)" v-b-tooltip title="facturar">
+                          <button type="button" class="btn btn-success btn-sm" @click="$router.push('/invoice_create/'+data.item.id)" v-tooltip="'editar'">
                               <i class="fa fa-file">
                               </i>
                           </button>

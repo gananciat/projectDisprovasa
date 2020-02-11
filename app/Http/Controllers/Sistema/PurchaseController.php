@@ -17,7 +17,7 @@ class PurchaseController extends ApiController
 {
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
     /**
      * Display a listing of the resource.
@@ -131,8 +131,10 @@ class PurchaseController extends ApiController
 
                     if(!$consultar->persevering){
                         $expiry = ProductExpiration::where('products_id',$consultar->id)->where('date',$detail->expiry_date)->first();
-                        $expiry->quantity -= $detail->quantity;
-                        $expiry->save();
+                        if($expiry){
+                            $expiry->quantity -= $detail->quantity;
+                            $expiry->save();
+                        }
                     }
 
                     $consultar->save();
@@ -150,26 +152,108 @@ class PurchaseController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Purcharse  $purcharse
-     * @return \Illuminate\Http\Response
+     * Eliminar unicamente producto en el detalle de la compra.
      */
-    public function destroy(Purcharse $purchase)
+    public function detroyDetail($id)
     {
+        DB::beginTransaction();
+            $detail = PurcharseDetail::where('id',$id)->with('purchase')->first();
 
+            $year = Carbon::parse($detail->purchase->date)->year;
+            $quantify = Quantify::where('products_id', $detail->product_id)->where('year',$year)->first();
+
+            if(!is_null($quantify)){
+                //Consultar Stock
+                $consultar = Product::find($detail->product_id);
+                $consultar->stock -= $detail->quantity;
+                $consultar->stock_temporary -= $detail->quantity;
+
+                if(!$consultar->persevering){
+                    $expiry = ProductExpiration::where('products_id',$consultar->id)->where('date',$detail->expiry_date)->first();
+                    if(!is_null($expiry)){
+                        $expiry->quantity -= $detail->quantity;
+                        $expiry->save();
+                    }
+                }
+
+                $consultar->save();
+
+                $quantify->sumary_purchase = $quantify->sumary_purchase - $detail->quantity;
+                $summary = $quantify->sumary_schools - $consultar->stock;
+                $quantify->subtraction = $summary > 0 ? $summary : 0;
+                $quantify->save();
+            }
+
+            $detail->delete();
+            $purchase = Purcharse::find($detail->purcharse_id);
+            $purchase->total -= $detail->quantity * $detail->purcharse_price;
+            $purchase->save();
+
+        DB::commit();
+
+        return $this->showOne($detail,201);
     }
 
     public function updateDetails(Request $request)
     {
         DB::beginTransaction();
             foreach ($request->items as $item ) {
-                $detail = PurcharseDetail::find($item['id']);
+                $detail = PurcharseDetail::where('id',$item['id'])->with('purchase')->first();
                 $detail->decrease = $item['decrease'];
+                $detail->purcharse_price = $item['purcharse_price'];
+                $detail->expiry_date = $item['expiry_date'];
+
+                $year = Carbon::parse($detail->purchase->date)->year;
+                $quantify = Quantify::where('products_id', $detail->product_id)->where('year',$year)->first();
+
+                if($item['quantity'] != $detail['quantity']){
+
+                    $consultar = Product::find($detail['product_id']); //obtener producto
+
+                    $stock = $consultar->stock - $detail->quantity;
+                    $stock_temporary = $consultar->stock_temporary - $detail->quantity;
+
+                    $consultar->stock = $stock > 0 ? $stock : 0;//descontar cantidad anterior a stock
+                    $consultar->stock_temporary = $stock_temporary > 0 ? $stock_temporary : 0;//descontar cantidad anterior a stock temporal anterior
+
+                    $consultar->stock += $item['quantity'];//agregar nueva cantidad a stock
+                    $consultar->stock_temporary += $item['quantity'];//agregar nueva cantidad a stock temporal
+
+
+                    if(!$consultar->persevering){
+                        $expiry = ProductExpiration::where('products_id',$consultar->id)->where('date',$detail->expiry_date)->first();
+                        if(!is_null($expiry)){
+                            $expiry->quantity -= $detail->quantity; //descontar cantidad expirada anterior
+                            $expiry->quantity += $item['quantity']; //agregar nueva cantidad
+                            $expiry->save();
+                        } 
+                    }
+
+                    $consultar->save();
+                    $purchases = $quantify->sumary_purchase - $detail->quantity;
+                    $quantify->sumary_purchase = $purchases > 0 ? $purchases : 0;
+
+                    $quantify->sumary_purchase = $quantify->sumary_purchase + $item['quantity'];
+
+                    $summary = $quantify->sumary_schools - $consultar->stock;
+                    $quantify->subtraction = $summary > 0 ? $summary : 0;
+                    $quantify->save();
+
+                    $detail->quantity = $item['quantity'];  
+                }
                 $detail->save();
             }
+
+            $this->updateTotalPurcharse($request->purchase_id, $request->total);
         DB::commit();
 
         return $this->showQuery($request->items);
+    }
+
+    public function updateTotalPurcharse($id, $total)
+    {
+        $purchase = Purcharse::find($id);
+        $purchase->total = $total;
+        $purchase->save();
     }
 }

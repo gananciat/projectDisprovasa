@@ -55,7 +55,6 @@ const isLoggedOut = (to, from, next) => {
 const permissionsValidations = (to, from, next) => {
     var permissions = store.state.permissions
     var perm = _.includes(permissions, to.name)
-    console.log(perm)
     return perm ? next() : next('/') //redireccionamos al home del sistema
 }
 
@@ -69,7 +68,7 @@ const routes = [
     { path: '/school', name: 'School', component: School, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/provider', name: 'Provider', component: Provider, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/inventory', name: 'Inventory', component: Inventory, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
-    { path: '/purchase', name: 'Purcharse', component: Purchase, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
+    { path: '/purchase', name: 'Purchase', component: Purchase, beforeEnter: multiguard([isLoggedIn, permissionsValidations]) },
     { path: '/purchase_create', name: 'PurchaseCreate', component: PurchaseCreate, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/purchase_view_info/:id', name: 'PurchaseViewInfo', component: PurchaseViewInfo, beforeEnter: multiguard([isLoggedIn]) },
     { path: '/school_balance/:id', name: 'Balance', component: Balance, beforeEnter: multiguard([isLoggedIn]) },

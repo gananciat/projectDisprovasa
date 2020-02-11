@@ -54,7 +54,7 @@ class OrderController extends ApiController
     //ger orders for invoiced
     public function indexOrders()
     { 
-        $orders = Order::where('invoiced',false)->orderBy('date')->with('school')->get();
+        $orders = Order::where('invoiced',false)->where('on_route',true)->where('aware',true)->orderBy('date')->with('school')->get();
         return $this->showAll($orders);
     }
 

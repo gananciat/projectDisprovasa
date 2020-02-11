@@ -86,8 +86,8 @@
                                     </multiselect>
                             </div>
                             <div class="form-group col-md-1 col-sm-1 col-lg-1">
-                                <br />
-                                <button type="button" @click="addDetail()" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                                <label>&nbsp;</label>
+                                <button type="button" @click="addDetail()" class="btn btn-success btn-sm form-control"><i class="fa fa-plus-square-o"></i> agregar</button>
                               </div>
                         </div>
                         <div class="row">
@@ -117,7 +117,6 @@
                                                 <td>
                                                     <el-input-number v-model="item.quantity" size="small" :min="1"></el-input-number>
                                                 </td>
-                                                <td>{{subTotal(item)| currency('Q ')}}</td>
                                                 <td>
                                                   <input type="date" class="form-control" placeholder="ingrese fecha vencimiento"
                                                       :name="item.product"
@@ -127,6 +126,7 @@
                                                   :class="{'input':true,'has-errors': errors.has(item.product)}">
                                                   <FormError :attribute_name="item.product" :errors_form="errors"> </FormError>
                                                 </td>
+                                                <td>{{subTotal(item)| currency('Q ')}}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger btn-sm" @click="removeDetail(item)"><i class="fa fa-minus"></i></button>
                                                 </td>

@@ -104,6 +104,13 @@ export default {
         });
       }
 
+  },
+
+  computed: {
+    getLogo(){
+      let self = this
+      return self.$store.state.base_url+'img/logo.jpeg'
+    }
   }
 }
 </script>

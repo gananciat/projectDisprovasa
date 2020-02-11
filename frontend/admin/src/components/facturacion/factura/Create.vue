@@ -30,8 +30,10 @@
                     <div class="row">
                       <div class="col-md-8 col-sm-8 col-lg-8">
                         <address class="text-center">
-                          <i class="fa fa-globe"></i> DISPROVASA.<br />
+                          <div class="widget-user-image text-center">
+                            <img class="elevation-2 img-circle" style="width: 50%; height: 80px;" src="../../../assets/logo.jpeg" alt="User Avatar"> 
                             su proveedor de calidad
+                        </div>
                         </address>
                       </div>
                       <div class="col-md-4 col-sm-4 col-lg-4">
@@ -277,7 +279,6 @@ export default {
                     duration: 4000
                 })
                 self.getVat()
-                self.getSerie()
             }).catch(e=>{
                 
             })
@@ -333,11 +334,15 @@ export default {
             let self = this
             self.$store.state.services.vatService.getAll()
             .then(r=>{
+                if(r.data.data.find(x=>x.actual) == undefined){
+                    self.$toastr.error('no existe ningun valor de iva activo, ingrese iva','error')
+                    self.$router.push('/vat')
+                    return
+                }
                 self.vat = r.data.data.find(x=>x.actual)
                 self.form.vat_id = self.vat.id
-                if(self.vat == undefined){
-                    self.$toastr.error('no existe ningun valor de iva activo','error')
-                }
+                self.getSerie()
+                
             }).catch(e=>{
                 
             })
@@ -348,12 +353,16 @@ export default {
             let self = this
             self.$store.state.services.serieService.getAll()
             .then(r=>{
+                if(r.data.data.find(x=>x.active) == undefined){
+                    self.$toastr.error('no existe ninguna serie activa o bien se agoto el numero de facturas, ingrese serie','error')
+                    self.$router.push('/serie')
+                    return
+                }
+                
                 self.serie = r.data.data.find(x=>x.active)
                 self.form.invoice = self.serie.actual_bill+1
                 self.form.serie_id = self.serie.id
-                if(self.serie == undefined){
-                    self.$toastr.error('no existe ninguna serie activa o bien se agoto el numero de facturas','error')
-                }
+                
             }).catch(e=>{
 
             })
