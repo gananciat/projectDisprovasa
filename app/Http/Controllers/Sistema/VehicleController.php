@@ -32,7 +32,9 @@ class VehicleController extends ApiController
                                             ->whereColumn([
                                                             ['id', 'vehicles.vehicle_models_id'],
                                                         ])
-                                        ])->get();
+                                        ])
+                                        ->orderBY('created_at','desc')
+                                        ->get();
 
         return $this->showAll($vehicle);
     }

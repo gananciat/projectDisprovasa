@@ -39,6 +39,7 @@ class SchoolController extends ApiController
         return $this->showAll(School::with(
             'municipality.departament',
             'person')
+            ->orderBY('created_at','desc')
             ->get());
     }
 

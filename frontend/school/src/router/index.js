@@ -30,9 +30,8 @@ const isLoggedOut = (to, from, next) => {
 }
 
 const routes = [
-  { path: '/', name: 'Default', component: Default,beforeEnter: multiguard([isLoggedIn]) },
-  { path: '/example', name: 'ExampleIndex', component: ExampleIndex, beforeEnter: multiguard([isLoggedIn]) },
-  { path: '/login', name: 'Login', component: Login,beforeEnter: multiguard([isLoggedOut]) },
+    { path: '/', name: 'Default', component: Default,beforeEnter: multiguard([isLoggedIn]) },
+    { path: '/login', name: 'Login', component: Login,beforeEnter: multiguard([isLoggedOut]) },
 
     /* ROUTER SCHOOL */
     { path: '/school/management/order', name: 'OrderSchool', component: OrderSchool, beforeEnter: multiguard([isLoggedIn]) },

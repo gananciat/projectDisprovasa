@@ -42,10 +42,10 @@ class OrderController extends ApiController
             ])->first();
 
             $orders = Order::where('schools_id',$person_school->schools_id)
-                            ->orderBy('date','desc')
+                            ->orderBy('created_at','desc')
                             ->get();
         } else {
-            $orders = Order::orderBy('date','desc')->get();
+            $orders = Order::orderBy('created_at','desc')->get();
         }
 
         return $this->showAll($orders);

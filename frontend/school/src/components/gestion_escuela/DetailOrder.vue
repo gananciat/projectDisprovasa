@@ -492,8 +492,8 @@ export default {
         .get(id)
         .then(r => {
             self.items = r.data.data[0];
-            console.log(self.items)
             self.disponibility = self.items.balance - (self.items.subtraction_temporary - self.items.subtraction)
+            self.disponibility = Number(self.disponibility).toFixed(2)
             self.temporary = self.items.subtraction_temporary - self.items.subtraction
             self.guard_total = self.items.total
             self.getProduct(r.data.data[0].type_order)
@@ -851,7 +851,6 @@ export default {
     cuadrar(produt, price){
       let self = this
       self.loading = true
-      console.log(produt, price)
 
       self.$store.state.services.productService
         .getCuadrar(produt, price)

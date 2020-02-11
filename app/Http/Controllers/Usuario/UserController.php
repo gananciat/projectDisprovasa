@@ -120,11 +120,10 @@ class UserController extends ApiController
                 $insert->admin = User::USUARIO_REGULAR;
                 $insert->people_id = $insert_people->id;
                 $insert->rols_id = $data->rols_id;
-                $insert->save();                
+                $insert->save();
 
+                Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             DB::commit();
-
-            Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -230,10 +229,10 @@ class UserController extends ApiController
                     $user->save(); 
                 }
 
-            DB::commit();
+                if($enviar_correo)
+                    Mail::to($user->email)->send(new WelcomeUser($user, $password));
 
-            if($enviar_correo)
-                Mail::to($user->email)->send(new WelcomeUser($user, $password));
+            DB::commit();
                 
             return $this->showOne($update_people,201);
         } catch (\Exception $e) {

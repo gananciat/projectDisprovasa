@@ -183,14 +183,461 @@
                   <el-tab-pane label="GRATUIDAD">
                     <h1>Pedidos de gratuidad</h1>
                     &nbsp; 
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+
+                          <template v-slot:row-details="data">
+                            <div class="row">
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">-</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">=</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-12"  v-loading="loading_check">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped hover bordered">
+                                            <thead style="background: #28a745;">
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" rowspan="2">#</th>
+                                                    <th style="vertical-align:middle;" rowspan="2">Producto</th>                                                    
+                                                    <th style="vertical-align:middle;" colspan="3">Pedido</th>                                                      
+                                                    <th style="vertical-align:middle;" colspan="3">Entregado</th>  
+                                                </tr>
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background: #17a2b8; font-size: 11px;">
+                                                <template v-for="(row, index) in data.item.details">
+                                                    <tr v-bind:key="index">
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ index+1 }}
+                                                        </td>                                    
+                                                        <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                                            <span>{{ row.product.name+' / '+row.product.presentation.name }}</span>    
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.original_quantity) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.purchased_amount) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                            <tfoot style="background: #28a745;">
+                                                <tr class="text-right" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" colspan="2">Totales</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total | currency('Q',',',2,'.','front',true) }}</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</th> 
+                                                </tr>
+                                            </tfoot>
+                                        </table>   
+                                    </div>                   
+                                </div>
+                            </div>
+                          </template>
+
+                          <template v-slot:cell(order)="data">
+                            <div class="col-sm-12 text-center">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.aware == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
+                                {{ data.item.order }}
+                              </b-button>
+                            </div>
+                          </template> 
+
+                          <template v-slot:cell(date)="data">
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
+                          </template>     
+                          <template v-slot:cell(total)="data">
+                            <div class="text-right" style="font-size: 18px;">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</div>
+                          </template>              
+                          <template v-slot:cell(anio)="data">
+                            <div class="text-center">{{ data.item.date | moment('YYYY') }}</div> 
+                          </template>    
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template>                      
                   </el-tab-pane>
                   <el-tab-pane label="UTILES">
                     <h1>Pedidos de utiles</h1>
-                    &nbsp;               
+                    &nbsp;  
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+
+                          <template v-slot:row-details="data">
+                            <div class="row">
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">-</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">=</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-12"  v-loading="loading_check">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped hover bordered">
+                                            <thead style="background: #28a745;">
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" rowspan="2">#</th>
+                                                    <th style="vertical-align:middle;" rowspan="2">Producto</th>                                                    
+                                                    <th style="vertical-align:middle;" colspan="3">Pedido</th>                                                      
+                                                    <th style="vertical-align:middle;" colspan="3">Entregado</th>  
+                                                </tr>
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background: #17a2b8; font-size: 11px;">
+                                                <template v-for="(row, index) in data.item.details">
+                                                    <tr v-bind:key="index">
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ index+1 }}
+                                                        </td>                                    
+                                                        <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                                            <span>{{ row.product.name+' / '+row.product.presentation.name }}</span>    
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.original_quantity) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.purchased_amount) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                            <tfoot style="background: #28a745;">
+                                                <tr class="text-right" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" colspan="2">Totales</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total | currency('Q',',',2,'.','front',true) }}</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</th> 
+                                                </tr>
+                                            </tfoot>
+                                        </table>   
+                                    </div>                   
+                                </div>
+                            </div>
+                          </template>
+
+                          <template v-slot:cell(order)="data">
+                            <div class="col-sm-12 text-center">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.aware == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
+                                {{ data.item.order }}
+                              </b-button>
+                            </div>
+                          </template> 
+
+                          <template v-slot:cell(date)="data">
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
+                          </template>     
+                          <template v-slot:cell(total)="data">
+                            <div class="text-right" style="font-size: 18px;">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</div>
+                          </template>              
+                          <template v-slot:cell(anio)="data">
+                            <div class="text-center">{{ data.item.date | moment('YYYY') }}</div> 
+                          </template>    
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template>                                   
                   </el-tab-pane>
                   <el-tab-pane label="VALIJAS DIDACTICA">
                     <h1>Pedidos de valijas didactica</h1>
-                    &nbsp;               
+                    &nbsp;  
+                    <template>
+                        <div class="col-sm-12">
+                          <b-row>
+                          <b-col md="4" class="my-1 form-inline">
+                            <label>mostrando: </label>
+                                <b-form-select :options="pageOptions" v-model="perPage" />
+                              <label>entradas </label>
+                          </b-col>
+                          <b-col  class="my-1 form-group pull-right">
+                              <b-input-group>
+                                <b-form-input v-model="filter" placeholder="buscar" />
+                              </b-input-group>
+                          </b-col>
+                        </b-row>
+                        <b-table responsive hover small flex
+                          bordered
+                          :fields="fields" 
+                          :items="items"
+                          :filter = "filter"
+                          :current-page="currentPage"
+                          :per-page="perPage"
+                          @filtered="onFiltered">
+                          <!-- A virtual column -->
+
+                          <template v-slot:row-details="data">
+                            <div class="row">
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Pedido </b> {{ data.item.total | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">-</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total del Reembolso </b> {{ data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                              <div class="col-sm-1 text-center align-items-center" style="font-size: 18px;">=</div>
+                              <div class="col-sm-3 text-center align-items-center">
+                                <h3><b>Total Facturado </b> {{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</h3>  
+                              </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-12"  v-loading="loading_check">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped hover bordered">
+                                            <thead style="background: #28a745;">
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" rowspan="2">#</th>
+                                                    <th style="vertical-align:middle;" rowspan="2">Producto</th>                                                    
+                                                    <th style="vertical-align:middle;" colspan="3">Pedido</th>                                                      
+                                                    <th style="vertical-align:middle;" colspan="3">Entregado</th>  
+                                                </tr>
+                                                <tr class="text-center" style="font-size: 16px;">
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio</th>
+                                                    <th>Sub</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="background: #17a2b8; font-size: 11px;">
+                                                <template v-for="(row, index) in data.item.details">
+                                                    <tr v-bind:key="index">
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ index+1 }}
+                                                        </td>                                    
+                                                        <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                                            <span>{{ row.product.name+' / '+row.product.presentation.name }}</span>    
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.original_quantity) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                                            {{ Number(row.progress.purchased_amount) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.sale_price | currency('Q',',',2,'.','front',true) }}
+                                                        </td>  
+                                                        <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                                            {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
+                                                        </td> 
+                                                        <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                            <tfoot style="background: #28a745;">
+                                                <tr class="text-right" style="font-size: 16px;">
+                                                    <th style="vertical-align:middle;" colspan="2">Totales</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total | currency('Q',',',2,'.','front',true) }}</th> 
+                                                    <th style="vertical-align:middle;" colspan="3">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</th> 
+                                                </tr>
+                                            </tfoot>
+                                        </table>   
+                                    </div>                   
+                                </div>
+                            </div>
+                          </template>
+
+                          <template v-slot:cell(order)="data">
+                            <div class="col-sm-12 text-center">
+                              <b-button size="md" @click="data.toggleDetails" :class="data.item.aware == true ?  'mr-2 btn-success' : 'mr-2 btn-danger'">
+                                {{ data.item.order }}
+                              </b-button>
+                            </div>
+                          </template> 
+
+                          <template v-slot:cell(date)="data">
+                            <div class="text-center">{{ data.item.date | moment('dddd DD MMMM YYYY') }}</div>
+                          </template>     
+                          <template v-slot:cell(total)="data">
+                            <div class="text-right" style="font-size: 18px;">{{ data.item.total - data.item.refund | currency('Q',',',2,'.','front',true) }}</div>
+                          </template>              
+                          <template v-slot:cell(anio)="data">
+                            <div class="text-center">{{ data.item.date | moment('YYYY') }}</div> 
+                          </template>    
+
+                        </b-table>
+                        <b-row>
+                            <b-col md="12" class="my-1">
+                              <label v-if="totalRows > 0">total: {{totalRows}} registros</label> 
+                              <div class="text-center">
+                                  <label v-if="totalRows === 0">No hay registros que mostrar</label> 
+                              </div>   
+                            </b-col>
+                            <div class="pull-right col-md-12">
+                              <div class="mt-3" v-if="totalRows > 0">
+                                  <b-pagination 
+                                    v-model="currentPage" 
+                                    :per-page="perPage" 
+                                    :total-rows="totalRows" 
+                                    align="right"
+                                    first-text="⏮"
+                                    prev-text="⏪"
+                                    next-text="⏩"
+                                    last-text="⏭">
+                                  </b-pagination>
+                                </div>
+                            </div>
+                        </b-row>
+                        </div>
+                      </template>                                   
                   </el-tab-pane>
                 </el-tabs>
               </div>
