@@ -20,14 +20,14 @@ const state = {
     client_id: 2,
     menu: [],
     permissions: [],
-    //base_url: 'http://www.project.com/',
-    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
+    base_url: 'http://www.project.com/',
+    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
 
     //base_url: 'http://sistematio.test/',
     //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 
-    base_url: 'http://sistemapro.test:8000/',
-    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
+    //base_url: 'http://sistemapro.test:8000/',
+    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 }
 
 const mutations = {
