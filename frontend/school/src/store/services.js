@@ -24,10 +24,18 @@ import GraphService from '../services/GraphService'
 import InformationSchoolService from '../services/InformationSchoolService'
 
 // Axios Configuration
-//let baseUrl = 'http://64.225.113.86/'
-let baseUrl = 'http://sistematio.test/' //base url desarrollo
+
+// Para desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
+
+// Para producción
+//let baseUrl = 'http://www.empresa.disprovasa.org/' //base url produccion disprovasa
+//let baseUrl = 'http://www.proalsa.disprovasa.org/' //base url produccion proalsa
+
 let token_data = $cookies.get('token_data')
+
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'

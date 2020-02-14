@@ -603,13 +603,13 @@ export default {
       let self = this;
       self.loading = true;
       let data = self.form;
+      data.municipalities_id = self.form.municipalities_id.id;
+      data.municipalities_id_people = self.form.municipalities_id_people.id;
+      data.type_person = self.form.type_person.id;
+      data.logo = self.logo
       self.$store.state.services.schoolService
         .create(data)
         .then(r => {
-          data.municipalities_id = self.form.municipalities_id.id;
-          data.municipalities_id_people = self.form.municipalities_id_people.id;
-          data.type_person = self.form.type_person.id;
-          data.logo = self.logo
           self.loading = false
           if( self.interceptar_error(r) == 0) return
           self.$toastr.success('registro agregado con exito', 'exito')         

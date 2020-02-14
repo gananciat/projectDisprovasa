@@ -17,16 +17,29 @@ const state = {
     people: {},
     school_name: '',
     token_expired: null,
-    client_id: 2,
 
-    //base_url: 'http://64.225.113.86/',
+    /* ::::::::::::::::::::: DESARROLLO ::::::::::::::::::::::::: */
+    //base_url: 'http://www.project.com/',
+    //client_id: 2,
     //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
 
     base_url: 'http://sistematio.test/',
-    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
+    client_id: 2,
+    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 
     //base_url: 'http://sistemapro.test:8000/',
-    //client_secret: 'psuLuEaRASnqe8rJAreH3xqrcTUQkAbBOUrqXl2z'
+    //client_id: 2,
+    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
+
+    /* :::::::::::::::: DISPROVASA ::::::::::::::: */
+    //base_url: 'http://www.empresa.disprovasa.org/',
+    //client_id: 3,
+    //client_secret: 'UA3HB22ViZrERbMAbZNPtZFT3LDg9pEJbiUAJZ2J',
+
+    /* :::::::::::::::: PROALSA ::::::::::::::: */
+    //base_url: 'http://www.proalsa.disprovasa.org/',
+    //client_id: 4,
+    //client_secret: 'kVVX2xqANGrE2d4hXrMjk2xaYWE9EkcRzZUZQCG6',    
 }
 
 const mutations = {
