@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Sistema;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\Controller;
-use App\Models\Person;
-use App\Models\PhonePerson;
 use App\User;
 use Carbon\Carbon;
+use App\Models\Person;
+use App\Mail\WelcomeUser;
+use App\Models\PhonePerson;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ApiController;
 
 class PersonController extends  ApiController
 {
@@ -86,7 +88,7 @@ class PersonController extends  ApiController
             $insert_user->current_school = 0;
             $insert_user->save();
         
-
+            Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
         DB::commit();
 
         return $this->showOne($person,201);

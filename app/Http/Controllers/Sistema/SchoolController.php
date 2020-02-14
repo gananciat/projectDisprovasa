@@ -102,10 +102,10 @@ class SchoolController extends ApiController
         ];
         
         $this->validate($request, $rules, $messages);
-
+        $password = $this->generarPassword(16);
         try {
             DB::beginTransaction();
-                if($request->code_high_school != '' && $request->code_primary != '')
+                if($request->code_high_school == '' && $request->code_primary == '')
                     return $this->errorResponse('El cóigo de preprimaria o de primaria es necesario.',403);
 
                 if(!is_null(School::where('code_high_school',$request->code_high_school)->first()) && $request->code_high_school != null)
@@ -174,7 +174,7 @@ class SchoolController extends ApiController
                 }
 
                 $asignar_persona_escuela = new PersonSchool();
-                $asignar_persona_escuela->type_person = $request->type_person['id'];
+                $asignar_persona_escuela->type_person = $request->type_person;
                 $asignar_persona_escuela->current = true;
                 $asignar_persona_escuela->schools_id = $insert->id;
                 $asignar_persona_escuela->people_id = $insert_people->id;
@@ -195,8 +195,8 @@ class SchoolController extends ApiController
                     $insert_user = new User();
                 }
 
-                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person['id'])->first();
-                $password = $this->generarPassword(16);
+                $rol = Rol::select('id')->where('name',$request->type_person)->first();
+
                 $insert_user->email = $insert_people->email;
                 $insert_user->password = $password;
                 $insert_user->remember_token = Str::random(20);
@@ -205,18 +205,10 @@ class SchoolController extends ApiController
                 $insert_user->admin = User::USUARIO_REGULAR;
                 $insert_user->people_id = $insert_people->id;
                 $insert_user->rols_id = $rol->id;
-<<<<<<< HEAD
                 $insert_user->save();                
-
+            DB::commit();
                 
-                Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
-            DB::commit();
-=======
-                $insert_user->save();               
-            DB::commit();
-
-            //Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
->>>>>>> 0df29a08504eb1b4dfc7d140f665866bc6c62d14
+            Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();

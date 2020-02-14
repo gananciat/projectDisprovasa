@@ -76,6 +76,8 @@ class UserController extends ApiController
         $this->validate($request, $rules, $messages);
 
         try {
+            $password = $this->generarPassword(16);
+
             DB::beginTransaction();
                 $data = $request->all();
 
@@ -111,9 +113,8 @@ class UserController extends ApiController
                     $insert = new User();
                 }
 
-                $password = $this->generarPassword(16);
                 $insert->email = $insert_people->email;
-                $insert->password = Hash::make($password);
+                $insert->password = $password;
                 $insert->remember_token = Str::random(20);
                 $insert->verified = User::USUARIO_NO_VERIFICADO;
                 $insert->verification_token = User::generarVerificationToken();
@@ -121,9 +122,10 @@ class UserController extends ApiController
                 $insert->people_id = $insert_people->id;
                 $insert->rols_id = $data->rols_id;
                 $insert->save();
-
-                Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             DB::commit();
+            $insert = User::find(1);
+            
+            Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -216,7 +218,7 @@ class UserController extends ApiController
                 {
                     $password = $this->generarPassword(16);
                     $user->email = $update_people->email;
-                    $user->password = Hash::make($password);
+                    $user->password = $password;
                     $user->remember_token = Str::random(20);
                     $user->verified = User::USUARIO_NO_VERIFICADO;
                     $user->verification_token = User::generarVerificationToken();
