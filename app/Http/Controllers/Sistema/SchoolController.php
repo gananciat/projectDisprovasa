@@ -39,7 +39,7 @@ class SchoolController extends ApiController
         return $this->showAll(School::with(
             'municipality.departament',
             'person')
-            ->orderBY('created_at','desc')
+            ->orderBy('created_at','desc')
             ->get());
     }
 
@@ -205,18 +205,13 @@ class SchoolController extends ApiController
                 $insert_user->admin = User::USUARIO_REGULAR;
                 $insert_user->people_id = $insert_people->id;
                 $insert_user->rols_id = $rol->id;
-<<<<<<< HEAD
                 $insert_user->save();                
 
                 
                 Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
-            DB::commit();
-=======
-                $insert_user->save();               
-            DB::commit();
 
-            //Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
->>>>>>> 0df29a08504eb1b4dfc7d140f665866bc6c62d14
+                $insert_user->save(); 
+            DB::commit();   
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -249,9 +249,8 @@
                         .cancel(data.id)
                         .then(r => {
                         self.loading = false
-                        if(r.response){
-                            this.$toastr.error(r.response.data.error, 'error')
-                            return
+                        if(self.$store.state.global.captureError(r)){
+                          return
                         }
                         this.$toastr.success('factura anulada con exito', 'exito')
                         self.getAll()
@@ -272,9 +271,8 @@
                   .update(data)
                   .then(r => {
                       self.loading = false
-                      if(r.response){
-                          this.$toastr.error(r.response.data.error, 'error')
-                          return
+                      if(self.$store.state.global.captureError(r)){
+                        return
                       }
                       this.$toastr.success('factura actualizada con exito', 'exito')
                       self.close()

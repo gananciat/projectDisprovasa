@@ -83,9 +83,8 @@ export default {
         .login(self.credentials)
         .then(r => {
             self.loading = false
-            if(r.response !== undefined){
-                self.$toastr.error(r.response.data.error, 'error')
-                return
+            if(self.$store.state.global.captureError(r)){
+              return
             }
             self.$store.dispatch('guardarToken',r.data)
             self.$router.push('/')

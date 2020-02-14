@@ -254,9 +254,8 @@ export default {
             .then(response => {
               self.loading = false
                 var file_name = 'productos_pedidos_'+data.start_date+'_'+data.end_date
-                if(response.response){
-                    this.$toastr.error(r.response.data.error, 'error')
-                    return
+                if(self.$store.state.global.captureError(r)){
+                  return
                 }
                 var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 fileSaver.saveAs(blob, file_name);

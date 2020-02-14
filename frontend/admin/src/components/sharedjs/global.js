@@ -12,16 +12,14 @@ export default {
 
     captureError(r){
         if(r.response){
-            console.log(typeof r.response.data)
             if (r.response.data.error == undefined && typeof r.response.data === 'object') {
                 for (let value of Object.values(r.response.data)) {
                     toastr.error(value, 'Mensaje')
                 }
-                return true
             } else {
                 toastr.error(r.response.data.error, 'error')
-                return true
             }
+            return true
         }
         return false
     },

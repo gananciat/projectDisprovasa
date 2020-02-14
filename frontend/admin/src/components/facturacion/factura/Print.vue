@@ -179,9 +179,8 @@ export default {
             .then(r => {
             self.loading = false
             var name = 'factura_'+self.getFullInvoice(self.invoice);
-            if(r.response){
-                this.$toastr.error(r.response.data.error, 'error')
-                return
+            if(self.$store.state.global.captureError(r)){
+              return
             }
             const url = window.URL.createObjectURL(new Blob([r.data], { type: 'application/pdf' }));
             const link = document.createElement('a');

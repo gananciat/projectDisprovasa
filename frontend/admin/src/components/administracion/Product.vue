@@ -309,9 +309,13 @@ export default {
       self.$store.state.services.productService
         .getAll()
         .then(r => {
-          self.items = r.data.data
-          self.totalRows = self.items.length
           self.loading = false
+          if(self.$store.state.global.captureError(r)){
+            return
+          }
+          self.items = r.data.data
+          
+          self.totalRows = self.items.length
         })
         .catch(r => {});
     },
@@ -353,8 +357,7 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro agregado con exito', 'exito')
@@ -374,8 +377,7 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro actualizado con exito', 'exito')
@@ -401,10 +403,9 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
+                  if(self.$store.state.global.captureError(r)){
+                    return
+                  }
                   this.$toastr.success('registro eliminado con exito', 'exito')
                   self.getAll()
                   self.close()

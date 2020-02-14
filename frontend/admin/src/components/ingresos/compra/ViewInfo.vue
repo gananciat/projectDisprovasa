@@ -207,8 +207,7 @@ export default {
         .updateDetails(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('compra actualizada con exito', 'exito')
@@ -233,10 +232,9 @@ export default {
                 .destroyDetail(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
+                  if(self.$store.state.global.captureError(r)){
+                    return
+                  }
                   this.$toastr.success('producto ah sido eliminado', 'exito')
                   self.get(self.purchase.id)
                 })
