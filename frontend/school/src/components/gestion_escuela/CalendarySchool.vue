@@ -63,7 +63,7 @@
     </div>
     <div class="row">
         <div class="col-12 text-right">
-        <button type="button" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-primary btn-sm" v-b-tooltip.left v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
         </div>
     </div>
                     </div>
@@ -81,7 +81,7 @@
                                 <i class="fa fa-calendar"></i>
                                 <div class="timeline-item">
                                     <span class="time">
-                                        <button type="button" class="btn btn-danger btn-sm" v-if="puede_eliminar(item.date)" v-b-tooltip.hover title="eliminar" @click="destroy(item)">
+                                        <button type="button" class="btn btn-danger btn-sm" v-if="puede_eliminar(item.date)" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(item)">
                                             <i class="fa fa-trash">
                                             </i>
                                         </button>                                        

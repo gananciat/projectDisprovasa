@@ -169,12 +169,12 @@
                             <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                                          
-                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -273,12 +273,12 @@
                             <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                                          
-                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -377,12 +377,12 @@
                             <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                                          
-                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>
@@ -481,12 +481,12 @@
                             <div class="text-center">{{ data.item.created_at | moment('dddd DD MMMM YYYY') }}</div> 
                           </template>                 
                           <template v-slot:cell(option)="data">    
-                              <router-link class="btn btn-success btn-sm" v-b-tooltip.hover v-b-tooltip.rightbottom title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
-                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="editar" @click="mapData(data.item)">
+                              <router-link class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="mostrar información" :to="'/school/management/order/detail/'+data.item.id"><i class="fa fa-eye"></i></router-link>                  
+                              <button type="button" class="btn btn-warning btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="editar" @click="mapData(data.item)">
                                   <i class="fa fa-pencil">
                                   </i>
                               </button>                                                          
-                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.hover v-b-tooltip.rightbottom title="eliminar" @click="destroy(data.item)">
+                              <button type="button" class="btn btn-danger btn-sm" v-if="!data.item.complete" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(data.item)">
                                   <i class="fa fa-trash">
                                   </i>
                               </button>

@@ -10,6 +10,7 @@ class CreateDeliveryMansTable extends Migration
     {
         Schema::create('delivery_mans', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->boolean('current')->default(1);
             $table->unsignedBigInteger('people_id');
             $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');
             $table->unsignedBigInteger('type_license_id');

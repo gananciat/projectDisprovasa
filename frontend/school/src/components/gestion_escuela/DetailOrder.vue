@@ -243,8 +243,8 @@
                     </div>
                 </div>                               
                 <div class="col-md-12 col-sm-12 text-right">
-                    <button type="button" class="btn btn-danger btn-md" v-b-tooltip.hover title="cancelar" @click="clearData"><i class="fa fa-undo"></i> Cancelar</button>
-                    <button type="button" class="btn btn-success btn-md" v-b-tooltip.hover title="agregar" @click="create">Agregar producto</button>
+                    <button type="button" class="btn btn-danger btn-md" v-b-tooltip.left v-b-tooltip.hover title="cancelar" @click="clearData"><i class="fa fa-undo"></i> Cancelar</button>
+                    <button type="button" class="btn btn-success btn-md" v-b-tooltip.left v-b-tooltip.hover title="agregar" @click="create">Agregar producto</button>
                 </div>      
             </div>
         </div>
@@ -263,7 +263,7 @@
                 </div>   
                 &nbsp;  
                 <div class="col-md-12 col-sm-12 text-right" v-if="Number(total) > 0">
-                    <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.hover title="cuadrar" @click="cuadrar(items.type_order, disponibility)">Cuadrar</button>
+                    <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.left v-b-tooltip.hover title="cuadrar" @click="cuadrar(items.type_order, disponibility)">Cuadrar</button>
                 </div>     
                 &nbsp;                                        
                 <div class="col-md-12 col-sm-12">
@@ -369,9 +369,9 @@
                                                     </p>
                                                 </td>
                                                 <td style="vertical-align:middle; text-align: center;">
-                                                    <button type="button" v-if="item.deliver" class="btn btn-success btn-sm" v-b-tooltip.hover title="listo"><i class="fa fa-check"></i></button>
-                                                    <button type="button" v-if="!item.deliver" class="btn btn-info btn-sm" v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
-                                                    <button type="button" v-if="item.progress.purchased_amount == 0" class="btn btn-danger btn-sm" v-b-tooltip.hover title="eliminar" @click="destroy(item)"><i class="fa fa-trash"></i></button>
+                                                    <button type="button" v-if="item.deliver" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="listo"><i class="fa fa-check"></i></button>
+                                                    <button type="button" v-if="!item.deliver" class="btn btn-info btn-sm" v-b-tooltip.left v-b-tooltip.hover title="editar" @click="update(item)"><i class="fa fa-pencil"></i></button>
+                                                    <button type="button" v-if="item.progress.purchased_amount == 0" class="btn btn-danger btn-sm" v-b-tooltip.left v-b-tooltip.hover title="eliminar" @click="destroy(item)"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>                       
                                         </template>

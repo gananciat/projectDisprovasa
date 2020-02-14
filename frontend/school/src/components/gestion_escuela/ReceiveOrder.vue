@@ -117,8 +117,8 @@
                                                             {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
                                                         </td> 
                                                         <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
-                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
-                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip.left v-b-tooltip.hover title="eliminar"><i class="fa fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -270,8 +270,8 @@
                                                             {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
                                                         </td> 
                                                         <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
-                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
-                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip.left v-b-tooltip.hover title="eliminar"><i class="fa fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -423,8 +423,8 @@
                                                             {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
                                                         </td> 
                                                         <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
-                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
-                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip.left v-b-tooltip.hover title="eliminar"><i class="fa fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -576,8 +576,8 @@
                                                             {{ row.subtotal - row.refund | currency('Q',',',2,'.','front',true) }}
                                                         </td> 
                                                         <td style="vertical-align:middle; text-align: center; font-weight: bold;">       
-                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip title="check"><i class="fa fa-check"></i></button>
-                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip title="eliminar"><i class="fa fa-trash"></i></button>
+                                                            <button v-if="!row.aware && !data.item.aware" type="button" @click="check(row)" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="check"><i class="fa fa-check"></i></button>
+                                                            <button v-if="row.aware && !data.item.aware" type="button" @click="destroy(row,index+1)" class="btn btn-danger btn-sm" v-b-tooltip.left v-b-tooltip.hover title="eliminar"><i class="fa fa-trash"></i></button>
                                                         </td>
                                                     </tr>
                                                 </template>

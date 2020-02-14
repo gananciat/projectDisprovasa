@@ -58,9 +58,13 @@ class DeliveryManController extends ApiController
      * @param  \App\Models\DeliveryMan  $deliveryMan
      * @return \Illuminate\Http\Response
      */
-    public function show(DeliveryMan $deliveryMan)
+    public function show($delivery_man)
     {
-        //
+        $deliverys = DeliveryMan::with('vehicle.plate','vehicle.model')
+                                ->where('people_id', $delivery_man)
+                                ->get();
+
+        return $this->showAll($deliverys);
     }
 
     /**

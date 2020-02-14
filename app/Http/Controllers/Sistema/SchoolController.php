@@ -105,6 +105,9 @@ class SchoolController extends ApiController
 
         try {
             DB::beginTransaction();
+                if($request->code_high_school != '' && $request->code_primary != '')
+                    return $this->errorResponse('El cóigo de preprimaria o de primaria es necesario.',403);
+
                 if(!is_null(School::where('code_high_school',$request->code_high_school)->first()) && $request->code_high_school != null)
                     return $this->errorResponse('El cóigo de preprimaria ya existe registrado.',403);
 
@@ -169,7 +172,7 @@ class SchoolController extends ApiController
                 }
 
                 $asignar_persona_escuela = new PersonSchool();
-                $asignar_persona_escuela->type_person = $request->type_person;
+                $asignar_persona_escuela->type_person = $request->type_person['id'];
                 $asignar_persona_escuela->current = true;
                 $asignar_persona_escuela->schools_id = $insert->id;
                 $asignar_persona_escuela->people_id = $insert_people->id;
@@ -190,7 +193,7 @@ class SchoolController extends ApiController
                     $insert_user = new User();
                 }
 
-                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person['id'])->first();
                 $password = $this->generarPassword(16);
                 $insert_user->email = $insert_people->email;
                 $insert_user->password = $password;
@@ -202,9 +205,9 @@ class SchoolController extends ApiController
                 $insert_user->rols_id = $rol->id;
                 $insert_user->save();                
 
+                
+                Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
             DB::commit();
-
-            Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -39,7 +39,7 @@
         <div class="row">
           <!-- /.col -->
           <div class="col-4">
-            <button type="button" @click="beforeLogin" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+            <button type="button" @click="beforeLogin" v-b-tooltip.left v-b-tooltip.hover title="ingresar" class="btn btn-primary btn-block btn-flat">Ingresar</button>
           </div>
           <!-- /.col -->
         </div>

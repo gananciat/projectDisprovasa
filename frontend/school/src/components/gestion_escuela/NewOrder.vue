@@ -238,7 +238,7 @@
             </div>   
             &nbsp;                            
             <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
+              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
             </div>   
             &nbsp;   
           </div>
@@ -260,7 +260,7 @@
             </div>    
             &nbsp;  
             <div class="col-md-12 col-sm-12 text-right" v-if="Number(total) > 0">
-              <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.hover title="cuadrar" @click="cuadrar(title, disponibility)">Cuadrar</button>
+              <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.left v-b-tooltip.hover title="cuadrar" @click="cuadrar(title, disponibility)">Cuadrar</button>
               <br>
             </div>     
             &nbsp;        
@@ -320,7 +320,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" v-if="!loading_detail && amount_available" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" v-if="!loading_detail && amount_available" class="btn btn-primary btn-sm" v-b-tooltip.left v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                       </div>

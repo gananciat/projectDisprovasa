@@ -284,7 +284,7 @@
                                     name="code_primary"
                                     v-model="form.code_primary"
                                     data-vv-as="código primaria"
-                                    v-validate="'required|max:24'"
+                                    v-validate="'max:24'"
                                     :class="{'input':true,'has-errors': errors.has('code_primary')}"
                                   />
                                   <FormError :attribute_name="'code_primary'" :errors_form="errors"></FormError>
@@ -301,7 +301,7 @@
                                     name="code_high_school"
                                     v-model="form.code_high_school"
                                     data-vv-as="código preprimaria"
-                                    v-validate="'required|max:24'"
+                                    v-validate="'max:24'"
                                     :class="{'input':true,'has-errors': errors.has('code_high_school')}"
                                   />
                                   <FormError

@@ -62,12 +62,12 @@
                         </div>
                       </template>
                       <template v-slot:cell(option)="data">    
-                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-tooltip="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
+                          <router-link class="btn btn-info btn-sm" :to="'/information/school/'+data.item.id" v-b-tooltip.left v-b-tooltip.hover title="'mostrar información'"><i class="fa fa-eye"></i></router-link>                  
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip.left v-b-tooltip.hover title="'eliminar'">
                               <i class="fa fa-trash">
                               </i>
                           </button>
-                          <router-link class="btn btn-success btn-sm" :to="'/school_balance/'+data.item.id" v-tooltip="'mostrar balance'"><i class="fa fa-balance-scale"></i></router-link>  
+                          <router-link class="btn btn-success btn-sm" :to="'/school_balance/'+data.item.id" v-b-tooltip.left v-b-tooltip.hover title="'mostrar balance'"><i class="fa fa-balance-scale"></i></router-link>  
                       </template>
 
                     </b-table>
