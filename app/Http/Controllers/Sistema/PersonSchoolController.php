@@ -73,6 +73,7 @@ class PersonSchoolController extends ApiController
         ];
         
         $this->validate($request, $rules, $messages);
+        $password = $this->generarPassword(16);
 
         try {
             DB::beginTransaction();
@@ -114,7 +115,7 @@ class PersonSchoolController extends ApiController
                 }
 
                 $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
-                $password = $this->generarPassword(16);
+
                 $insert_user->email = $insert->email;
                 $insert_user->password = Hash::make($password);
                 $insert_user->remember_token = Str::random(20);
@@ -201,7 +202,8 @@ class PersonSchoolController extends ApiController
         ];
         
         $this->validate($request, $rules, $messages);
-
+        $password = $this->generarPassword(16);
+        
         try {
             DB::beginTransaction();
 
@@ -228,7 +230,7 @@ class PersonSchoolController extends ApiController
                 $enviar_correo = false;
                 if(mb_strtolower($update_user->email) != mb_strtolower($update->email))
                 {
-                    $password = $this->generarPassword(16);
+
                     $update_user->email = $update->email;
                     $update_user->password = Hash::make($password);
                     $update_user->remember_token = Str::random(20);
