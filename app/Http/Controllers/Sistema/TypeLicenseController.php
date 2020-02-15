@@ -21,6 +21,6 @@ class TypeLicenseController extends ApiController
      */
     public function index()
     {
-        return $this->showAll(TypeLicense::select('id','name','type')->orderBy('name')->get());
+        return $this->showAll(TypeLicense::select('id','name','type')->where('type','!=','NA')->orderBy('name')->get());
     }
 }

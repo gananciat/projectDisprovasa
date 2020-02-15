@@ -58,7 +58,7 @@
                       <!-- A virtual column -->
                       <template v-slot:cell(logo)="data">
                         <div class="text-center">
-                          <img alt="Avatar" class="table-avatar" width="75px;" height="50px;" :src="getLogo(data.item.logo)">
+                          <img alt="Avatar" class="table-avatar brand-image" width="75px;" height="50px;" :src="getLogo(data.item.logo)">
                         </div>
                       </template>
                       <template v-slot:cell(option)="data">    
@@ -221,3 +221,8 @@ export default {
 
 };
 </script>
+<style scoped>
+  .brand-image {
+      border-radius: 10%
+  }
+</style>

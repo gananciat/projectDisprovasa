@@ -208,6 +208,89 @@
                     <!-- /.col -->
                   </div>
             </b-modal>
+
+            <!-- Modal para nuevo registro -->
+            <b-modal ref="vehicle_modal" :title="'VEHICULOS ASIGNADOS A '+piloto" size="lg" hide-footer class="modal-backdrop" no-close-on-backdrop>
+              <div class="row">
+                <div class="col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label>Tipo de Licencia</label>
+                    <multiselect v-model="form_vehicle.type_license_id"
+                        v-validate="'required'" 
+                        data-vv-name="vehi.type_license_id"
+                        data-vv-as="un tipo de licencia"
+                        :options="type_licenses" placeholder="seleccione una licencia"  
+                        :searchable="true"
+                        :allow-empty="false"
+                        :show-labels="false"
+                        data-vv-scope="vehi"
+                        label="name" track-by="id">
+                        <span slot="noResult">No se encontro ningún registro</span>
+                        </multiselect>
+                        <FormError :attribute_name="'vehi.type_license_id'" :errors_form="errors"> </FormError>
+                  </div>                
+                </div>                
+                <div class="col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label>Vehículo</label>
+                    <multiselect v-model="form_vehicle.vehicles_id"
+                        v-validate="'required'" 
+                        data-vv-name="vehi.vehicles_id"
+                        data-vv-as="un vehículo"
+                        :options="vehicles" placeholder="seleccione un vehículo"  
+                        :searchable="true"
+                        :allow-empty="false"
+                        :show-labels="false"
+                        data-vv-scope="vehi"
+                        label="name" track-by="id">
+                        <span slot="noResult">No se encontro ningún registro</span>
+                        </multiselect>
+                        <FormError :attribute_name="'vehi.vehicles_id'" :errors_form="errors"> </FormError>
+                  </div>                
+                </div>
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-danger btn-sm" @click="cancelVehicle"><i class="fa fa-undo"></i> Cancelar</button>
+                  <button type="button" class="btn btn-primary btn-sm" @click="createOreditVehicle"><i class="fa fa-save"></i> Guardar</button>
+                </div>                
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <div class="table-responsive">
+                      <table class="table table-striped hover bordered">
+                          <thead>
+                              <tr class="text-center" style="font-size: 16px;">
+                                  <th style="vertical-align:middle;">Licencia</th>
+                                  <th style="vertical-align:middle;">Placa</th>
+                                  <th style="vertical-align:middle;">Vehículo</th>
+                                  <th style="vertical-align:middle;">Opción</th>
+                              </tr>
+                          </thead>
+                          <tbody style="font-size: 11px;">
+                              <template v-for="(item, index) in items_vehicles">
+                                <tr v-bind:key="index">
+                                  <td style="vertical-align:middle;">{{ item.license.name+' / '+item.license.type }}</td>
+                                  <td style="vertical-align:middle;">{{ item.vehicle.plate.type+'-'+item.vehicle.placa }}</td>
+                                  <td style="vertical-align:middle;">{{ item.vehicle.model.brand_model }}</td>
+                                  <td style="vertical-align:middle; text-align: center;">
+                                    <button type="button" class="btn btn-info btn-sm" @click="editVehicle(item)" v-b-tooltip.left v-b-tooltip.hover title="editar">
+                                        <i class="fa fa-pencil">
+                                        </i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm" @click="destroyVehicle(item)" v-b-tooltip.left v-b-tooltip.hover title="eliminar">
+                                        <i class="fa fa-trash">
+                                        </i>
+                                    </button>
+                                  </td>
+                                </tr>
+                              </template>
+                          </tbody>
+                      </table>   
+                  </div>                   
+                </div>
+              </div>              
+            </b-modal>
+
           </div>
         </div>
 
@@ -274,11 +357,11 @@
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip.left v-b-tooltip.hover title="'eliminar'">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip.left v-b-tooltip.hover title="eliminar">
                               <i class="fa fa-trash">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-success btn-sm" @click="destroy(data.item)" v-b-tooltip.left v-b-tooltip.hover title="'eliminar'">
+                          <button type="button" class="btn btn-success btn-sm" @click="viewVehicles(data.item)" v-b-tooltip.left v-b-tooltip.hover title="vehiculos">
                               <i class="fa fa-cab">
                               </i>
                           </button>
@@ -368,6 +451,18 @@ export default {
           municipalities_id: null,
           direction: '',
           phones: []
+      },
+      //Datos vehicles
+      piloto: '',
+      people: null,
+      items_vehicles: [],
+      type_licenses: [],
+      vehicles: [],
+      form_vehicle: {
+        id: 0,
+        people_id: null,
+        type_license_id: null,
+        vehicles_id: null
       }
     };
   },
@@ -381,6 +476,27 @@ export default {
   },
 
   methods: {
+    //Clasificar error
+    interceptar_error(r){
+      let self = this
+      let error = 1;
+
+        if(r.response){
+            if(r.response.status === 422){
+                this.$toastr.info(r.response.data.error, 'Mensaje')
+                error = 0
+            }
+
+            if(r.response.status != 201 && r.response.status != 422){
+                for (let value of Object.values(r.response.data)) {
+                    self.$toastr.error(value, 'Mensaje')
+                }
+                error = 0
+            }
+        }
+      
+      return error
+    },
 
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
@@ -624,6 +740,142 @@ export default {
     getPhones(phones){
       let self = this
       return phones.map(e => e.number).join(", ");
+    },
+
+    viewVehicles(item){
+      let self = this;
+      self.loading = true;
+
+      self.$store.state.services.deliverymanService
+        .get(item.id)
+        .then(r => {
+          self.people = item
+          self.items_vehicles = r.data.data;
+          self.piloto = item.name_one+' '+item.last_name_one
+          self.form_vehicle.people_id = item.id
+
+          self.getVehicle()
+          self.getTypeLicense()
+          self.cancelVehicle()
+          self.$refs['vehicle_modal'].show()
+          self.loading = false; 
+        })
+        .catch(r => {});
+    },
+
+    getVehicle(){
+      let self = this;
+      self.loading = true;
+      self.vehicles = [];
+
+      self.$store.state.services.vehicleService
+        .getAll()
+        .then(r => {
+          r.data.data.forEach(function (item) {
+              self.vehicles.push({id: item.id, name: item.brand_model+' / '+item.type_plate+'-'+item.placa})
+          });
+        })
+        .catch(r => {});
+    },  
+
+    getTypeLicense(){
+      let self = this;
+      self.loading = true;
+      self.type_licenses = [];
+
+      self.$store.state.services.typelicenseService
+        .getAll()
+        .then(r => {
+          r.data.data.forEach(function (item) {
+              self.type_licenses.push({id: item.id, name: item.name+' / '+item.type})
+          });
+        })
+        .catch(r => {});
+    },    
+
+    cancelVehicle(){
+      let self = this
+      self.form_vehicle.id = 0
+      self.form_vehicle.vehicles_id = null
+      self.form_vehicle.type_license_id = null
+    },
+
+    createOreditVehicle(){
+      let self = this
+      self.$validator.validateAll('vehi').then((result) => {
+          if (result) {
+              self.form_vehicle.id === 0 ? self.createVehicle() : self.updateVehicle()
+           }
+      });      
+    },
+
+    createVehicle(){
+      let self = this
+      self.loading = true
+      let data = {}
+      data.people_id = self.form_vehicle.people_id
+      data.vehicles_id = self.form_vehicle.vehicles_id.id
+      data.type_license_id = self.form_vehicle.type_license_id.id
+
+      self.$store.state.services.deliverymanService
+        .create(data)
+        .then(r => {
+          self.loading = false
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro agregado con exito', 'exito')
+          self.viewVehicles(self.people)
+        })
+        .catch(r => {});      
+    },
+
+    updateVehicle(){
+      let self = this
+      self.loading = true
+      let data = {}
+      data.id = self.form_vehicle.id
+      data.vehicles_id = self.form_vehicle.vehicles_id.id
+      data.type_license_id = self.form_vehicle.type_license_id.id
+       
+      self.$store.state.services.deliverymanService
+        .update(data)
+        .then(r => {
+          self.loading = false
+          if( self.interceptar_error(r) == 0) return
+          self.$toastr.success('registro modificado con exito', 'exito')
+          self.viewVehicles(self.people)
+        })
+        .catch(r => {});     
+    },
+
+    editVehicle(data){
+        let self = this
+        self.form_vehicle.id = data.id
+        self.form_vehicle.vehicles_id = {id: data.vehicle.id, name: data.vehicle.model.brand_model+' / '+data.vehicle.plate.type+'-'+data.vehicle.placa}
+        self.form_vehicle.type_license_id = {id: data.license.id, name: data.license.name+' / '+data.license.type}
+    },    
+
+    destroyVehicle(data){
+      let self = this
+
+      self.$swal({
+        title: "¿ELIMINAR REGISTRO?",
+        text: "¿ESTA SEGURO DE DESEA ELIMINAR EL REGISTRO?",
+        type: "warning",
+        showCancelButton: true
+      }).then((result) => { 
+          if (result.value) { 
+              self.loading = true
+              self.$store.state.services.deliverymanService
+                .destroy(data)
+                .then(r => {
+                  self.loading = false
+                  if( self.interceptar_error(r) == 0) return
+                  self.$toastr.success('registro eliminado con exito', 'exito')
+                  self.viewVehicles(self.people)
+                })
+                .catch(r => {});
+          }
+      });
     }
   },
 

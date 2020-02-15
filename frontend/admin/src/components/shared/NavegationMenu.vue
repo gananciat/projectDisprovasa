@@ -4,9 +4,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="#/" class="brand-link">
-      <img src="../../assets/logo.jpeg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">Sistema dispro</span>
+      <img src="../../assets/logo.jpeg" alt="Logo" class="brand-image elevation-3">
+      <span class="brand-text font-weight-light">DISPROVASA</span>
     </a>
 
     <!-- Sidebar -->
@@ -115,3 +114,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+  .brand-image {
+      border-radius: 10%
+  }
+</style>

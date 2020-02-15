@@ -112,8 +112,7 @@ export default {
 </script>
 
 <style scoped>
-  /*.user-panel img {
-    height: auto;
-    width: 4.1rem;
-}*/
+  .brand-circle {
+      border-radius: 10%
+  }
 </style>

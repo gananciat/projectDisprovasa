@@ -781,7 +781,7 @@ export default {
                                 if( self.interceptar_error(r) == 0) return 
                                 if(r.data.ready)
                                 {
-                                    self.$router.push('/school/management/receive/order') 
+                                    self.getAll(self.modalidad) 
                                 }
                                 else
                                 {

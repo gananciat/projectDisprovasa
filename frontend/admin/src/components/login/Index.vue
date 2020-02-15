@@ -3,12 +3,12 @@
 <body class="login-page">
 <div class="login-box" style="margin-top: -150px;">
   <div class="login-logo">
-    <a><b>Sistema Proalsa - </b> Empresa</a>
+    <img src="../../assets/logo.jpeg" width="60%" alt="Logo" class="brand-image elevation-3">
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">ingreso al sistema</p>
+      <p class="login-box-msg"><a><b>Sistema Disprovasa </b> <br> Empresa</a></p>
 
       <form action="#">
         <div class="form-group has-feedback">
@@ -37,8 +37,8 @@
         </div>
         <div class="row">
           <!-- /.col -->
-          <div class="col-5">
-            <button type="button" @click="beforeLogin" class="btn btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> ingresar</button>
+          <div class="col-12">
+            <button type="button" @click="beforeLogin" class="btn btn-md btn-primary btn-block btn-flat"><i class="fa fa-sign-in"></i> ingresar</button>
           </div>
           <!-- /.col -->
         </div>
@@ -113,3 +113,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .brand-image {
+      border-radius: 10%
+  }
+</style>
