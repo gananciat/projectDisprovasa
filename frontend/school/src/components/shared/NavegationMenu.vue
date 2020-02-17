@@ -64,13 +64,16 @@ export default {
           { icon: "circle-o", text: "Pedido de alimentación", path: "/school/0/management/order/new/alimentacion/A" },
           { icon: "circle-o", text: "Pedido de gratuidad", path: "/school/0/management/order/new/gratuidad/G" },
           { icon: "circle-o", text: "Pedido de utiles", path: "/school/0/management/order/new/utiles/U" },
+          { icon: "circle-o", text: "Pedido de valijas", path: "/school/0/management/order/new/valijas/V" },
+          { icon: "circle-o", text: "Recibir pedido", path: "/school/management/receive/order" },
         ]
       }, 
       {
         icon: "cog",
-        text: "Calendario",
+        text: "Configuración",
         children: [
-          { icon: "circle-o", text: "Configuración", path: "/school/management/calendar" },
+          { icon: "circle-o", text: "Calendario", path: "/school/management/calendar" },
+          { icon: "circle-o", text: "Sugerencia de Menú", path: "/school/menu/suggestion" },
         ]
       },     
     ]
@@ -109,8 +112,7 @@ export default {
 </script>
 
 <style scoped>
-  /*.user-panel img {
-    height: auto;
-    width: 4.1rem;
-}*/
+  .brand-circle {
+      border-radius: 10%
+  }
 </style>

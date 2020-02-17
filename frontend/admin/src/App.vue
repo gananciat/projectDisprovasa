@@ -19,7 +19,7 @@
         
       </div>
       <!-- Default to the left -->
-      <strong>Copyright &copy; 2020 <a >sistema disprovasa</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; 2020 <a >Sistema Proalsa - Empresa</a>.</strong> All rights reserved.
     </footer>
     </div>
 </template>
@@ -53,3 +53,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.highcharts-credits {
+  display: none !important;
+}
+</style>

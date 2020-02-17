@@ -2,12 +2,29 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
+//Gráficas
+import Highcharts from 'highcharts'
+import HighchartsVue from 'highcharts-vue'
+Vue.use(HighchartsVue)
+import exportingInit from 'highcharts/modules/exporting'
+exportingInit(Highcharts)
+
 //Tooltipe
-import VTooltip from 'v-tooltip'
-Vue.use(VTooltip)
+import Tooltip from 'vue-directive-tooltip';
+import 'vue-directive-tooltip/dist/vueDirectiveTooltip.css';
+
+Vue.use(Tooltip);
 
 import VueCurrencyFilter from 'vue-currency-filter'
 Vue.use(VueCurrencyFilter)
+Vue.use(VueCurrencyFilter, {
+  symbol : 'Q',
+  thousandsSeparator: ',',
+  fractionCount: 2,
+  fractionSeparator: '.',
+  symbolPosition: 'front',
+  symbolSpacing: true
+})
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
@@ -59,7 +76,7 @@ import _ from 'lodash'
 
 import Multiselect from 'vue-multiselect'
 Vue.component('multiselect', Multiselect)
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+import '../static/vue-multiselect.min.css'
 
 //validators
 import VeeValidate from 'vee-validate'

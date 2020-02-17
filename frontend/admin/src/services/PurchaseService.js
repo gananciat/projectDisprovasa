@@ -36,6 +36,11 @@ class purchaseService {
         let self = this;
         return self.axios.delete(`${self.baseUrl}/${data.id}`);
     }
+
+    destroyDetail(data) {
+        let self = this;
+        return self.axios.delete(`${self.baseUrl}_destroy_detail/${data.id}`);
+    }
 }
 
 export default purchaseService

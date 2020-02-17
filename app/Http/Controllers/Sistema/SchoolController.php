@@ -7,6 +7,7 @@ use App\Models\Rol;
 use App\Models\Order;
 use App\Models\Person;
 use App\Models\School;
+use App\Mail\WelcomeUser;
 use App\Models\PhonePerson;
 use App\Models\PhoneSchool;
 use Illuminate\Support\Str;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,6 +39,7 @@ class SchoolController extends ApiController
         return $this->showAll(School::with(
             'municipality.departament',
             'person')
+            ->orderBy('created_at','desc')
             ->get());
     }
 
@@ -102,6 +105,9 @@ class SchoolController extends ApiController
 
         try {
             DB::beginTransaction();
+                if($request->code_high_school != '' && $request->code_primary != '')
+                    return $this->errorResponse('El cóigo de preprimaria o de primaria es necesario.',403);
+
                 if(!is_null(School::where('code_high_school',$request->code_high_school)->first()) && $request->code_high_school != null)
                     return $this->errorResponse('El cóigo de preprimaria ya existe registrado.',403);
 
@@ -109,12 +115,14 @@ class SchoolController extends ApiController
                     return $this->errorResponse('El cóigo de primaria ya existe registrado.',403);
 
                 $imagePath = '';
-                if($request->logo != null || $request->logo != ''){
+                if($request->logo != null && $request->logo != ''){
                     if (preg_match('/^data:image\/(\w+);base64,/', $request->logo)) {
                         $data_img = substr($request->logo, strpos($request->logo, ',') + 1);
                         $data_img = base64_decode($data_img);
                         $imagePath = $request->nit.'_'.time().'.png';
                         Storage::disk('images')->put($imagePath, $data_img);
+
+                        $request->logo = 'img/school_images/'.$imagePath;
                     } 
                 }
 
@@ -122,7 +130,7 @@ class SchoolController extends ApiController
                 $insert->municipalities_id = $request->municipalities_id;
                 $insert->name = $request->name;
                 $insert->bill = $request->bill;
-                $insert->logo = 'img/school_images/'.$imagePath;
+                $insert->logo = $request->logo;
                 $insert->direction = $request->direction;
                 $insert->nit = $request->nit;
                 $insert->code_high_school = $request->code_high_school;
@@ -166,7 +174,7 @@ class SchoolController extends ApiController
                 }
 
                 $asignar_persona_escuela = new PersonSchool();
-                $asignar_persona_escuela->type_person = $request->type_person;
+                $asignar_persona_escuela->type_person = $request->type_person['id'];
                 $asignar_persona_escuela->current = true;
                 $asignar_persona_escuela->schools_id = $insert->id;
                 $asignar_persona_escuela->people_id = $insert_people->id;
@@ -187,7 +195,7 @@ class SchoolController extends ApiController
                     $insert_user = new User();
                 }
 
-                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+                $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person['id'])->first();
                 $password = $this->generarPassword(16);
                 $insert_user->email = $insert_people->email;
                 $insert_user->password = $password;
@@ -199,8 +207,11 @@ class SchoolController extends ApiController
                 $insert_user->rols_id = $rol->id;
                 $insert_user->save();                
 
-            DB::commit();
+                
+                Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
 
+                $insert_user->save(); 
+            DB::commit();   
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -302,15 +313,15 @@ class SchoolController extends ApiController
                 $school->code_primary = $request->code_primary;
                 $school->people_id = Auth::user()->people_id;
 
-                if($request->logo != null || $request->logo != ''){
+                if($request->logo != null && $request->logo != ''){
                     $imagePath = '';
                     if (preg_match('/^data:image\/(\w+);base64,/', $request->logo)) {
                         $data = substr($request->logo, strpos($request->logo, ',') + 1);
                         $data = base64_decode($data);
                         $imagePath = $request->nit.'_'.time().'.png';
                         Storage::disk('images')->put($imagePath, $data);
+                        $school->logo = 'img/school_images/'.$imagePath;
                     }
-                    $school->logo = 'img/school_images/'.$imagePath;
                 }
 
                 if (!$school->isDirty()) {
@@ -336,49 +347,42 @@ class SchoolController extends ApiController
      */
     public function destroy(School $school)
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-                $message = '';
+            $message = '';
+            $asignados = PersonSchool::where('schools_id',$school->id)->where('current',true)->get();
 
-                $asignados = PersonSchool::where('schools_id',$school->id)->where('current',true)->get();
+            foreach ($asignados as $key => $value) {
+                $user = User::where('people_id',$value->people_id)->first();
+                $user->password = Hash::make($this->generarPassword(16));
+                $user->remember_token = Str::random(20);
+                $user->verified = User::USUARIO_NO_VERIFICADO;
+                $user->verification_token = User::generarVerificationToken();
+                $user->admin = User::USUARIO_REGULAR;
+                $user->save(); 
+            }                
 
-                foreach ($asignados as $key => $value) {
-                    $user = User::where('people_id',$value->people_id)->first();
-                    $user->password = Hash::make($this->generarPassword(16));
-                    $user->remember_token = Str::random(20);
-                    $user->verified = User::USUARIO_NO_VERIFICADO;
-                    $user->verification_token = User::generarVerificationToken();
-                    $user->admin = User::USUARIO_REGULAR;
-                    $user->save(); 
-                }                
-
-                $orders = Order::where('schools_id',$school->id)->count();
-        
-                if($orders > 0) {
-                    if($school->current == false) {
-                        $message = $school->name.' fue dada de alta.';
-                        $school->current = true;
-                    }
-                    else {
-                        $message = $school->name.' fue dada de baja.';
-                        $school->current = false;
-                    }
+            $orders = Order::where('schools_id',$school->id)->count();
+    
+            if($orders > 0) {
+                if($school->current == false) {
+                    $message = $school->name.' fue dada de alta.';
+                    $school->current = true;
                 }
                 else {
-                    $message = $school->name.' fue eliminada.';
-                    
-                    PersonSchool::where('schools_id', $school->id)->delete();
-                    PhoneSchool::where('schools_id', $school->id)->delete();
-                    $school->delete();
+                    $message = $school->name.' fue dada de baja.';
+                    $school->current = false;
                 }
-        
-                return $this->errorResponse($message, 422);
+            }
+            else {
+                $message = $school->name.' fue eliminada.';
+                
+                PersonSchool::where('schools_id', $school->id)->delete();
+                PhoneSchool::where('schools_id', $school->id)->delete();
+                $school->delete();
+            }
+        DB::commit();
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $this->errorResponse($e->getMessage(),403);
-        }
+        return $this->showOne($school, 201);
     }
 }

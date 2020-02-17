@@ -34,11 +34,12 @@ class UtilImport implements ToCollection
                         $insert->propierty = Product::UTILES;
                         $insert->categories_id = $category->id;
                         $insert->stock = random_int(1,100);
+                        $insert->stock_temporary = $insert->stock;
                         $insert->presentations_id = $insert_presentacion->id;
                         $insert->save();
     
                         if($value[3] != ''){
-                            $value[3] = 0;
+                            $value[3] = rand(1, 100)/10;
                         }
                         
                         $insert_price = new Price();

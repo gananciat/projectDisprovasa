@@ -15,6 +15,7 @@ class CreatePurcharseDetailsTable extends Migration
     {
         Schema::create('purcharse_details', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->date('expiry_date');
             $table->unsignedBigInteger('purcharse_id');
             $table->unsignedBigInteger('product_id');
             $table->decimal('purcharse_price',11,2);
@@ -22,8 +23,8 @@ class CreatePurcharseDetailsTable extends Migration
             $table->integer('decrease')->default(0);
             $table->timestamps();
 
-            $table->foreign('purcharse_id')->references('id')->on('purcharses')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('purcharse_id')->references('id')->on('purcharses')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade');
         });
     }
 

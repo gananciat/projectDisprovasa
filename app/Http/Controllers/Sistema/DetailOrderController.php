@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Sistema;
 
 use App\Models\Order;
+use App\Models\School;
 use App\Models\Balance;
 use App\Models\Product;
 use App\Models\Quantify;
 use App\Models\DetailOrder;
 use App\Models\OrderStatus;
+use App\Models\Disbursement;
 use Illuminate\Http\Request;
 use App\Models\ProgressOrder;
+use App\Models\ProductExpiration;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ApiController;
-use App\Models\Disbursement;
-use App\Models\School;
 use Illuminate\Database\Eloquent\Builder;
 
 class DetailOrderController extends ApiController
@@ -101,38 +102,67 @@ class DetailOrderController extends ApiController
                 $product = Product::find($insert_detalle_orden->products_id);                 
                 $insert_quantify = Quantify::where('products_id',$insert_detalle_orden->products_id)->where('year',date('Y'))->first();
 
-                if(is_null($insert_quantify)) {
-                    $insert_quantify = new Quantify();
-                    $insert_quantify->year = date('Y');
-                    $insert_quantify->products_id = $product->products_id;
-            
-                    $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
-    
-                    if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                        $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                if($insert_detalle_orden->quantity > 1){
+                    for ($i=0; $i < $insert_detalle_orden->quantity; $i++) { 
+                        if($product->stock_temporary > 0){
+                            $product->stock_temporary -= 1;
+                            
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used -= 1;
+                
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
+                        
+                                    $expiration->save();
+                                }
+                            }
+
+                        }else{
+                            $insert_quantify->subtraction += 1;
+                        }
                     }
+                }else{
+                    if($product->stock_temporary > 0){
+                        $product->stock_temporary -= 1;
+                        
+                        if(!$product->persevering)
+                        {
+                            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                            if(!is_null($expiration))
+                            {
+                                $expiration->used -= 1;
             
-                    $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-            
-                } else {
-                    $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $insert_detalle_orden->quantity;
+                                if($expiration->used == 0)
+                                    $expiration->current = false;
                     
-                    if($product->stock >= ($insert_detalle_orden->quantity+$product->stock_temporary)){
-                        $insert_quantify->sumary_purchase += $insert_detalle_orden->quantity;
+                                $expiration->save();
+                            }
+                        }
+
+                    }else{
+                        $insert_quantify->subtraction += 1;
                     }
-            
-                    $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                 }
 
+                $insert_quantify->sumary_schools +=  $insert_detalle_orden->quantity;
                 $insert_quantify->save();
                 $product->save();
 
                 $order->total += $insert_detalle_orden->subtotal;
+
                 $balance->subtraction_temporary += $insert_detalle_orden->subtotal;
 
-                if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
+                if($balance->balance === ($balance->subtraction_temporary - $balance->subtraction))
+                    $balance->current = false;
+
+                if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
                     return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
+                $order->balances_id = $balance->id;
                 $balance->save();
                 $order->save();
 
@@ -153,12 +183,12 @@ class DetailOrderController extends ApiController
      */
     public function show($detail_order)
     {
-        $detail_order = Order::select("id","order","title","description","type_order","date","total","complete","schools_id","people_id","created_at","code")
+        $detail_order = Order::select("id","order","title","description","type_order","date","total","complete","schools_id","people_id","created_at","code","refund")
                                 ->with(['person:id,cui,name_one,name_two,last_name_one,last_name_two',
                                         'school:id,name,municipalities_id',
                                         'school.municipality:id,name,departaments_id',
                                         'school.municipality.departament:id,name',
-                                        'details:id,quantity,sale_price,subtotal,observation,complete,products_id,orders_id',
+                                        'details:id,quantity,sale_price,subtotal,observation,complete,products_id,orders_id,deliver,refund',
                                         'details.product:id,name,presentations_id,categories_id',
                                         'details.product.presentation:id,name',
                                         'details.product.category:id,name',
@@ -166,30 +196,36 @@ class DetailOrderController extends ApiController
                                         'details.progress.order_status:id,status'])
                                 ->addSelect(['balance' => Balance::select('balance')
                                         ->whereColumn([
-                                                        ['code', 'orders.code'],
-                                                        ['type_balance', 'orders.type_order']
+                                                        ['id', 'orders.balances_id'],
                                                       ])
                                         ->where('current', true)
                                         ->where('year', date('Y'))
                                         ->orderBy('disbursement_id','desc')
                                         ->limit(1)
-                                    ])  
-                                ->addSelect(['subtraction_temporary' => Balance::select('subtraction_temporary')
+                                    ]) 
+                                ->addSelect(['subtraction' => Balance::select('subtraction')
                                         ->whereColumn([
-                                                        ['code', 'orders.code'],
-                                                        ['type_balance', 'orders.type_order']
+                                                        ['id', 'orders.balances_id'],
                                                       ])
-                                        ->where('current', true)
+                                        ->where('current', true)              
                                         ->where('year', date('Y'))
                                         ->orderBy('disbursement_id','desc')
                                         ->limit(1)
                                     ])    
+                                ->addSelect(['subtraction_temporary' => Balance::select('subtraction_temporary')
+                                        ->whereColumn([
+                                                        ['id', 'orders.balances_id'],
+                                                      ])
+                                        ->where('current', true)              
+                                        ->where('year', date('Y'))
+                                        ->orderBy('disbursement_id','desc')
+                                        ->limit(1)
+                                    ])   
                                 ->addSelect(['disbursement_id' => Balance::select('disbursement_id')
                                         ->whereColumn([
-                                                        ['code', 'orders.code'],
-                                                        ['type_balance', 'orders.type_order']
+                                                        ['id', 'orders.balances_id'],
                                                       ])
-                                        ->where('current', true)
+                                        ->where('current', true)              
                                         ->where('year', date('Y'))
                                         ->orderBy('disbursement_id','desc')
                                         ->limit(1)
@@ -200,7 +236,7 @@ class DetailOrderController extends ApiController
                                                       ])
                                     ])                                      
                                 ->withCount(['details as detail_complete' => function(Builder $query) {
-                                    $query->where('complete', true);
+                                    $query->where('deliver', true);
                                 }, 'details as detail_total'])
                                 ->where('id',$detail_order)->get();
 
@@ -248,11 +284,64 @@ class DetailOrderController extends ApiController
                 ])->first();
 
                 $progress_order = ProgressOrder::where('detail_orders_id',$detail_order->id)->first();
-                if($request->quantity >= $progress_order->purchased_amount){
-                    
+                if(($request->quantity+1) > $progress_order->purchased_amount){
+
+                    $product = Product::find($detail_order->products_id);                 
+                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
+
                     //Restamos el sub total anterior
                     $balance->subtraction_temporary -= $detail_order->subtotal;
                     $order->total = $order->total - $detail_order->subtotal;
+
+                    if($detail_order->quantity > 1){
+                        for ($i=0; $i < $detail_order->quantity; $i++) { 
+                            
+                            if($product->stock_temporary < $product->stock)
+                            {
+                                $product->stock_temporary += 1;
+                                if(!$product->persevering)
+                                {
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                    if(!is_null($expiration))
+                                    {
+                                        $expiration->used += 1;
+
+                                        if(!$expiration->current)
+                                            $expiration->current = true;
+                            
+                                        $expiration->save();
+                                    }
+                                }
+                            }
+                            else
+                                $insert_quantify->subtraction -= 1;
+                        }
+                    }else{
+                        if($product->stock_temporary < $product->stock)
+                        {
+                            $product->stock_temporary += 1;
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used += 1;
+
+                                    if(!$expiration->current)
+                                        $expiration->current = true;
+                        
+                                    $expiration->save();
+                                }
+                            }
+                        }
+                        else
+                            $insert_quantify->subtraction -= 1;
+                    }
+
+                    $insert_quantify->sumary_schools -=  $detail_order->quantity;
+
+                    if($balance->balance != $balance->subtraction_temporary)
+                        $balance->current = true;
 
                     $detail_order->quantity = $request->quantity;
                     $detail_order->subtotal = $detail_order->quantity*$detail_order->sale_price;
@@ -260,10 +349,14 @@ class DetailOrderController extends ApiController
                     $detail_order->complete = false;
 
                     //Asignamos el nuevo subtotal al total
-                    $balance->subtraction_temporary += $detail_order->subtotal;
                     $order->total = $order->total + $detail_order->subtotal;
 
-                    if(($balance->subtraction_temporary - $balance->subtraction_temporary) < 0)
+                    $balance->subtraction_temporary += $detail_order->subtotal;
+
+                    if($balance->balance === ($balance->subtraction_temporary - $balance->subtraction))
+                        $balance->current = false;
+    
+                    if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
                         return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);
 
                     $progress_order->order_statuses_id = $estado_orden->id;
@@ -272,35 +365,56 @@ class DetailOrderController extends ApiController
                         return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
                     }
 
-                    $product = Product::find($detail_order->products_id);                 
-                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
+                    if($detail_order->quantity > 1){
+                        for ($i=0; $i < $detail_order->quantity; $i++) { 
+                            if($product->stock_temporary > 0){
+                                $product->stock_temporary -= 1;
+                                
+                                if(!$product->persevering)
+                                {
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                                    if(!is_null($expiration))
+                                    {
+                                        $expiration->used -= 1;
+                    
+                                        if($expiration->used == 0)
+                                            $expiration->current = false;
+                            
+                                        $expiration->save();
+                                    }
+                                }
     
-                    if(is_null($insert_quantify)) {
-                        $insert_quantify = new Quantify();
-                        $insert_quantify->year = date('Y');
-                        $insert_quantify->products_id = $product->products_id;
-                
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $detail_order->quantity;
-        
-                        if($product->stock >= ($detail_order->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $detail_order->quantity;
+                            }else{
+                                $insert_quantify->subtraction += 1;
+                            }
                         }
+                    }else{
+                        if($product->stock_temporary > 0){
+                            $product->stock_temporary -= 1;
+                            
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used -= 1;
                 
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-                
-                    } else {
-                        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $detail_order->quantity;
+                                    if($expiration->used == 0)
+                                        $expiration->current = false;
                         
-                        if($product->stock >= ($detail_order->quantity+$product->stock_temporary)){
-                            $insert_quantify->sumary_purchase += $detail_order->quantity;
+                                    $expiration->save();
+                                }
+                            }
+    
+                        }else{
+                            $insert_quantify->subtraction += 1;
                         }
-                
-                        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
                     }
+
+                    $insert_quantify->sumary_schools +=  $detail_order->quantity;
     
                     $insert_quantify->save();
                     $product->save();                    
-
                     $order->save();
                     $balance->save();
                     $detail_order->save();
@@ -345,10 +459,66 @@ class DetailOrderController extends ApiController
                     ProgressOrder::where('detail_orders_id',$detail_order->id)->delete();
                     $balance->subtraction_temporary -= $detail_order->subtotal;
                     $order->total = $order->total - $detail_order->subtotal;
-                    $buscar = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
-                    $buscar->sumary_purchase += $detail_order->quantity;
-                    $buscar->subtraction = $buscar->sumary_schools - $buscar->sumary_purchase;
-                    $buscar->save();
+                    
+                    $product = Product::find($detail_order->products_id);
+                    
+                    $insert_quantify = Quantify::where('products_id',$detail_order->products_id)->where('year',date('Y'))->first();
+    
+                    $insert_quantify->sumary_schools -=  $detail_order->quantity;
+                    
+                    if($detail_order->quantity > 1){
+                        for ($i=0; $i < $detail_order->quantity; $i++) { 
+                            
+                            if($product->stock_temporary < $product->stock)
+                            {
+                                $product->stock_temporary += 1;
+                                if(!$product->persevering)
+                                {
+                                    $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                    if(!is_null($expiration))
+                                    {
+                                        $expiration->used += 1;
+
+                                        if(!$expiration->current)
+                                            $expiration->current = true;
+                            
+                                        $expiration->save();
+                                    }
+                                }
+                            }
+                            else
+                                $insert_quantify->subtraction -= 1;
+                        }
+                    }else{
+                        if($product->stock_temporary < $product->stock)
+                        {
+                            $product->stock_temporary += 1;
+                            if(!$product->persevering)
+                            {
+                                $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('used',0)->latest()->orderBy('date', 'desc')->first();
+                                if(!is_null($expiration))
+                                {
+                                    $expiration->used += 1;
+
+                                    if(!$expiration->current)
+                                        $expiration->current = true;
+                        
+                                    $expiration->save();
+                                }
+                            }
+                        }
+                        else
+                            $insert_quantify->subtraction -= 1;
+                    }
+
+                    if($balance->balance !== ($balance->subtraction_temporary - $balance->subtraction))
+                        $balance->current = true;
+    
+                    if(($balance->subtraction_temporary - $balance->subtraction) > $balance->balance)
+                        return $this->errorResponse('El monto del pedido excede al monto disponible en el código '.$order->code, 422);                             
+                        
+                    $insert_quantify->save();
+                    $product->save();
                     $balance->save();
                     $detail_order->delete();
                 } else {

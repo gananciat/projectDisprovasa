@@ -13,6 +13,7 @@ class Balance extends Model
     const ALIMENTACION = 'ALIMENTACION';
     const GRATUIDAD = 'GRATUIDAD';
     const UTILES = 'UTILES';
+    const VALIJA_DIDACTICA = 'VALIJA DIDACTICA';
 
     protected $table = 'balances';
     protected $fillable = ['balance','start_date','end_date','schools_id',

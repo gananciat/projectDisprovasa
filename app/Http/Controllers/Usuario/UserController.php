@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Usuario;
 use App\User;
 use App\Models\Rol;
 use App\Models\Person;
+use App\Mail\WelcomeUser;
 use App\Models\PhonePerson;
 use Illuminate\Support\Str;
 use App\Models\PersonSchool;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ApiController;
 
 class UserController extends ApiController
@@ -74,6 +76,8 @@ class UserController extends ApiController
         $this->validate($request, $rules, $messages);
 
         try {
+            $password = $this->generarPassword(16);
+
             DB::beginTransaction();
                 $data = $request->all();
 
@@ -110,17 +114,18 @@ class UserController extends ApiController
                 }
 
                 $insert->email = $insert_people->email;
-                $insert->password = Hash::make($this->generarPassword(16));
+                $insert->password = $password;
                 $insert->remember_token = Str::random(20);
                 $insert->verified = User::USUARIO_NO_VERIFICADO;
                 $insert->verification_token = User::generarVerificationToken();
                 $insert->admin = User::USUARIO_REGULAR;
                 $insert->people_id = $insert_people->id;
                 $insert->rols_id = $data->rols_id;
-                $insert->save();                
-
+                $insert->save();
             DB::commit();
-
+            $insert = User::find(1);
+            
+            Mail::to($insert->email)->send(new WelcomeUser($insert, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -208,23 +213,29 @@ class UserController extends ApiController
                     $update_phone_people->save();
                 }     
                 
+                $enviar_correo = false;
                 if($user->email != $update_people->email) 
                 {
+                    $password = $this->generarPassword(16);
                     $user->email = $update_people->email;
-                    $user->password = Hash::make($this->generarPassword(16));
+                    $user->password = $password;
                     $user->remember_token = Str::random(20);
                     $user->verified = User::USUARIO_NO_VERIFICADO;
                     $user->verification_token = User::generarVerificationToken();
                     $user->admin = User::USUARIO_REGULAR;
                     $user->rols_id = $data->rols_id;
                     $user->save(); 
+                    $enviar_correo = true;
                 } else {
                     $user->rols_id = $data->rols_id;
                     $user->save(); 
                 }
 
-            DB::commit();
+                if($enviar_correo)
+                    Mail::to($user->email)->send(new WelcomeUser($user, $password));
 
+            DB::commit();
+                
             return $this->showOne($update_people,201);
         } catch (\Exception $e) {
             DB::rollBack();

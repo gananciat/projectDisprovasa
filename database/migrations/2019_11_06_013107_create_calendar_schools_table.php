@@ -14,9 +14,9 @@ class CreateCalendarSchoolsTable extends Migration
             $table->date('date');
             $table->boolean('business')->default(0);
             $table->unsignedBigInteger('schools_id');
-            $table->foreign('schools_id')->references('id')->on('schools');
+            $table->foreign('schools_id')->references('id')->on('schools')->onUpdate('cascade');
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people'); 
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade'); 
             $table->softDeletes();            
             $table->timestamps();
         });

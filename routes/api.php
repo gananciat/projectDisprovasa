@@ -37,8 +37,10 @@ Route::resource('phone_schools', 'Sistema\PhoneSchoolController', ['except' => [
 Route::resource('presentations', 'Sistema\PresentationController', ['except' => ['create', 'edit']]);
 Route::resource('prices', 'Sistema\PriceController', ['except' => ['index', 'create', 'edit', 'update']]);
 Route::resource('products', 'Sistema\ProductController', ['except' => ['create']]);
+Route::get('products_paginate/{query?}', 'Sistema\ProductController@indexPaginate');
+Route::get('products/{product}/cuadrar/{price}', 'Sistema\ProductController@cuadrar');
 Route::resource('providers', 'Sistema\ProviderController', ['except' => ['create']]);
-Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\providerController@showByNit');
+Route::name('providers_show_by_nit')->get('providers_show_by_nit/{nit}', 'Sistema\ProviderController@showByNit');
 
 Route::resource('products.prices', 'Sistema\ProductPriceController', ['except' => ['edit']]);
 Route::resource('products.purchases', 'Sistema\ProductPurchaseController', ['except' => ['edit']]);
@@ -48,25 +50,54 @@ Route::resource('years', 'Sistema\YearController', ['except' => ['create', 'edit
 Route::resource('reservations', 'Sistema\ReservationController', ['except' => ['index' ,'create', 'edit', 'update', 'destroy']]);
 Route::get('reservations_money/{code}/{type_order}', 'Sistema\ReservationController@money');
 Route::resource('orders', 'Sistema\OrderController', ['except' => ['create', 'edit']]);
+Route::get('orders_by_invoices', 'Sistema\OrderController@indexOrders');
+Route::get('orders_get/{id}', 'Sistema\OrderController@showOrder');
 Route::resource('detail_orders', 'Sistema\DetailOrderController', ['except' => ['index', 'create', 'edit']]);
 Route::resource('purchases', 'Sistema\PurchaseController', ['except' => ['create', 'edit']]);
 Route::name('purchases_update_detail')->put('purchases_update_detail', 'Sistema\PurchaseController@updateDetails');
+Route::name('purchases_destroy_detail')->delete('purchases_destroy_detail/{id}', 'Sistema\PurchaseController@detroyDetail');
+
 Route::resource('calendar_school', 'Sistema\CalendarSchoolController', ['except' => ['create', 'edit', 'update']]);
-Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'store', 'destroy']]);
+Route::resource('progress_orders', 'Sistema\ProgressOrderController', ['except' => ['index', 'create', 'destroy']]);
 Route::resource('rols', 'Sistema\RolController', ['except' => ['create', 'edit']]);
 Route::resource('rols.menus', 'Sistema\RolRolMenuController', ['except' => ['create', 'edit']]);
 Route::resource('persons', 'Sistema\PersonController', ['except' => ['create', 'edit']]);
 Route::resource('quantifies', 'Sistema\QuantifyController', ['except' => ['create', 'edit']]);
+Route::resource('repeat_order', 'Sistema\RepeatOrderController', ['except' => ['index', 'create', 'edit', 'update', 'destroy']]);
+Route::resource('menu_suggestion', 'Sistema\MenuSuggestionController', ['except' => ['create', 'edit']]);
+Route::resource('products_expirations', 'Sistema\ProductExpirationController', ['except' => ['create']]);
+Route::resource('license_plate', 'Sistema\LicensePlateController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('type_license', 'Sistema\TypeLicenseController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle_brand', 'Sistema\VehicleBrandController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle_model', 'Sistema\VehicleModelController', ['except' => ['create', 'store', 'show', 'edit', 'update', 'destroy']]);
+Route::resource('vehicle', 'Sistema\VehicleController', ['except' => ['create','edit']]);
+Route::resource('check_delivery', 'Sistema\CheckDeliveryManController', ['except' => ['edit','update']]);
+Route::resource('delivery_man', 'Sistema\DeliveryManController', ['except' => ['create', 'edit']]);
+Route::resource('check_school', 'Sistema\CheckSchoolController', ['except' => ['create','edit','update']]);
+Route::resource('vats', 'Sistema\VatController', ['except' => ['create', 'edit']]);
+Route::resource('series', 'Sistema\SerieController', ['except' => ['create', 'edit']]);
+Route::resource('invoices', 'Sistema\InvoiceController', ['except' => ['create', 'edit']]);
+Route::put('invoices_cancel/{id}', 'Sistema\InvoiceController@cancel');
+Route::get('invoices_invoice/{id}/{total}', 'Sistema\InvoiceController@invoice');
+Route::resource('detail_suggestion', 'Sistema\DetailSuggestionController', ['except' => ['index', 'create', 'edit', 'show']]);
 
 //New Route Usuario
 Route::resource('users', 'Usuario\UserController', ['except' => ['edit']]);
 Route::resource('disbursements', 'Sistema\DisbursementController', ['except' => ['edit']]);
 Route::resource('balances', 'Sistema\BalanceController', ['except' => ['edit']]);
 Route::resource('schools.balances', 'Sistema\SchoolBalanceController', ['except' => ['edit']]);
-Route::name('schools_show')->get('schools_show/{id}', 'Sistema\schoolController@getOne');
+Route::name('schools_show')->get('schools_show/{id}', 'Sistema\SchoolController@getOne');
 Route::resource('notifications', 'Reports\NotificationsController', ['except' => ['edit']]);
 
 //New Route Gráficas Escuela y Admin
 Route::get('graph_school_order', 'Dashboard\School\GraphController@school_order');
 Route::get('information_disbursement_school/{id}', 'Dashboard\School\InformationController@disbursement_school');
+
+Route::get('dashboard_graph_purchases', 'Dashboard\sistema\GraphController@purchasesLastGraph');
+Route::get('dashboard_graph_orders', 'Dashboard\sistema\GraphController@ordersLastGraph');
+Route::get('products_orders/{start_date}/{end_date}', 'Reports\OrderReportControler@ProductsOrderedByDates');
+Route::get('products_orders_export/{start_date}/{end_date}', 'Reports\OrderReportControler@exportExcel');
+
+
+
 

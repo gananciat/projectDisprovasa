@@ -14,6 +14,43 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
+            <b-modal ref="cuadra_opc" hide-footer class="modal-backdrop" no-close-on-backdrop size="lg" title="Opciones para cuadrar">
+              <div class="col-md-12 col-sm-12 col-12" v-if="Number(total) > 0">
+                  <div class="table-responsive">
+                      <table class="table table-striped hover bordered">
+                          <thead>
+                              <tr class="text-center" style="font-size: 16px;">
+                                  <th style="vertical-align:middle;">Cantidad</th>
+                                  <th style="vertical-align:middle;">Producto</th>                                                    
+                                  <th style="vertical-align:middle;">Precio</th>                                                      
+                                  <th style="vertical-align:middle;">Total</th>  
+                              </tr>
+                          </thead>
+                          <tbody style="font-size: 11px;">
+                              <template v-for="(row, index) in cuadrar_opciones">
+                                  <tr v-bind:key="index">
+                                      <td style="vertical-align:middle; text-align: center; font-weight: bold;">
+                                          {{ row.cantidad }}
+                                      </td> 
+                                      <td style="vertical-align:middle; text-align: left; font-weight: bold;">
+                                          {{ row.producto+' / '+row.marca }}
+                                      </td>  
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>   
+                                      <td style="vertical-align:middle; text-align: right; font-weight: bold;">
+                                          {{ row.cantidad * row.precio | currency('Q ',',',2,'.','front',true) }}
+                                      </td>                                  
+                                  </tr>
+                              </template>
+                          </tbody>
+                      </table>   
+                  </div>                   
+              </div>              
+            </b-modal>
+          </div>
+
+          <div class="col-lg-12">
             
             <div class="card">
               <div class="card-header border-0">
@@ -26,19 +63,19 @@
                       <div class="card-header p-0 pt-1">
                         <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                           <li class="nav-item">
-                            <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
+                            <a :class="'nav-link '+nav_info" @click="inforTab" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Información del Menú</a>
                           </li>
                           <li class="nav-item" v-if="amount_available">
-                            <a class="nav-link" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
+                            <a :class="'nav-link '+nav_ord" @click="generationOrder" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">Pedido</a>
                           </li>
                         </ul>
                       </div>
                       <div class="card-body">
 <form> 
   <div class="tab-content" id="custom-tabs-one-tabContent">
-    <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+    <div :class="'tab-pane fade '+tab_info" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
       <div class="row">
-        <div class="col-md-2 col-sm-12">
+        <div class="col-md-4 col-sm-12">
           <div class="form-group">
             <label>Fecha para la entrega del pedido</label>
             <div class="block">
@@ -61,7 +98,7 @@
             <FormError :attribute_name="'menu.date'" :errors_form="errors"> </FormError>
           </div>
         </div>
-        <div class="col-md-2 col-sm-12">            
+        <div class="col-lg-4 col-md-4 col-sm-12">            
           <div class="form-group">
             <label>Código</label>
             <multiselect v-model="form.code"
@@ -80,13 +117,17 @@
                 <FormError :attribute_name="'menu.code'" :errors_form="errors"> </FormError>
           </div>
         </div> 
-        <div class="col-md-8 col-sm-12 text-right"> 
+        <div class="col-md-4 col-sm-12 text-right"> 
           <div class="form-group">
             <label>Monto disponible</label>
             <br>
-            <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+            <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>  
+            <br>
+            <small>{{ disbursement }}</small>          
           </div>
-        </div>       
+        </div>   
+      </div>    
+      <div class="row">
         <div class="col-md-12 col-sm-12">
           <div class="form-group">
             <label>Menú</label>
@@ -119,7 +160,7 @@
       </div>
     </div>
 
-    <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+    <div :class="'tab-pane fade '+tab_ord" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab" v-if="amount_available">
       <div class="row" v-loading="loading_detail">
         <div class="col-md-8 col-sm-12">
           <div class="row">          
@@ -194,10 +235,12 @@
                 </textarea>
                 <FormError :attribute_name="'detail.observation'" :errors_form="errors"> </FormError>
               </div>
-            </div>                               
+            </div>   
+            &nbsp;                            
             <div class="col-md-12 col-sm-12 text-right">
-              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
-            </div>      
+              <button type="button" class="btn btn-success btn-sm" v-b-tooltip.left v-b-tooltip.hover title="agregar" @click="addProductDetail">Agregar producto</button>
+            </div>   
+            &nbsp;   
           </div>
         </div>
         <div class="col-md-4 col-sm-12">
@@ -210,9 +253,17 @@
               <div class="form-group">
                 <label>Monto disponible</label>
                 <br>
-                <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>            
+                <h1>{{ disponibility | currency('Q ',',',2,'.','front',true) }}</h1>  
+                <br>
+                <small>{{ disbursement }}</small>            
               </div>
-            </div>                    
+            </div>    
+            &nbsp;  
+            <div class="col-md-12 col-sm-12 text-right" v-if="Number(total) > 0">
+              <button type="button" v-b-modal.modal-lg class="btn btn-info btn-md" v-b-tooltip.left v-b-tooltip.hover title="cuadrar" @click="cuadrar(title, disponibility)">Cuadrar</button>
+              <br>
+            </div>     
+            &nbsp;        
             <div class="col-md-12 col-sm-12">
               <div class="position-relative p-5 bg-green">
                 <div class="ribbon-wrapper ribbon-xl">
@@ -223,7 +274,7 @@
                 <p>En esta sección mostraremos el <br>
                 monto total del pedido.</p>
                 <div style="text-align: left; font-size: 32px; justify-content: center; align-items: center;">
-                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>
+                  <label>{{ total | currency('Q ',',',2,'.','front',true) }}</label>  
                 </div>             
               </div>       
             </div>
@@ -269,7 +320,7 @@
     </div>
   </div>
   <div class="col-md-12 col-sm-12 text-right">
-      <button type="button" v-if="!loading_detail && amount_available" class="btn btn-primary btn-sm" v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
+      <button type="button" v-if="!loading_detail && amount_available" class="btn btn-primary btn-sm" v-b-tooltip.left v-b-tooltip.hover title="guardar" @click="createOrEdit"><i class="fa fa-save"></i> Guardar</button>
   </div>  
 </form>
                       </div>
@@ -290,7 +341,7 @@
 import moment from 'moment'
 import FormError from '../shared/FormError'
 export default {
-  name: "newschool",
+  name: "neworder",
   components: {
       FormError,
       moment
@@ -299,18 +350,24 @@ export default {
     return {
       loading: false,
       loading_detail: false,
+      nav_info: 'active',
+      tab_info: 'show active',
+      nav_ord: '',
+      tab_ord: '',
       no_reservation: '',
       calendario: [],
       codes: [],
       title: '',
       items: {},
       products: [],
+      cuadrar_opciones: [],
       product_id: null,
       quantity: '',
       observation: '',
       total: 0,
       amount_available: false,
       disponibility: 0,
+      disbursement: '',
       information_product: {
         category: '',
         marca: '',
@@ -390,20 +447,35 @@ export default {
 
     bloquear_fechas(){
       let self = this
-      self.calendario.forEach(function (item) {
-        if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
-        {
+      if(moment(new Date(), 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY')) 
+      {
           self.$swal({
             title: "ERROR",
-            text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+            text: "LA FECHA QUE SELECCIONO TIENE QUE SER DISTINTA DE HOY",
             type: "error",
             showCancelButton: false
           }).then((result) => {
               self.form.date = ''
           }); 
-          return 
-        }
-      });    
+          return         
+      }
+      else
+      {
+        self.calendario.forEach(function (item) {
+          if(moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') == moment(self.form.date, 'YYYY-MM-DD').format('DD/MM/YYYY'))
+          {
+            self.$swal({
+              title: "ERROR",
+              text: "LA FECHA QUE SELECCIONO TIENE UNA ACTIVIDAD PROGRAMADA, "+item.title,
+              type: "error",
+              showCancelButton: false
+            }).then((result) => {
+                self.form.date = ''
+            }); 
+            return 
+          }
+        }); 
+      }   
     },
 
     //Generar correlativo de la orden
@@ -420,10 +492,22 @@ export default {
             self.loading = false
             self.interceptar_error(r) == 0 ? '' : self.$toastr.success('número de reservación creado', 'exito') 
             self.no_reservation = r.data.data.correlative+'-'+r.data.data.year
+            self.nav_ord = 'active';
+            self.nav_ord = 'show active';
+            self.nav_info = '';
+            self.tab_info = '';            
           })
           .catch(r => {});
       }
 
+    },
+
+    inforTab(){
+      let self = this
+      self.nav_info = 'active';
+      self.tab_info = 'show active';
+      self.nav_ord = '';
+      self.tab_ord = '';
     },
 
     //funcion, validar si se guarda o actualiza
@@ -480,7 +564,7 @@ export default {
       let self = this
 
       self.$swal({
-        title: "Verificar",
+        title: "ADVERTENCIA",
         text: "¿ESTA SEGURO QUE DESEA GUARDAR EL PEDIDO # "+ self.no_reservation + "?",
         type: "info",
         showCancelButton: true
@@ -531,7 +615,7 @@ export default {
       let encontro = false
       self.loading_detail = true
 
-      if(self.disponibility > self.information_product.sub_total)
+      if(self.disponibility >= self.information_product.sub_total)
       {
         self.$validator.validateAll("detail").then((result) => {
             if (result) {
@@ -540,7 +624,7 @@ export default {
                   self.loading_detail = false
                   encontro = true
                   self.$swal({
-                    title: "Advertencia",
+                    title: "ADVERTENCIA",
                     text: "EL PRODUCTO "+ self.product_id.name + ", YA FUE AGREGADO. ¿DESEA INCREMENTAR LA CANTIDAD?",
                     type: "warning",
                     showCancelButton: true
@@ -551,6 +635,7 @@ export default {
                         item.quantity = item.quantity + self.quantity
                         item.sub_total = self.information_product.sub_total + item.sub_total
                         self.disponibility = self.disponibility - self.information_product.sub_total
+                        self.disponibility = Number(self.disponibility).toFixed(2)
 
                         self.limpiarInputDetail()
                         return                      
@@ -568,7 +653,8 @@ export default {
                                               products_id:self.product_id.id, 
                                               producto:self.product_id.name})
                 self.$toastr.success('producto agregado al detalle del pedido.', 'Peiddo #'+self.no_reservation)  
-                self.disponibility = self.disponibility - self.information_product.sub_total  
+                self.disponibility = self.disponibility - self.information_product.sub_total
+                self.disponibility = Number(self.disponibility).toFixed(2)  
               
                 self.limpiarInputDetail()
                 self.loading_detail = false                
@@ -583,7 +669,7 @@ export default {
       {
         self.loading_detail = false
         self.$swal({
-          title: "Error",
+          title: "ERROR",
           text: "EL MONTO DISPONIBLE DE Q "+ self.disponibility.toFixed(2) + " ES MENOR AL SUBTOTAL Q "+ self.information_product.sub_total.toFixed(2),
           type: "error",
           showCancelButton: false
@@ -608,6 +694,7 @@ export default {
       let self = this
       self.total = self.total - self.form.detail_order[index].sub_total
       self.disponibility = self.disponibility - self.form.detail_order[index].sub_total
+      self.disponibility = Number(self.disponibility).toFixed(2)
       self.form.detail_order.splice(index, 1);
     },    
 
@@ -622,14 +709,38 @@ export default {
     balance(){
       let self = this
       self.loading = true
+      self.amount_available = false
+      self.disponibility = 0
       self.$store.state.services.reservationService
         .getMoney(self.form.code.id, self.title)
         .then(r => {
           self.loading = false
           if( self.interceptar_error(r) == 0) return
-          self.disponibility = r.data.data[0].balance - r.data.data[0].subtraction_temporary
+          self.disponibility = r.data.data[0].balance - (r.data.data[0].subtraction_temporary - r.data.data[0].subtraction)
           self.disponibility = self.disponibility - self.total
+          self.disponibility = Number(self.disponibility).toFixed(2)
+          self.disbursement = r.data.data[0].disbursement.name
           self.amount_available = true
+          self.form.detail_order = []
+          self.total = 0          
+        })
+        .catch(r => {});
+    },
+    
+    cuadrar(produt, price){
+      let self = this
+      self.loading = true
+
+      self.$store.state.services.productService
+        .getCuadrar(produt, price)
+        .then(r => {
+          self.loading = false
+          self.cuadrar_opciones = []
+          self.interceptar_error(r) == 0 ? '' : self.cuadrar_opciones = r.data
+          
+          if(self.cuadrar_opciones.length > 0)
+            self.$refs['cuadra_opc'].show()
+
         })
         .catch(r => {});
     }
@@ -640,11 +751,19 @@ export default {
       let renombrar = '';
       let message = ''
       var d = new Date()
+      self.nav_info = 'active';
+      self.tab_info = 'show active';
+      self.nav_ord = '';
+      self.tab_ord = '';
       self.form.title = null
       self.form.description = null
       self.form.date = null
+      self.form.code = null
       self.form.detail_order = []
       self.total = 0
+      self.amount_available = false
+      self.disponibility = 0
+      self.disbursement = ''
       switch (self.$route.params.type_order) {
         case 'A':
           renombrar = 'alimentacion'
@@ -660,7 +779,12 @@ export default {
           renombrar = 'utiles'
           message = 'utiles'
           self.getProduct(renombrar)           
-          break;                        
+          break;  
+        case 'V':
+          renombrar = 'valija didactica'
+          message = 'valijas didactica'
+          self.getProduct('utiles')           
+          break;                      
         default:
           self.$router.push('/school/management/order') 
           break;

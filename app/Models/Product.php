@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Category;
-use App\Models\DetailOrder;
-use App\Models\Presentation;
+use Carbon\Carbon;
 use App\Models\Price;
-use App\Models\PurcharseDetail;
+use App\Models\Category;
 use App\Models\Quantify;
 use App\Models\Sentence;
-use Carbon\Carbon;
+use App\Models\DetailOrder;
+use App\Models\Presentation;
+use App\Models\PurcharseDetail;
+use App\Models\ProductExpiration;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -19,7 +20,7 @@ class Product extends Model
     const UTILES = 'UTILES';
 
     protected $table = 'products';
-    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty','stock','stock_temporary'];
+    protected $fillable = ['name','camouflage','categories_id','presentations_id','propierty','stock','stock_temporary','persevering'];
     
     public function setNameAttribute($value) {
         $this->attributes['name'] = mb_strtoupper($value);
@@ -42,6 +43,11 @@ class Product extends Model
     public function prices()
     {
         return $this->hasMany(Price::class,'products_id');
+    }
+
+    public function expirtations()
+    {
+        return $this->hasMany(ProductExpiration::class,'products_id');
     }
 
     public function sentences()

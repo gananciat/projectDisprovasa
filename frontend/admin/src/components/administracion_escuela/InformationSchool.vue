@@ -284,7 +284,7 @@
                                     name="code_primary"
                                     v-model="form.code_primary"
                                     data-vv-as="código primaria"
-                                    v-validate="'required|max:24'"
+                                    v-validate="'max:24'"
                                     :class="{'input':true,'has-errors': errors.has('code_primary')}"
                                   />
                                   <FormError :attribute_name="'code_primary'" :errors_form="errors"></FormError>
@@ -301,7 +301,7 @@
                                     name="code_high_school"
                                     v-model="form.code_high_school"
                                     data-vv-as="código preprimaria"
-                                    v-validate="'required|max:24'"
+                                    v-validate="'max:24'"
                                     :class="{'input':true,'has-errors': errors.has('code_high_school')}"
                                   />
                                   <FormError
@@ -581,7 +581,7 @@ export default {
         code_high_school: '',
         code_primary: '',
         direction: '',
-        municipalities_id: '',
+        municipalities_id: {},
         name: '',
         nit: '',
         logo: null        
@@ -672,8 +672,8 @@ export default {
           self.form.code_high_school = self.items.code_high_school
           self.form.code_primary = self.items.code_primary
           self.form.direction = self.items.direction
-          self.form.municipalities_id = {'id': self.items.municipality.id, 'name': self.items.municipality.departament.name+' / '+self.items.municipality.name}
           self.form.nit = self.items.nit
+          self.form.municipalities_id = {id: self.items.municipality.id, name: self.items.municipality.departament.name+' / '+self.items.municipality.name}
           self.logo = self.items.logo !== null ? self.$store.state.base_url+self.items.logo : self.$store.state.base_url+'img/logo_empty.png'
           self.loading = false; 
         })
@@ -709,11 +709,10 @@ export default {
       self.loading = true
       let data = self.form
       data.logo = self.logo
-       
+      data.municipalities_id = self.form.municipalities_id.id
       self.$store.state.services.schoolService
         .update(data)
         .then(r => {
-          data.municipalities_id = self.form.municipalities_id.id
           self.loading = false
           if( self.interceptar_error(r) == 0) return
           self.$toastr.success('registro actualizado con exito', 'exito')  

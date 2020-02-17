@@ -44,7 +44,7 @@ class Person extends Model
     }
 
     public function setEmailAttribute($valor) {
-        $this->attributes['email'] = mb_strtoupper($valor);  
+        $this->attributes['email'] = mb_strtolower($valor);  
     }
 
     public function municipality()

@@ -1,4 +1,4 @@
-class productService {
+class ProductService {
     axios
     baseUrl
 
@@ -10,6 +10,14 @@ class productService {
     getAll() {
         let self = this;
         return self.axios.get(`${self.baseUrl}`);
+    }
+
+    getAllFilter(search) {
+        let self = this
+        if (search == '') {
+            search = 0
+        }
+        return self.axios.get(`${self.baseUrl}_paginate/${search}`);
     }
 
     getPrices($id) {
@@ -43,4 +51,4 @@ class productService {
     }
 }
 
-export default productService
+export default ProductService

@@ -266,10 +266,9 @@ export default {
         .then(r => {
           self.loading = false
           self.loading = false
-          if(r.response){
-                this.$toastr.error(r.response.data.error, 'error')
-                return
-            }
+          if(self.$store.state.global.captureError(r)){
+            return
+          }
           this.$toastr.success('registro eliminado con exito', 'exito')
           self.get(self.school.id)
           self.close()
@@ -294,10 +293,9 @@ export default {
                 .then(r => {
                   self.loading = false
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
+                  if(self.$store.state.global.captureError(r)){
+                    return
+                  }
                   this.$toastr.success('registro eliminado con exito', 'exito')
                   self.get(self.school.id)
                   self.close()

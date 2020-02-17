@@ -13,9 +13,9 @@ class CreatePersonSchoolsTable extends Migration
             $table->string('type_person');
             $table->boolean('current')->default(1);
             $table->unsignedBigInteger('schools_id');
-            $table->foreign('schools_id')->references('id')->on('schools');              
+            $table->foreign('schools_id')->references('id')->on('schools')->onUpdate('cascade');             
             $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people');             
+            $table->foreign('people_id')->references('id')->on('people')->onUpdate('cascade');             
             $table->timestamps();
         });
     }

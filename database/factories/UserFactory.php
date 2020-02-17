@@ -1,24 +1,34 @@
 <?php
 
-use App\User;
-use App\Seller;
 use App\Category;
 use App\Models\Balance;
 use App\Models\CalendarSchool;
+use App\Models\DeliveryMan;
 use App\Models\DetailOrder;
-use App\Models\Year;
-use App\Transaction;
+use App\Models\DetailSuggestion;
+use App\Models\LicensePlate;
+use App\Models\MenuSuggestion;
 use App\Models\Month;
+use App\Models\Municipality;
 use App\Models\Order;
-use App\Models\School;
-use App\Models\Reservation;
-use Illuminate\Support\Str;
 use App\Models\PersonSchool;
 use App\Models\Price;
 use App\Models\Product;
+use App\Models\ProductExpiration;
+use App\Models\Provider;
 use App\Models\Quantify;
+use App\Models\Reservation;
+use App\Models\School;
+use App\Models\TypeLicense;
+use App\Models\Vehicle;
+use App\Models\VehicleModel;
+use App\Models\Year;
+use App\Seller;
+use App\Transaction;
+use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /*$factory->define(User::class, function (Faker $faker) {
     static $password;
@@ -62,6 +72,16 @@ $factory->define(Transaction::class, function (Faker $faker) {
         'product_id' => $vendedor->products->random()
     ];
 });*/
+
+$factory->define(Provider::class, function (Faker $faker) {
+    $municipality = Municipality::all()->random();
+    return [
+        'nit' => rand(1000000, 99999999),
+        'name' =>'proveedor '.$faker->numberBetween(1, 50),
+        'direction'=>'calle '.$faker->numberBetween(1,25),
+        'municipalities_id' => $municipality->id
+    ];
+});
 
 $factory->define(CalendarSchool::class, function (Faker $faker) {
     $date_actual = Carbon::now();
@@ -107,7 +127,7 @@ $factory->define(Order::class, function (Faker $faker) {
         'years_id' => $year->id,
         'months_id' => $month->id,
         'complete' => false,
-        'type_order' => $faker->randomElement([Order::ALIMENTACION, Order::GRATUIDAD, Order::UTILES]),
+        'type_order' => $faker->randomElement([Order::ALIMENTACION, Order::GRATUIDAD, Order::UTILES, Order::VALIJA_DIDACTICA]),
         'code' => $faker->randomElement([$school->code_high_school,$school->code_primary])
     ];
 });
@@ -121,9 +141,13 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         $balance = Balance::where('schools_id',$order->schools_id)->where('type_balance',$order->type_order)->where('code',$order->code)->where('current',true)->first();
         if(!is_null($balance))
         {
-            $product = Product::where('propierty',$order->type_order)->get()->random();
+            $pro = $order->type_order;
+            if($order->type_order == Order::VALIJA_DIDACTICA)
+                $pro = Order::UTILES;
+
+            $product = Product::where('propierty',$pro)->get()->random();
             $price = Price::where('products_id',$product->id)->where('current',true)->first();
-            $cantidad = $faker->numberBetween(1,25);
+            $cantidad = $faker->numberBetween(1,100);
             $date_actual = Carbon::now();
             $total = $cantidad * $price->price;
             $principal = $balance->balance;
@@ -133,34 +157,35 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
     }while(($principal - $resta) < 0);
 
     $insert_quantify = Quantify::where('products_id',$product->id)->where('year',date('Y'))->first();
-    if(is_null($insert_quantify)) {
-        $insert_quantify = new Quantify();
-        $insert_quantify->year = $date_actual->format('Y');
-        $insert_quantify->products_id = $product->products_id;
-        
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
+
+
+    for ($i=0; $i < $cantidad; $i++) { 
+        if($product->stock_temporary > 0){
+            $product->stock_temporary -= 1;
+
+            $expiration = ProductExpiration::where('products_id',$product->id)->where('expiration',false)->where('current',true)->latest()->orderBy('date', 'asc')->first();
+            if(!is_null($expiration))
+            {
+                $expiration->used -= 1;
+
+                if($expiration->used == 0)
+                    $expiration->current = false;
+    
+                $expiration->save();
+            }
+
+        }else{
+            $insert_quantify->subtraction += 1;
         }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
-
-    } else {
-        $insert_quantify->sumary_schools =  $insert_quantify->sumary_schools + $cantidad;
-        
-        if($product->stock >= ($cantidad+$product->stock_temporary)){
-            $insert_quantify->sumary_purchase += $cantidad;
-        }
-
-        $insert_quantify->subtraction = $insert_quantify->sumary_schools - $insert_quantify->sumary_purchase;
     }
-
+    $insert_quantify->sumary_schools +=  $cantidad;
+    
     if($balance->balance == $balance->subtraction_temporary){
-        $balance->current == false;
+        $balance->current == true;
     }
     
     $order->total += $total;
+    $order->balances_id = $balance->id;
 
     $insert_quantify->save();
     $product->save();
@@ -175,5 +200,50 @@ $factory->define(DetailOrder::class, function (Faker $faker) {
         'complete' => false,
         'products_id' => $product->id,
         'orders_id' => $order->id
+    ];
+});
+
+$factory->define(MenuSuggestion::class, function (Faker $faker) {
+    return [
+        'title' => $faker->unique()->numerify('Menú #####'),
+        'description' => $faker->text(150),
+        'people_id' => 1,
+    ];
+});
+
+$factory->define(DetailSuggestion::class, function (Faker $faker) {
+    return [
+        'observation' => $faker->randomElement(['', $faker->text(100)]),
+        'products_id' => Product::where('propierty','ALIMENTACION')->get()->random()->id,
+        'menu_suggestions_id' => MenuSuggestion::all()->random()->id
+    ];
+});
+
+$factory->define(Vehicle::class, function (Faker $faker) {
+    $vin = '';
+    $chasis = '';
+    for ($i=0; $i < 13; $i++) { 
+        $vin .= $faker->randomElement(['?','#']);
+    }
+    for ($i=0; $i < 13; $i++) { 
+        $chasis .= $faker->randomElement(['?','#']);
+    }
+    return [
+        'placa' => $faker->unique()->bothify('###???'),
+        'color' => $faker->randomElement(['rojo','azul','amarillo','gris','negro','verde','celeste','beish','blaco']),
+        'anio' => $faker->numberBetween(1990, date('Y')),
+        'vin' => $faker->unique()->bothify($vin),
+        'chasis' => $faker->unique()->bothify($chasis),
+        'motor' => $faker->randomElement(['1000','1200','1400','1600','1800','2000','2200','2400','2600']),
+        'license_plates_id' => LicensePlate::all()->random()->id,
+        'vehicle_models_id' => VehicleModel::all()->random()->id
+    ];
+});
+
+$factory->define(DeliveryMan::class, function (Faker $faker) {
+    return [
+        'people_id' => 1,
+        'type_license_id' => 2,
+        'vehicles_id' => Vehicle::all()->random()->id
     ];
 });

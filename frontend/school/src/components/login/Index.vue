@@ -3,12 +3,12 @@
 <body class="login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Sistema</b> escuela</a>
+    <img src="../../assets/logo.jpeg" width="60%" alt="Logo" class="brand-image elevation-3">
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">ingreso al sistema</p>
+      <p class="login-box-msg"><a><b>Sistema Disprovasa </b> <br> Escuela</a></p>
 
       <form action="#">
         <div class="form-group has-feedback">
@@ -39,7 +39,7 @@
         <div class="row">
           <!-- /.col -->
           <div class="col-4">
-            <button type="button" @click="beforeLogin" class="btn btn-primary btn-block btn-flat">Ingresar</button>
+            <button type="button" @click="beforeLogin" v-b-tooltip.left v-b-tooltip.hover title="ingresar" class="btn btn-primary btn-block btn-flat">Ingresar</button>
           </div>
           <!-- /.col -->
         </div>
@@ -104,4 +104,8 @@ export default {
   }
 }
 </script>
-
+<style scoped>
+  .brand-image {
+      border-radius: 10%
+  }
+</style>

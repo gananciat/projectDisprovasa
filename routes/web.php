@@ -10,6 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+use App\User;
+use App\Mail\WelcomeUser;
+use Illuminate\Support\Facades\Mail;
+
 Route::get('/', function () {
     return view('home');
 });
@@ -17,4 +22,3 @@ Route::get('/', function () {
 Route::get('/escuela', function () {
     return view('escuela');
 });
-

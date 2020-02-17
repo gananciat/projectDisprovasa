@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateOauthPersonalAccessClientsTable extends Migration
 {
@@ -18,6 +19,9 @@ class CreateOauthPersonalAccessClientsTable extends Migration
             $table->unsignedInteger('client_id')->index();
             $table->timestamps();
         });
+
+        DB::insert('insert into oauth_personal_access_clients (id,client_id,created_at,updated_at) values (?,?,?,?)', 
+            [1,1,Carbon::now(),Carbon::now()]);
     }
 
     /**

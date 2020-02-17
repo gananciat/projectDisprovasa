@@ -80,14 +80,21 @@
                                 <multiselect v-model="product"
                                     :options="products" placeholder="agregue producto"  
                                     :searchable="true"
+                                    :internal-search="false" 
+                                    :options-limit="300" :limit="3" :limit-text="limitText" 
+                                    :max-height="600" 
+                                    :show-no-results="true" 
+                                    :hide-selected="true"
                                     label="name"
+                                    :loading="isLoading"
+                                    @search-change="asyncProducts"
                                     :allow-empty="false">
                                     <span slot="noResult">Ningun producto encontrada</span>
                                     </multiselect>
                             </div>
                             <div class="form-group col-md-1 col-sm-1 col-lg-1">
-                                <br />
-                                <button type="button" @click="addDetail()" class="btn btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                                <label>&nbsp;</label>
+                                <button type="button" @click="addDetail()" class="btn btn-success btn-sm form-control"><i class="fa fa-plus-square-o"></i> agregar</button>
                               </div>
                         </div>
                         <div class="row">
@@ -95,13 +102,14 @@
                         <el-divider></el-divider>
                                 <h3 class="card-title">Detalle de compra</h3>
                                 <div class="table-responsive">
-                                    <table class="table table-condensed table-bordered">
+                                    <table class="table table-condensed table-bordered table-sm">
                                         <thead>
                                             <tr>
                                                 <th>Producto</th>
                                                 <th>Faltante</th>
                                                 <th>Precio compra</th>
                                                 <th>Cantidad</th>
+                                                <th>Fecha vencimiento</th>
                                                 <th>Subtotal</th>
                                                 <th>Opción</th>
                                             </tr>
@@ -115,6 +123,15 @@
                                                 </td>
                                                 <td>
                                                     <el-input-number v-model="item.quantity" size="small" :min="1"></el-input-number>
+                                                </td>
+                                                <td>
+                                                  <input type="date" class="form-control" placeholder="ingrese fecha vencimiento"
+                                                      :name="item.product"
+                                                      v-model="item.expiry_date"
+                                                      :data-vv-as=" 'fecha vencimiento '+item.product "
+                                                      v-validate="'required'"
+                                                  :class="{'input':true,'has-errors': errors.has(item.product)}">
+                                                  <FormError :attribute_name="item.product" :errors_form="errors"> </FormError>
                                                 </td>
                                                 <td>{{subTotal(item)| currency('Q ')}}</td>
                                                 <td>
@@ -182,6 +199,8 @@ export default {
       loading: false,
       products: [],
       product: null,
+      search: '',
+      timeout: null,
       form: {
           id: null,
           nit: '',
@@ -205,6 +224,21 @@ export default {
   },
 
   methods: {
+    asyncProducts (query) {
+      let self = this
+      self.search = query
+      clearTimeout(self.timeout)
+
+      self.timeout = setTimeout(() => {
+        self.getProducts()
+      }, 700);
+      
+    },
+
+     limitText (count) {
+      return `y ${count} otros productos`
+    },
+
     create(){
         let self = this
         var data = self.form
@@ -212,8 +246,7 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro agregado con exito', 'exito')
@@ -253,12 +286,12 @@ export default {
 
     getProducts(){
         let self = this
-        self.loading = true;
+        self.isLoading = true;
 
         self.$store.state.services.productService
-        .getAll()
+        .getAllFilter(self.search)
             .then(r => {
-            self.loading = false
+            self.isLoading = false
             self.products = r.data.data
         })
         .catch(r => {});
@@ -289,7 +322,8 @@ export default {
             product_id: self.product.id,
             subtraction: self.product.quantify.subtraction,
             purcharse_price: 0.1,
-            quantity: 1
+            quantity: 1,
+            expiry_date: null
         })
     },
 

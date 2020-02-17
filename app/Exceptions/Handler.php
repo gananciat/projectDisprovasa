@@ -39,7 +39,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Exception $exception)
     {
-        
         if($exception->getCode() === 401){
             return $this->errorResponse("Usuario o contraseña incorrectos", 401);
         }
@@ -154,6 +153,8 @@ class Handler extends ExceptionHandler
         {
             return $this->errorResponse("Falla inesperada, intente luego", 500);
         }
+
+        //return $this->errorResponse("Falla inesperada, intente luego", 500);
 
         return parent::render($request, $exception);
     }

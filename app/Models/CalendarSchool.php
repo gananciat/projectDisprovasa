@@ -15,6 +15,10 @@ class CalendarSchool extends Model
     protected $fillable = ['date','schools_id','people_id','title','business'];
     protected $dates = ['deleted_at'];
 
+    public function setTitleAttribute($value) {
+        $this->attributes['title'] = mb_strtoupper($value);
+    }
+
     public function person()
     {
         return $this->belongsTo(Person::class,'people_id');

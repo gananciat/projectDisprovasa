@@ -32,6 +32,19 @@ import QuantifyService from '../services/QuantifyService'
 import ReportService from '../services/ReportService'
 import RolService from '../services/RolService'
 import PersonService from '../services/PersonService'
+import DashboardService from '../services/DashboradService'
+import ProductExpirationService from '../services/ProductExpirationService'
+import CheckDeliveryManService from '../services/CheckDeliveryManService'
+import VehicleService from '../services/VehicleService'
+import VehicleModelService from '../services/VehicleModelService'
+import VehicleBrandService from '../services/VehicleBrandService'
+import LicensePlateService from '../services/LicensePlateService'
+import TypeLicenseService from '../services/TypeLicenseService'
+import DeliveryManService from '../services/DeliveryManService'
+import VatService from '../services/VatService'
+import SerieService from '../services/SerieService'
+import InvoiceService from '../services/InvoiceService'
+import DetailSuggestionService from '../services/DetailSuggestionService'
 
 
 /* IMPORT SCHOOL */
@@ -39,12 +52,20 @@ import ReservationService from '../services/ReservationService'
 import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
+import MenuSuggestionService from '../services/MenuSuggestionService'
 
 // Axios Configuration
-let baseUrl = 'http://www.project.com/' //base url desarrollo
-//let baseUrl = 'http://sistematio.test/' //base url desarrollo
-let token_data = $cookies.get('token_data')
+
+// Para desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
+
+// Para producción
+//let baseUrl = 'http://www.empresa.disprovasa.org/' //base url produccion disprovasa
+//let baseUrl = 'http://www.proalsa.disprovasa.org/' //base url produccion proalsa
+
+let token_data = $cookies.get('token_data')
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -117,12 +138,24 @@ export default {
     rolService: new RolService(Axios, baseUrl),
     personService: new PersonService(Axios, baseUrl),
     quantifyService: new QuantifyService(Axios, baseUrl),
+    dashboardService: new DashboardService(Axios, baseUrl),
+    productExpirationService: new ProductExpirationService(Axios, baseUrl),
+    checkdeliverymanService: new CheckDeliveryManService(Axios, baseUrl),
+    vehicleService: new VehicleService(Axios, baseUrl),
+    vehiclemodelService: new VehicleModelService(Axios, baseUrl),
+    vehiclebrandService: new VehicleBrandService(Axios, baseUrl),
+    licenseplateService: new LicensePlateService(Axios, baseUrl),
+    typelicenseService: new TypeLicenseService(Axios, baseUrl),
+    deliverymanService: new DeliveryManService(Axios, baseUrl),
+    serieService: new SerieService(Axios, baseUrl),
+    vatService: new VatService(Axios, baseUrl),
+    invoiceService: new InvoiceService(Axios, baseUrl),
+    detailsuggestionService: new DetailSuggestionService(Axios, baseUrl),
 
     /* EXPORT SERVICE SCHOOL */
     reservationService: new ReservationService(Axios, baseUrl),
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
-
-
+    menusuggestionService: new MenuSuggestionService(Axios, baseUrl),
 }

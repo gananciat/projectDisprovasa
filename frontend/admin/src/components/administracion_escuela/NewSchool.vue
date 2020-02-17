@@ -33,7 +33,7 @@
           <div class="input-group">
             <div class="custom-file">
               <input accept="image/*" type="file" class="custom-file-input" id="exampleInputFile" @change="selectedFile">
-              <label class="custom-file-label" for="exampleInputFile">sleccionar logo</label>
+              <label class="custom-file-label" for="exampleInputFile">seleccionar logo</label>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
             <div class="form-group">
               <label>Nombre</label>
               <input type="text" class="form-control" placeholder="nombre"
-              name="add.name"
+              name="name"
               v-model="form.name"
               data-vv-as="nombre"
               v-validate="'required|max:175'"
@@ -64,13 +64,13 @@
             <div class="form-group">
               <label>NIT</label>
               <input type="text" class="form-control" placeholder="nit"
-              name="add.nit"
+              name="nit"
               v-model="form.nit"
               data-vv-as="nit"
-              v-validate="'required|max:13|min:7'"
+              v-validate="'required|max:10|min:7'"
               data-vv-scope="add"
               :class="{'input':true,'has-errors': errors.has('add.nit')}">
-              <FormError :attribute_name="'nit'" :errors_form="errors"> </FormError>
+              <FormError :attribute_name="'add.nit'" :errors_form="errors"> </FormError>
             </div>
           </div> 
 
@@ -78,10 +78,10 @@
             <div class="form-group">
               <label>Código Primaria</label>
               <input type="text" class="form-control" placeholder="código primaria"
-              name="add.code_primary"
+              name="code_primary"
               v-model="form.code_primary"
               data-vv-as="código primaria"
-              v-validate="'required|max:24'"
+              v-validate="'max:24'"
               data-vv-scope="add"
               :class="{'input':true,'has-errors': errors.has('add.code_primary')}">
               <FormError :attribute_name="'add.code_primary'" :errors_form="errors"> </FormError>
@@ -92,10 +92,10 @@
             <div class="form-group">
               <label>Código Preprimaria</label>
               <input type="text" class="form-control" placeholder="código preprimaria"
-              name="add.code_high_school"
+              name="code_high_school"
               v-model="form.code_high_school"
               data-vv-as="código preprimaria"
-              v-validate="'required|max:24'"
+              v-validate="'max:24'"
               data-vv-scope="add"
               :class="{'input':true,'has-errors': errors.has('add.code_high_school')}">
               <FormError :attribute_name="'add.code_high_school'" :errors_form="errors"> </FormError>
@@ -108,13 +108,13 @@
             <div class="form-group">
               <label>Nombre Factura</label>
               <input type="text" class="form-control" placeholder="nombre a facturar"
-              name="add.bill"
+              name="bill"
               v-model="form.bill"
               data-vv-as="nombre a facturar"
               v-validate="'required|max:175'"
               data-vv-scope="add"
               :class="{'input':true,'has-errors': errors.has('add.bill')}">
-              <FormError :attribute_name="'bill'" :errors_form="errors"> </FormError>
+              <FormError :attribute_name="'add.bill'" :errors_form="errors"> </FormError>
             </div>
           </div>  
         </div>
@@ -125,7 +125,7 @@
               <label>Municipio</label>
               <multiselect v-model="form.municipalities_id"
                   v-validate="'required'" 
-                  data-vv-name="add.municipalities_id"
+                  data-vv-name="municipalities_id"
                   data-vv-as="municipio"
                   :options="municipalities" placeholder="seleccione municipio"  
                   :searchable="true"
@@ -143,7 +143,7 @@
             <div class="form-group">
               <label>Dirección</label>
               <input type="text" class="form-control" placeholder="dirección"
-              name="add.direction"
+              name="direction"
               v-model="form.direction"
               data-vv-as="dirección"
               v-validate="'required|max:175'"
@@ -603,13 +603,13 @@ export default {
       let self = this;
       self.loading = true;
       let data = self.form;
+      data.municipalities_id = self.form.municipalities_id.id;
+      data.municipalities_id_people = self.form.municipalities_id_people.id;
+      data.type_person = self.form.type_person.id;
+      data.logo = self.logo
       self.$store.state.services.schoolService
         .create(data)
         .then(r => {
-          data.municipalities_id = self.form.municipalities_id.id;
-          data.municipalities_id_people = self.form.municipalities_id_people.id;
-          data.type_person = self.form.type_person.id;
-          data.logo = self.logo
           self.loading = false
           if( self.interceptar_error(r) == 0) return
           self.$toastr.success('registro agregado con exito', 'exito')         

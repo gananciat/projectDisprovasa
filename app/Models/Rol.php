@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Rol extends Model
 {
+    const ADMINISTRADOR = 'ADMINISTRADOR';
+    const GERENTE = 'GERENTE';
+    const BODEGA = 'BODEGA';
+    const SUPERVISOR = 'SUPERVISOR';
+    const COMPRA = 'COMPRA';
+    const FACTURADOR = 'FACTURADOR';
+    const REPARTIDOR = 'REPARTIDOR';
     const ROL_PRESIDENTE = 'PRESIDENTE';
 
     protected $table = 'rols';

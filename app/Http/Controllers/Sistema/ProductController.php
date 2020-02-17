@@ -27,6 +27,22 @@ class ProductController extends ApiController
         return $this->showAll($products);
     }
 
+    public function indexPaginate($query = '')
+    {
+        if($query === 0){
+            $query = '';
+        }
+        $queryModel = Product::query();
+        $columns = ['id','name'];
+
+        foreach($columns as $column){
+            $queryModel->orWhere($column, 'LIKE', '%'.$query.'%');
+        }
+
+        $activos = $queryModel->with('category','presentation','prices','quantify')->orderBy('id')->get();
+        return $this->showAllPaginate($activos);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -167,6 +183,7 @@ class ProductController extends ApiController
         try {
             DB::beginTransaction();
                 $data = $request->all();
+                $existe = null;
 
                 if($product->name != $request->name || $product->categories_id != $request->categories_id || $product->presentations_id != $request->presentations_id)
                 {
@@ -184,6 +201,7 @@ class ProductController extends ApiController
                 $product->categories_id = $request->categories_id;
                 $product->presentations_id = $request->presentations_id;
                 $product->camouflage = $request->camouflage;
+                $product->persevering = $request->persevering;
 
                 if (!$product->isDirty()) {
                     return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
@@ -210,5 +228,33 @@ class ProductController extends ApiController
         $product->prices()->delete();
         $product->delete();
         return $this->showOne($product,201);
+    }
+
+    public function cuadrar($product, $price)
+    {
+        $array = array();
+        $products = Product::with(['category','presentation','prices' => function ($query){
+            $query->where('current', true);
+        }])
+        ->where('propierty',mb_strtoupper($product))
+        ->get();
+        
+        foreach ($products as $key => $value) {
+            for ($i=1; $i < 21; $i++) { 
+                if($value->prices[0]['price']*$i == number_format($price,2))
+                {
+                    $data['cantidad'] = $i;
+                    $data['producto'] = $value->name;
+                    $data['marca'] = $value->presentation->name;
+                    $data['precio'] = $value->prices[0]['price'];                
+                    array_push($array, $data);
+                }
+            }
+        }
+
+        if(count($array) == 0)
+            return $this->errorResponse('El sistema no pudo encontrar un precio que le ayude a cuadrar.', 422);
+        else
+            return $this->successResponse($array);
     }
 }

@@ -15,15 +15,27 @@ import ReservationService from '../services/ReservationService'
 import OrderService from '../services/OrderService'
 import DetailOrderService from '../services/DetailOrderService'
 import CalendarySchoolService from '../services/CalendarySchoolService'
+import RepeatOrderService from '../services/RepeatOrderService'
+import MenuSuggestionService from '../services/MenuSuggestionService'
+import CheckSchoolService from '../services/CheckSchoolService'
 
 /* IMPORT DASHBOARD */
 import GraphService from '../services/GraphService'
 import InformationSchoolService from '../services/InformationSchoolService'
 
 // Axios Configuration
-let baseUrl = 'http://sistematio.test/' //base url desarrollo
+
+// Para desarrollo
+//let baseUrl = 'http://www.project.com/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
+let baseUrl = 'http://sistematio.test/' //base url desarrollo
+
+// Para producción
+//let baseUrl = 'http://www.empresa.disprovasa.org/' //base url produccion disprovasa
+//let baseUrl = 'http://www.proalsa.disprovasa.org/' //base url produccion proalsa
+
 let token_data = $cookies.get('token_data')
+
 
 // Axios Configuration
 Axios.defaults.headers.common.Accept = 'application/json'
@@ -82,8 +94,11 @@ export default {
     orderService: new OrderService(Axios, baseUrl),
     detailorderService: new DetailOrderService(Axios, baseUrl),
     calendaryschoolService: new CalendarySchoolService(Axios, baseUrl),
+    repeatorderService: new RepeatOrderService(Axios, baseUrl),
+    checkschoolService: new CheckSchoolService(Axios, baseUrl),
 
     /* EXPORT DASHBOARD */
     graphService: new GraphService(Axios, baseUrl),
     informationschoolService: new InformationSchoolService(Axios, baseUrl),
+    menusuggestionService: new MenuSuggestionService(Axios, baseUrl),
 }

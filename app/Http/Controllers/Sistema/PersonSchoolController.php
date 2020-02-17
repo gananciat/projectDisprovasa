@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sistema;
 use App\User;
 use App\Models\Rol;
 use App\Models\Person;
+use App\Mail\WelcomeUser;
 use Illuminate\Support\Str;
 use App\Models\PersonSchool;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use App\Models\SchoolPresident;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\ApiController;
 
 class PersonSchoolController extends ApiController
@@ -71,6 +73,7 @@ class PersonSchoolController extends ApiController
         ];
         
         $this->validate($request, $rules, $messages);
+        $password = $this->generarPassword(16);
 
         try {
             DB::beginTransaction();
@@ -112,8 +115,9 @@ class PersonSchoolController extends ApiController
                 }
 
                 $rol = Rol::select('id')->where('name',$asignar_persona_escuela->type_person)->first();
+
                 $insert_user->email = $insert->email;
-                $insert_user->password = Hash::make($this->generarPassword(16));
+                $insert_user->password = Hash::make($password);
                 $insert_user->remember_token = Str::random(20);
                 $insert_user->verified = User::USUARIO_NO_VERIFICADO;
                 $insert_user->verification_token = User::generarVerificationToken();
@@ -139,6 +143,7 @@ class PersonSchoolController extends ApiController
 
             DB::commit();
 
+            Mail::to($insert_user->email)->send(new WelcomeUser($insert_user, $password));
             return $this->showOne($insert,201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -197,7 +202,8 @@ class PersonSchoolController extends ApiController
         ];
         
         $this->validate($request, $rules, $messages);
-
+        $password = $this->generarPassword(16);
+        
         try {
             DB::beginTransaction();
 
@@ -221,13 +227,16 @@ class PersonSchoolController extends ApiController
                 $person_school->save();
 
                 $update_user = User::where('people_id',$person_school->people_id)->first();
+                $enviar_correo = false;
                 if(mb_strtolower($update_user->email) != mb_strtolower($update->email))
                 {
+
                     $update_user->email = $update->email;
-                    $update_user->password = Hash::make($this->generarPassword(16));
+                    $update_user->password = Hash::make($password);
                     $update_user->remember_token = Str::random(20);
                     $update_user->verified = User::USUARIO_NO_VERIFICADO;
                     $update_user->verification_token = User::generarVerificationToken();
+                    $enviar_correo = true;
                 }            
                 $rol = Rol::select('id')->where('name',$person_school->type_person)->first();
                 $update_user->rols_id = $rol->id;
@@ -255,6 +264,9 @@ class PersonSchoolController extends ApiController
 
             DB::commit();
 
+            if($enviar_correo)
+                Mail::to($update_user->email)->send(new WelcomeUser($update_user, $password));
+                
             return $this->showOne($update,201);
         } catch (\Exception $e) {
             DB::rollBack();

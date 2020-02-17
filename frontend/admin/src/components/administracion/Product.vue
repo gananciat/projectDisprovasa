@@ -87,6 +87,17 @@
 
                           <div><strong>{{ form.camouflage ? 'Si':'No' }}</strong></div>
                       </div>
+                      <div class="form-group col-md-4 col-sm-6 col-xs-12 col-lg-4" v-if="form.propierty == 1">
+                          <label></label>
+                          <b-form-checkbox
+                          v-model="form.persevering"
+                          name="camouflage"
+                          >
+                          ¿Producto vence ?
+                          </b-form-checkbox>
+
+                          <div><strong>{{ form.persevering ? 'Si':'No' }}</strong></div>
+                      </div>
                   </div>
                   <div class="row">
                     <!-- /.col -->
@@ -157,6 +168,10 @@
                        <template v-slot:cell(price)="data">
                            {{getPrice(data.item.prices).price | currency('Q ')}}
                       </template>
+                      <template v-slot:cell(persevering)="data">
+                           <b-badge class="bg-red" v-if="data.item.persevering">PERECEDERO</b-badge>
+                           <b-badge class="bg-yellow" v-else>NO PERECEDERO</b-badge>
+                      </template>
                       <template v-slot:cell(option)="data">
                           <button type="button" class="btn btn-success btn-sm" @click="showPrice(data.item)" v-tooltip="'ver precios'">
                               <i class="fa fa-money">
@@ -166,7 +181,7 @@
                               <i class="fa fa-pencil">
                               </i>
                           </button>
-                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-b-tooltip title="eliminar">
+                          <button type="button" class="btn btn-danger btn-sm" @click="destroy(data.item)" v-tooltip="'eliminar'">
                               <i class="fa fa-trash">
                               </i>
                           </button>
@@ -238,6 +253,7 @@ export default {
         { key: 'presentation', label: 'Marca', sortable: true },
         { key: 'price', label: 'Precio', sortable: true },
         { key: 'stock', label: 'Stock Actual', sortable: true },
+        { key: 'persevering', label: 'Perecedero', sortable: true },
         { key: 'option', label: 'Opciones', sortable: true },
       ],
       filter: null,
@@ -253,6 +269,7 @@ export default {
           categories_id: null,
           presentations_id: null,
           price: null,
+          persevering: false,
           propierty: null,
       }
     };
@@ -292,9 +309,13 @@ export default {
       self.$store.state.services.productService
         .getAll()
         .then(r => {
-          self.items = r.data.data
-          self.totalRows = self.items.length
           self.loading = false
+          if(self.$store.state.global.captureError(r)){
+            return
+          }
+          self.items = r.data.data
+          
+          self.totalRows = self.items.length
         })
         .catch(r => {});
     },
@@ -336,8 +357,7 @@ export default {
         .create(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro agregado con exito', 'exito')
@@ -357,8 +377,7 @@ export default {
         .update(data)
         .then(r => {
           self.loading = false
-          if(r.response){
-            this.$toastr.error(r.response.data.error, 'error')
+          if(self.$store.state.global.captureError(r)){
             return
           }
           this.$toastr.success('registro actualizado con exito', 'exito')
@@ -384,10 +403,9 @@ export default {
                 .destroy(data)
                 .then(r => {
                   self.loading = false
-                  if(r.response){
-                        this.$toastr.error(r.response.data.error, 'error')
-                        return
-                    }
+                  if(self.$store.state.global.captureError(r)){
+                    return
+                  }
                   this.$toastr.success('registro eliminado con exito', 'exito')
                   self.getAll()
                   self.close()
@@ -428,6 +446,8 @@ export default {
         self.form.camouflage = !!data.camouflage
         self.category = data.category
         self.presentation = data.presentation
+        self.form.persevering = !!data.persevering
+        self.form.propierty = self.setProperty(data.propierty)
         this.$refs['nuevo'].show()
     },
 
@@ -450,10 +470,10 @@ export default {
 
     open(numero,titulo){
         let self = this
+        self.clearData()
         self.mensaje = titulo
         self.form.propierty = numero
         this.$refs['nuevo'].show()
-        self.clearData()
     },
 
     //cerrar modal limpiar registros
@@ -478,6 +498,16 @@ export default {
         self.$nextTick(()=>{
             events.$emit('product_price',product)
         })
+    },
+
+    setProperty(property){
+      if(property = 'ALIMENTACION'){
+        return 1
+      }else if(property == 'GRATUIDAD'){
+        return 2
+      }else{
+        return 3
+      }
     }
   },
 
