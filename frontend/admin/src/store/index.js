@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Vuex from 'Vuex'
+import Vuex from 'vuex'
 import services from './services'
 import moment from 'moment'
 import auth from '../auth'
