@@ -251,13 +251,13 @@ export default {
         self.loading = true
         self.$store.state.services.reportService
             .exportOrderProduct(data.start_date, data.end_date)
-            .then(response => {
+            .then(r => {
               self.loading = false
                 var file_name = 'productos_pedidos_'+data.start_date+'_'+data.end_date
                 if(self.$store.state.global.captureError(r)){
                   return
                 }
-                var blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                var blob = new Blob([r.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 fileSaver.saveAs(blob, file_name);
                 a.click();
             })

@@ -57,9 +57,9 @@ import MenuSuggestionService from '../services/MenuSuggestionService'
 // Axios Configuration
 
 // Para desarrollo
-//let baseUrl = 'http://www.project.com/' //base url desarrollo
+let baseUrl = 'http://www.project.com/' //base url desarrollo
 //let baseUrl = 'http://sistemapro.test:8000/'
-let baseUrl = 'http://sistematio.test/' //base url desarrollo
+//let baseUrl = 'http://sistematio.test/' //base url desarrollo
 
 // Para producción
 //let baseUrl = 'http://www.empresa.disprovasa.org/' //base url produccion disprovasa

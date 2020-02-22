@@ -97,6 +97,7 @@ Route::get('dashboard_graph_purchases', 'Dashboard\sistema\GraphController@purch
 Route::get('dashboard_graph_orders', 'Dashboard\sistema\GraphController@ordersLastGraph');
 Route::get('products_orders/{start_date}/{end_date}', 'Reports\OrderReportControler@ProductsOrderedByDates');
 Route::get('products_orders_export/{start_date}/{end_date}', 'Reports\OrderReportControler@exportExcel');
+Route::get('products_providers_export', 'Reports\OrderReportControler@exportProductProvider');
 
 
 

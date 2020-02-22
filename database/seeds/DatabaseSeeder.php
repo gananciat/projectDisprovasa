@@ -387,7 +387,7 @@ class DatabaseSeeder extends Seeder
 
         Excel::import(new EscuelaImport, 'database/seeds/Catalogos/Escuelas.xlsx');  
 
-        /*$schools = School::all();
+        $schools = School::all();
 
         foreach ($schools as $key => $value) 
         {
@@ -524,7 +524,7 @@ class DatabaseSeeder extends Seeder
                 $insert_balace->save();
                 echo 'CODIGO PRIMARIA: '.$insert_balace->code.' ESCUELA: '.$value->name.' MONTO Q: '.$insert_balace->balance.' VALIJA_DIDACTICA'.PHP_EOL;
             }
-        }*/
+        }
 
         $insert_order = new OrderStatus();
         $insert_order->status = 'pedido';
@@ -542,20 +542,20 @@ class DatabaseSeeder extends Seeder
         echo 'ESTADO DE LA ORDEN: '.$insert_order->status.PHP_EOL;
 
 
-        /*for ($i=0; $i < 150; $i++) { 
+        for ($i=0; $i < 10; $i++) { 
             $insert_reservation = new Reservation();
             $insert_reservation->correlative = $i+1;
             $insert_reservation->year = date('Y');
             $insert_reservation->save();
-        }*/
+        }
 
         //Generar compras aleatorias
         //factory(CalendarSchool::class, 30)->create();
-        //factory(Order::class, 100)->create();
-        //factory(DetailOrder::class, 1000)->create();
+        factory(Order::class, 5)->create();
+        factory(DetailOrder::class, 100)->create();
         factory(Provider::class, 10)->create();
 
-        /*$detail_order = DetailOrder::all();
+        $detail_order = DetailOrder::all();
 
         foreach ($detail_order as $key => $value) {
             DB::beginTransaction();
@@ -591,7 +591,7 @@ class DatabaseSeeder extends Seeder
 
                         $value->deliver = true;
                         $insert->order_statuses_id = OrderStatus::where('status',OrderStatus::EN_PROCESO)->first()->id;
-                        $insert->check = true;
+                        $insert->check = false;
                     }
                 }
 
@@ -612,7 +612,7 @@ class DatabaseSeeder extends Seeder
                     echo "EL PEDIDO #".$order->order.", ESTA COMPLETO".PHP_EOL;
 
             DB::commit();
-        }*/
+        }
 
         /*for($i=1; $i<51; $i++){
             $provider = Provider::all()->random();

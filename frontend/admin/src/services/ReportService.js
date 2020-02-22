@@ -23,6 +23,13 @@ class ReportService {
             responseType: 'arraybuffer'
         });
     }
+
+    exportProductProviders() {
+        let self = this
+        return self.axios.get(`${self.baseUrl}products_providers_export`, {
+            responseType: 'arraybuffer'
+        });
+    }
 }
 
 export default ReportService

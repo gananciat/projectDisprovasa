@@ -21,13 +21,13 @@ const state = {
     permissions: [],
 
     /* ::::::::::::::::::::: DESARROLLO ::::::::::::::::::::::::: */
-    //base_url: 'http://www.project.com/',
-    //client_id: 2,
-    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
-
-    base_url: 'http://sistematio.test/',
+    base_url: 'http://www.project.com/',
     client_id: 2,
-    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
+    client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD'
+
+    //base_url: 'http://sistematio.test/',
+    //client_id: 2,
+    //client_secret: 't6LqVNQoiMx7aYceb44vBupKptrzXLF9MJ5OGdOD',
 
     //base_url: 'http://sistemapro.test:8000/',
     //client_id: 2,

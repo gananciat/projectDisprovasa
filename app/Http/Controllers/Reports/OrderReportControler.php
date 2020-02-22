@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Reports;
 
-use App\Exports\QuantityProductOrdersExport;
-use App\Http\Controllers\ApiController;
+use App\Models\Product;
 use App\Models\DetailOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductProviderExport;
+use App\Http\Controllers\ApiController;
+use App\Exports\QuantityProductOrdersExport;
 
 class OrderReportControler extends ApiController
 {
@@ -55,5 +57,42 @@ class OrderReportControler extends ApiController
             return 'DE '. date("d/m/Y", strtotime($start_date)). ' A '. date("d/m/Y", strtotime($end_date));
         }
         return '';
+    }
+
+    public function exportProductProvider($id = 0)
+    {
+        $products = Product::with('category')->get();
+        $arr_export = $this->mapDataProducts($products);
+
+        return Excel::download(new ProductProviderExport($arr_export), 'products_providers.xlsx');
+    }
+
+    public function mapDataProducts($products)
+    {
+        $arr_export = [];
+        $heading = ['proveedor','cantidad','merma','total (Q)'];
+
+        foreach ($products as $p) {
+            array_push($arr_export,[$p->name]);
+            array_push($arr_export,$heading);
+            $detail = DB::table('purcharse_details')
+                        ->join('purcharses','purcharse_details.purcharse_id','purcharses.id')
+                        ->join('provider','purcharses.provider_id','provider.id')
+                        ->select('provider.name as provider_name',
+                            DB::raw('sum(purcharse_details.quantity) as cantidad'),
+                            DB::raw('sum(purcharse_details.decrease) as merma'),
+                            DB::raw('sum(purcharse_details.purcharse_price * purcharse_details.quantity) as total'))
+                        ->where('purcharse_details.product_id',$p->id)
+                        ->orderBy('cantidad','DESC')
+                        ->groupBy('provider_name')
+                        ->get();
+
+            foreach ($detail as $d) {
+                array_push($arr_export, [$d->provider_name,$d->cantidad,$d->merma,number_format(($d->total),2)]);
+            }
+            array_push($arr_export, ['']);
+        }
+
+        return $arr_export;
     }
 }

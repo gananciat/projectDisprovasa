@@ -271,7 +271,7 @@ export default {
                 self.order = r.data.data
                 self.form.order_id = self.order.id
                 self.form.date = self.order.date
-                self.items = self.chunkArray(self.order.details,5)
+                self.items = self.chunkArray(self.order.details,10)
                 self.$notify.info({
                     title: 'información',
                     message: 'este pedido por el numero de productos que cuenta se factura en '+ self.items.length+' facturas',

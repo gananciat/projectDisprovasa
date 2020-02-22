@@ -4,10 +4,11 @@
 
             body{
                 font-size: 14px;
+                line-height: 25px;
             }
 
             #school_information{
-                margin-top: 15%;
+                margin-top: 14%;
             }
 
             .school_data {
@@ -28,30 +29,35 @@
     <body>
         <div id="invoice">
             <section id="school_information">
-                <table style="width: 100%">
+                <table style="width: 100%; font-size: 13px; margin-left: 75px;">
                     <tbody>
                         <tr>
-                            <td><span class="school_data"> {{Carbon\Carbon::parse($invoice->date)->format('d-m-Y')}}</span></td>
+                            <td><span> {{Carbon\Carbon::parse($invoice->date)->format('d-m-Y')}}</span></td>
                         </tr>
                         <tr>
-                            <td><span class="school_data"> {{$invoice->order->school->name}}</span></td>
+                            <td><span style="font-size: 12px;"> {{$invoice->order->school->bill}}</span></td>
                         </tr>
                         <tr>
-                            <td><span class="school_data"> {{$invoice->order->school->direction}}</span></td>
+                            <td><span> {{$invoice->order->school->direction}}</span></td>
                         </tr>
                         <tr>
                             <td>
-                                <span class="school_data"> {{$invoice->order->school->nit}}</span>
-                                <span class="school_data" style="margin-left: 30%"> </span>
-                                <span class="school_data" style="margin-left: 30%"> {{$invoice->order->school->email}}</span>
+                                <span> {{$invoice->order->school->nit}}</span>
+                                <span style="margin-left: 30%">
+                                @if(count($invoice->order->school->phons) > 0)
+                                    {{$invoice->order->school->phons[0]->number}}
+
+                                @endif
+                                 </span>
+                                <span style="margin-left: 30%"> {{$invoice->order->school->email}}</span>
                             </td>
                         </tr>
                         
                     </tbody>
                 </table>
-            </section><br /><br /><br /><br />
-            <section id="table_data">
-                <table style="width: 100%">
+            </section>
+            <section style="position: fixed; top: 29%">
+                <table style="width: 100%" >
                     @if($invoice->cancel)
                     <h1 id="anulado">
                         ANULADA
@@ -60,26 +66,34 @@
                     <tbody>
                         @foreach($invoice->products as $p)
                         <tr>
-                            <td width="13%">{{$p->progress->purchased_amount}}</td>
+                            <td width="15%">{{$p->progress->purchased_amount}}</td>
                             @if($p->progress->product->camouflage)
-                                <td width="50%">{{$p->invoiced_as}}</td>
+                                <td width="75%">{{$p->invoiced_as}}</td>
                             @else
-                                <td width="50%">{{$p->progress->product->name}}</td>
+                                <td width="75%">{{$p->progress->product->name}}</td>
                             @endif
-                            <td width="15%">Q {{number_format(($p->progress->purchased_amount * $p->progress->detail->sale_price),2)}}</td>
+                            <td width="10%">
+                                <span style="padding-left: 20%;">
+                                    Q {{number_format(($p->progress->purchased_amount * $p->progress->detail->sale_price),2)}}
+                                </span> 
+                            </td>
                         </tr>
                          @endforeach
                         
                     </tbody>
                 </table>
             </section><br /><br />
-            <section style="position: fixed; top: 80%; left: 0">
+            <section style="position: fixed; top: 85%; left: 0; font-size: 14px;">
                 <table style="width: 100%">
                     <tbody>
                         <tr>
-                            <td width="13%"></td>
-                            <td width="50%">{{$total}}</td>
-                            <td width="15%">Q {{number_format($invoice->total,2)}}</td>
+                            <td width="12%"></td>
+                            <td width="78%">{{$total}}</td>
+                            <td width="10%">
+                                <span>
+                                    Q {{number_format($invoice->total,2)}}
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

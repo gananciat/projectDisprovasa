@@ -124,9 +124,10 @@ class InvoiceController extends ApiController
 
     public function invoice($id,$total)
     {
-        $invoice = Invoice::where('id',$id)->with('products.progress.detail','serie','vat','products.progress.product','order.school')->first();
+        $invoice = Invoice::where('id',$id)->with('products.progress.detail','serie','vat','products.progress.product','order.school','order.school.phons')->first();
+
         $pdf = \PDF::loadView('pdfs.invoice',['invoice'=>$invoice,'total'=>$total]);
-        $pdf->setPaper('a4', 'portrait');
+        $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('invoice.pdf');
     }
